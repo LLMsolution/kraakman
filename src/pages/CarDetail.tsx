@@ -620,34 +620,24 @@ const CarDetail = () => {
 
                         {/* Toon "Zie meer/Lees minder" knop als er meer dan 3 rijen zijn */}
                         {car.opties.length > 9 && (
-                          <button
-                            onClick={() => setShowAllOptions(!showAllOptions)}
-                            className="mt-4 text-sm font-medium flex items-center gap-2 transition-colors duration-200 border-none outline-none bg-transparent cursor-pointer"
-                            style={{
-                              color: 'var(--color-primary)',
-                              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
-                            }}
-                            onMouseEnter={(e) => {
-                              e.currentTarget.style.color = 'var(--color-text-primary)';
-                              e.currentTarget.style.textDecoration = 'underline';
-                            }}
-                            onMouseLeave={(e) => {
-                              e.currentTarget.style.color = 'var(--color-primary)';
-                              e.currentTarget.style.textDecoration = 'none';
-                            }}
-                          >
-                            {showAllOptions ? (
-                              <>
-                                <span>Zie minder</span>
-                                <ChevronLeft className="h-4 w-4 rotate-90" style={{ transform: 'rotate(90deg)' }} />
-                              </>
-                            ) : (
-                              <>
-                                <span>Zie meer</span>
-                                <ChevronLeft className="h-4 w-4 -rotate-90" style={{ transform: 'rotate(-90deg)' }} />
-                              </>
-                            )}
-                          </button>
+                          <div className="flex justify-center">
+                            <button
+                              onClick={() => setShowAllOptions(!showAllOptions)}
+                              className="mt-4 text-sm font-medium transition-colors duration-200 border-none outline-none bg-transparent cursor-pointer"
+                              style={{
+                                color: 'var(--color-primary)',
+                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.color = 'var(--color-text-primary)';
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.color = 'var(--color-primary)';
+                              }}
+                            >
+                              {showAllOptions ? 'Zie minder' : 'Zie meer'}
+                            </button>
+                          </div>
                         )}
                       </>
                     ) : (

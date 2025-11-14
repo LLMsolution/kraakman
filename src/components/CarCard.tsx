@@ -8,7 +8,6 @@ interface CarCardProps {
   id: string;
   merk: string;
   model: string;
-  type?: string;
   bouwjaar: number;
   kilometerstand?: number;
   prijs: number;
@@ -26,7 +25,6 @@ const CarCard = ({
   id,
   merk,
   model,
-  type,
   bouwjaar,
   kilometerstand,
   prijs,
@@ -232,9 +230,6 @@ const CarCard = ({
               <h3 className="text-xl font-semibold mb-1">
                 {merk} {model}
               </h3>
-              {type && (
-                <p className="text-sm text-muted-foreground">{type}</p>
-              )}
             </div>
 
             {(brandstof_type || transmissie || bouwjaar || kilometerstand) && (
@@ -271,9 +266,6 @@ const CarCard = ({
                 <h3 className="text-xl font-semibold mb-1">
                   {merk} {model}
                 </h3>
-                {type && (
-                  <p className="text-sm text-muted-foreground">{type}</p>
-                )}
               </div>
               <p className="text-xl font-semibold">
                 € {prijs.toLocaleString('nl-NL')}

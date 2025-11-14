@@ -9,7 +9,6 @@ export interface Car {
   id: string;
   merk: string;
   model: string;
-  type?: string | null;
   bouwjaar: number;
   kilometerstand?: number | null;
   prijs: number;
@@ -41,7 +40,6 @@ export interface CarFormData {
   id?: string;
   merk: string;
   model: string;
-  type?: string | null;
   bouwjaar: number;
   transmissie?: string | null;
   kleur?: string | null;

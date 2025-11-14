@@ -87,7 +87,6 @@ const AdminDashboard = () => {
   const [formData, setFormData] = useState({
     merk: "",
     model: "",
-    type: "",
     voertuig_type: "",
     bouwjaar: new Date().getFullYear(),
     transmissie: "",
@@ -343,7 +342,6 @@ const AdminDashboard = () => {
       setFormData({
         merk: fullCarData.merk,
         model: fullCarData.model,
-        type: fullCarData.type || "",
         voertuig_type: fullCarData.voertuig_type || "",
         bouwjaar: fullCarData.bouwjaar,
         transmissie: fullCarData.transmissie || "",
@@ -375,7 +373,6 @@ const AdminDashboard = () => {
     setFormData({
       merk: "",
       model: "",
-      type: "",
       voertuig_type: "",
       bouwjaar: new Date().getFullYear(),
       transmissie: "",
@@ -529,15 +526,6 @@ const AdminDashboard = () => {
                         value={formData.model}
                         onChange={(e) => setFormData({ ...formData, model: e.target.value })}
                         required
-                      />
-                    </div>
-                    <div>
-                      <Label>Type</Label>
-                      <Input
-                        className={inputClass}
-                        value={formData.type}
-                        onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                        placeholder="Bijv. B6"
                       />
                     </div>
                     <div>

@@ -567,6 +567,14 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
+                      <Label>Kleur</Label>
+                      <Input
+                        className={inputClass}
+                        value={formData.kleur}
+                        onChange={(e) => setFormData({ ...formData, kleur: e.target.value })}
+                      />
+                    </div>
+                    <div>
                       <Label>Status *</Label>
                       <CustomDropdown
                         value={formData.status}
@@ -684,14 +692,6 @@ const AdminDashboard = () => {
                         value={formData.transmissie}
                         onChange={(e) => setFormData({ ...formData, transmissie: e.target.value })}
                         placeholder="Bijv. Automaat, Handgeschakeld"
-                      />
-                    </div>
-                    <div>
-                      <Label>Kleur</Label>
-                      <Input
-                        className={inputClass}
-                        value={formData.kleur}
-                        onChange={(e) => setFormData({ ...formData, kleur: e.target.value })}
                       />
                     </div>
                     <div>

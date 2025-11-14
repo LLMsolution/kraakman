@@ -52,6 +52,7 @@ const CarDetail = () => {
   const [loading, setLoading] = useState(true);
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);
+  const [lightboxDirection, setLightboxDirection] = useState<'next' | 'prev'>('next');
   const [similarCars, setSimilarCars] = useState<Car[]>([]);
   const [activeTab, setActiveTab] = useState('omschrijving');
   const [showFullDescription, setShowFullDescription] = useState(false);
@@ -114,10 +115,12 @@ const CarDetail = () => {
       switch (event.key) {
         case 'ArrowLeft':
           event.preventDefault(); // Prevent default browser behavior
+          setLightboxDirection('prev');
           setLightboxIndex((prev: number) => (prev - 1 + images.length) % images.length);
           break;
         case 'ArrowRight':
           event.preventDefault(); // Prevent default browser behavior
+          setLightboxDirection('next');
           setLightboxIndex((prev: number) => (prev + 1) % images.length);
           break;
         case 'Escape':
@@ -171,14 +174,17 @@ const CarDetail = () => {
 
   const openLightbox = (index: number) => {
     setLightboxIndex(index);
+    setLightboxDirection('next');
     setLightboxOpen(true);
   };
 
   const nextImage = () => {
+    setLightboxDirection('next');
     setLightboxIndex((prev: number) => (prev + 1) % allImages.length);
   };
 
   const prevImage = () => {
+    setLightboxDirection('prev');
     setLightboxIndex((prev: number) => (prev - 1 + allImages.length) % allImages.length);
   };
 
@@ -847,12 +853,23 @@ const CarDetail = () => {
                   <ChevronLeft className="h-5 w-5" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
                 </button>
 
-                <img
-                  src={allImages[lightboxIndex]?.url}
-                  alt={`${car.merk} ${car.model}`}
-                  className="w-full h-full object-contain"
-                  style={{ maxWidth: '100vw', maxHeight: '100vh' }}
-                />
+                <div className="relative w-full h-full">
+                  {allImages?.map((image, idx) => (
+                    <img
+                      key={idx}
+                      src={image.url}
+                      alt={`${car.merk} ${car.model}`}
+                      className={`absolute w-full h-full object-contain transition-transform duration-500 ease-in-out ${
+                        idx === lightboxIndex
+                          ? 'translate-x-0'
+                          : lightboxDirection === 'next'
+                            ? (idx < lightboxIndex ? '-translate-x-full' : 'translate-x-full')
+                            : (idx > lightboxIndex ? 'translate-x-full' : '-translate-x-full')
+                      }`}
+                      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+                    />
+                  ))}
+                </div>
 
                 <button
                   onClick={nextImage}

@@ -18,7 +18,7 @@
 .kraakman-textarea {
   @apply min-h-[100px] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
          focus:border-[var(--color-border-primary)] focus:ring-0
-         hover:border-[var(--color-border-primary)] transition-none resize-none;
+         transition-none resize-none;
 }
 
 .kraakman-textarea:focus {

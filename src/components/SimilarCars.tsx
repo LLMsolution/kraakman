@@ -50,6 +50,8 @@ export const SimilarCars: React.FC<SimilarCarsProps> = ({ similarCars, loading =
             kilometerstand={car.kilometerstand}
             prijs={car.prijs}
             car_images={car.car_images}
+            binnenkort_beschikbaar={car.binnenkort_beschikbaar}
+            gereserveerd={car.gereserveerd}
             status={car.status}
           />
         ))}

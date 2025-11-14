@@ -216,6 +216,7 @@ const Aanbod = () => {
                       brandstof_type={car.brandstof_type || undefined}
                       transmissie={car.transmissie || undefined}
                       binnenkort_beschikbaar={car.binnenkort_beschikbaar || undefined}
+                      gereserveerd={car.gereserveerd || undefined}
                       status="aanbod"
                     />
                   ))}

@@ -17,6 +17,7 @@ interface CarCardProps {
   brandstof_type?: string;
   transmissie?: string;
   binnenkort_beschikbaar?: boolean;
+  gereserveerd?: boolean;
   status?: "aanbod" | "verkocht";
   hideButton?: boolean;
 }
@@ -34,6 +35,7 @@ const CarCard = ({
   brandstof_type,
   transmissie,
   binnenkort_beschikbaar,
+  gereserveerd,
   status,
   hideButton = false
 }: CarCardProps) => {
@@ -91,6 +93,21 @@ const CarCard = ({
                 }}
               >
                 Binnenkort beschikbaar
+              </div>
+            )}
+
+            {/* Gereserveerd Banner - Overlay on Image */}
+            {gereserveerd && (
+              <div
+                className="absolute top-0 right-0 px-3 py-1.5 font-medium"
+                style={{
+                  backgroundColor: '#123458',
+                  color: '#F1EFEC',
+                  borderRadius: '0 0 0 4px',
+                  fontSize: '14px'
+                }}
+              >
+                Gereserveerd
               </div>
             )}
 
@@ -186,6 +203,20 @@ const CarCard = ({
                 }}
               >
                 Binnenkort beschikbaar
+              </div>
+            )}
+            {/* Gereserveerd Banner - Even without image */}
+            {gereserveerd && (
+              <div
+                className="absolute top-0 right-0 px-3 py-1.5 font-medium"
+                style={{
+                  backgroundColor: '#123458',
+                  color: '#F1EFEC',
+                  borderRadius: '0 0 0 4px',
+                  fontSize: '14px'
+                }}
+              >
+                Gereserveerd
               </div>
             )}
           </>

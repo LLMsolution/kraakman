@@ -266,6 +266,34 @@ const CarDetail = () => {
         </div>
       )}
 
+      {/* Gereserveerd Banner - Full-width bovenaan */}
+      {car.gereserveerd && (
+        <div
+          className="w-full"
+          style={{
+            backgroundColor: 'var(--color-primary)',
+            color: 'var(--color-text-inverse)'
+          }}
+        >
+          <div className="section-padding">
+            <div className="container-wide">
+              <div
+                className="flex items-center justify-center py-4 px-6 text-center"
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-3 h-3 rounded-full animate-pulse"
+                    style={{ backgroundColor: 'var(--color-text-inverse)' }}
+                  />
+                  <span className="font-medium">Gereserveerd</span>
+                  <span className="text-sm opacity-90">Neem contact op voor de mogelijkheden</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="section-padding section-spacing-lg">
         <div className="container-wide">
           {/* Back Button and Car Title */}

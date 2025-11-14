@@ -582,7 +582,7 @@ const AdminDashboard = () => {
                         onChange={(value: "aanbod" | "verkocht") =>
                           setFormData({ ...formData, status: value })
                         }
-                        options={["Selecteer status...", "Aanbod", "Verkocht"]}
+                        options={["Selecteer status...", "aanbod", "verkocht"]}
                         placeholder="Selecteer status..."
                       />
                     </div>

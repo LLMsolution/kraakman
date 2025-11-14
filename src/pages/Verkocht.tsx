@@ -212,6 +212,8 @@ const Verkocht = () => {
                       prijs={car.prijs}
                       car_images={car.car_images}
                       opties={car.opties || undefined}
+                      brandstof_type={car.brandstof_type}
+                      transmissie={car.transmissie}
                       status="verkocht"
                       hideButton={true}
                     />

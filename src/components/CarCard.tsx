@@ -34,6 +34,7 @@ const CarCard = ({
   brandstof_type,
   transmissie,
   binnenkort_beschikbaar,
+  status,
   hideButton = false
 }: CarCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -193,45 +194,82 @@ const CarCard = ({
 
       {/* Content */}
       <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div>
-            <h3 className="text-xl font-semibold mb-1">
-              {merk} {model}
-            </h3>
-            {type && (
-              <p className="text-sm text-muted-foreground">{type}</p>
-            )}
-          </div>
-          <p className="text-xl font-semibold">
-            € {prijs.toLocaleString('nl-NL')}
-          </p>
-        </div>
-
-        {(brandstof_type || transmissie || bouwjaar || kilometerstand) && (
-          <div className="flex justify-between items-center px-6 -mx-6 mb-4">
-            {brandstof_type && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <span className="w-2 h-2 rounded-full bg-primary"></span>
-                {brandstof_type}
-              </div>
-            )}
-            {transmissie && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <span className="w-2 h-2 rounded-full bg-primary"></span>
-                {transmissie}
-              </div>
-            )}
-            <div className="flex items-center gap-1 text-sm text-muted-foreground">
-              <span className="w-2 h-2 rounded-full bg-primary"></span>
-              {bouwjaar}
+        {/* Different layout for verkocht status */}
+        {status === 'verkocht' ? (
+          <>
+            <div className="text-center mb-4">
+              <h3 className="text-xl font-semibold mb-1">
+                {merk} {model}
+              </h3>
+              {type && (
+                <p className="text-sm text-muted-foreground">{type}</p>
+              )}
             </div>
-            {kilometerstand && (
-              <div className="flex items-center gap-1 text-sm text-muted-foreground">
-                <span className="w-2 h-2 rounded-full bg-primary"></span>
-                {kilometerstand.toLocaleString('nl-NL')} km
+
+            {(brandstof_type || transmissie || bouwjaar || kilometerstand) && (
+              <div className="flex flex-col items-center gap-2 text-center">
+                <div className="text-sm text-muted-foreground">
+                  {brandstof_type}
+                </div>
+                {transmissie && (
+                  <div className="text-sm text-muted-foreground">
+                    {transmissie}
+                  </div>
+                )}
+                <div className="text-sm text-muted-foreground">
+                  {bouwjaar}
+                </div>
+                {kilometerstand && (
+                  <div className="text-sm text-muted-foreground">
+                    {kilometerstand.toLocaleString('nl-NL')} km
+                  </div>
+                )}
               </div>
             )}
-          </div>
+          </>
+        ) : (
+          <>
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h3 className="text-xl font-semibold mb-1">
+                  {merk} {model}
+                </h3>
+                {type && (
+                  <p className="text-sm text-muted-foreground">{type}</p>
+                )}
+              </div>
+              <p className="text-xl font-semibold">
+                € {prijs.toLocaleString('nl-NL')}
+              </p>
+            </div>
+
+            {(brandstof_type || transmissie || bouwjaar || kilometerstand) && (
+              <div className="flex justify-between items-center px-6 -mx-6 mb-4">
+                {brandstof_type && (
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
+                    {brandstof_type}
+                  </div>
+                )}
+                {transmissie && (
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
+                    {transmissie}
+                  </div>
+                )}
+                <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                  <span className="w-2 h-2 rounded-full bg-primary"></span>
+                  {bouwjaar}
+                </div>
+                {kilometerstand && (
+                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                    <span className="w-2 h-2 rounded-full bg-primary"></span>
+                    {kilometerstand.toLocaleString('nl-NL')} km
+                  </div>
+                )}
+              </div>
+            )}
+          </>
         )}
 
         {!hideButton && (

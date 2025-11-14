@@ -21,6 +21,15 @@
          transition-none resize-none;
 }
 
+/* Specifieke override voor de omschrijving textarea */
+.omschrijving-textarea {
+  border-color: #030303 !important;
+}
+
+.omschrijving-textarea:hover {
+  border-color: #030303 !important;
+}
+
 .kraakman-textarea:focus {
   outline: none;
   box-shadow: none;

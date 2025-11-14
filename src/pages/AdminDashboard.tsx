@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 
 // Custom styling om te matchen met de rest van de site
 const inputClass = "h-12 border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none px-4 py-3";
-const textareaClass = "min-h-[100px] border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 transition-none resize-none";
+const textareaClass = "min-h-[100px] border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 transition-none resize-none !hover:border-transparent";
 const selectClass = "kraakman-native-select";
 const selectWrapperClass = "relative";
 const selectTriggerClass = "!h-12 !border !border-[#030303] !bg-[#F1EFEC] !text-[#030303] focus:!border-[#030303] focus:!ring-0 hover:!border-[#030303] transition-none";
@@ -742,7 +742,7 @@ const AdminDashboard = () => {
                 <div>
                   <Label>Omschrijving</Label>
                   <Textarea
-                    className={textareaClass}
+                    className={`omschrijving-textarea ${textareaClass}`}
                     value={formData.omschrijving}
                     onChange={(e) => setFormData({ ...formData, omschrijving: e.target.value })}
                     rows={12}

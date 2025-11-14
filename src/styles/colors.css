@@ -26,7 +26,7 @@
   --color-button-primary-border: var(--color-primary);   /* #123458 - BLAUWE BORDER */
   --color-button-primary-text: var(--color-background); /* #F1EFEC */
   --color-button-primary-hover-bg: var(--color-background);    /* #F1EFEC */
-  --color-button-primary-hover-border: transparent; /* GEEN BORDER OP HOVER */
+  --color-button-primary-hover-border: #030303; /* #030303 - ZWARTE BORDER OP HOVER */
   --color-button-primary-hover-text: var(--color-secondary);   /* #030303 */
 
   /* Button Type 2 - Secondary (Beige with dark text) */

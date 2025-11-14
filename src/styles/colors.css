@@ -1,0 +1,47 @@
+:root {
+  /* Primary Color Palette */
+  --color-primary: #123458;    /* Dark Blue - Primary actions, links, stars */
+  --color-secondary: #030303;  /* Almost Black - Text, borders */
+  --color-background: #F1EFEC; /* Light Beige - Main backgrounds */
+  --color-accent: #d4c9bf4d;     /* Muted Beige - Section backgrounds, accents */
+
+  
+  /* Semantic Color Mappings */
+  --color-text-primary: var(--color-secondary);
+  --color-text-secondary: var(--color-secondary);
+  --color-text-muted: var(--color-secondary);
+  --color-text-inverse: var(--color-background);
+
+  --color-bg-primary: var(--color-background);
+  --color-bg-secondary: var(--color-accent);
+  --color-bg-card: var(--color-background);  /* Changed from #FFFFFF to #F1EFEC */
+  --color-bg-overlay: var(--color-secondary-light);
+
+  --color-border-primary: var(--color-secondary);  /* All borders now #030303 */
+  --color-border-secondary: var(--color-secondary);
+  --color-border-accent: var(--color-secondary);
+
+  /* Button Type 1 - Primary (Blue with white text) */
+  --color-button-primary-bg: var(--color-primary);      /* #123458 */
+  --color-button-primary-border: var(--color-primary);   /* #123458 - BLAUWE BORDER */
+  --color-button-primary-text: var(--color-background); /* #F1EFEC */
+  --color-button-primary-hover-bg: var(--color-background);    /* #F1EFEC */
+  --color-button-primary-hover-border: transparent; /* GEEN BORDER OP HOVER */
+  --color-button-primary-hover-text: var(--color-secondary);   /* #030303 */
+
+  /* Button Type 2 - Secondary (Beige with dark text) */
+  --color-button-secondary-bg: var(--color-background);   /* #F1EFEC */
+  --color-button-secondary-border: var(--color-secondary); /* #030303 */
+  --color-button-secondary-text: var(--color-secondary);  /* #030303 */
+  --color-button-secondary-hover-bg: var(--color-primary);    /* #123458 */
+  --color-button-secondary-hover-border: #123458; /* #123458 - BLAUWE BORDER OP HOVER */
+  --color-button-secondary-hover-text: var(--color-background); /* #F1EFEC */
+
+  --color-star-filled: var(--color-primary);
+  --color-star-empty: var(--color-secondary);
+
+  /* Component Specific Colors */
+  --color-footer-bg: #F1EFEC;
+  --color-link: var(--color-primary);
+  --color-link-hover: var(--color-primary);
+}

@@ -1,0 +1,187 @@
+/* ==========================================
+   KRAAKMAN AUTOMOTIVE - COMPREHENSIVE SPACING SYSTEM
+   ========================================== */
+
+/* Base Spacing Unit - 4px (perfect for consistent design) */
+:root {
+  --space-0: 0;           /* 0px */
+  --space-1: 0.25rem;     /* 4px */
+  --space-2: 0.5rem;      /* 8px */
+  --space-3: 0.75rem;     /* 12px */
+  --space-4: 1rem;        /* 16px */
+  --space-5: 1.25rem;     /* 20px */
+  --space-6: 1.5rem;      /* 24px */
+  --space-8: 2rem;        /* 32px */
+  --space-10: 2.5rem;     /* 40px */
+  --space-12: 3rem;       /* 48px */
+  --space-16: 4rem;       /* 64px */
+  --space-20: 5rem;       /* 80px */
+  --space-24: 6rem;       /* 96px */
+  --space-32: 8rem;       /* 128px */
+
+  /* ==========================================
+     SEMANTIC SPACING TOKENS
+     ========================================== */
+
+  /* Micro Spacing (tight elements) */
+  --spacing-micro: var(--space-1);      /* 4px - between紧密相关 elements */
+  --spacing-tight: var(--space-2);      /* 8px - tight spacing */
+  --spacing-snug: var(--space-3);       /* 12px - comfortable tight */
+  --spacing-normal: var(--space-4);     /* 16px - default spacing */
+  --spacing-relaxed: var(--space-5);    /* 20px - relaxed spacing */
+  --spacing-loose: var(--space-6);      /* 24px - loose spacing */
+  --spacing-spread: var(--space-8);     /* 32px - spread spacing */
+
+  /* Component Internal Spacing */
+  --spacing-component-xs: var(--space-2);   /* 8px - tight component spacing */
+  --spacing-component-sm: var(--space-3);   /* 12px - small component spacing */
+  --spacing-component-md: var(--space-4);   /* 16px - regular component spacing */
+  --spacing-component-lg: var(--space-6);   /* 24px - large component spacing */
+  --spacing-component-xl: var(--space-8);   /* 32px - extra large component spacing */
+  --spacing-component-2xl: var(--space-12); /* 48px - huge component spacing */
+
+  /* Layout & Section Spacing */
+  --spacing-section-xs: var(--space-4);     /* 16px - minimal section spacing */
+  --spacing-section-sm: var(--space-6);     /* 24px - small section spacing */
+  --spacing-section-md: var(--space-8);     /* 32px - medium section spacing */
+  --spacing-section-lg: var(--space-12);    /* 48px - large section spacing */
+  --spacing-section-xl: var(--space-16);    /* 64px - extra large section spacing */
+  --spacing-section-2xl: var(--space-20);   /* 80px - huge section spacing */
+  --spacing-section-3xl: var(--space-24);   /* 96px - hero section spacing */
+
+  /* Container & Layout Spacing */
+  --spacing-container-xs: var(--space-2);  /* 8px - tiny container */
+  --spacing-container-sm: var(--space-4);  /* 16px - small container */
+  --spacing-container-md: var(--space-6);  /* 24px - medium container */
+  --spacing-container-lg: var(--space-8);  /* 32px - large container */
+  --spacing-container-xl: var(--space-12); /* 48px - extra large container */
+
+  /* ==========================================
+     SPECIFIC COMPONENT SPACING RULES
+     ========================================== */
+
+  /* Navigation & Header */
+  --spacing-nav-padding: var(--space-4);     /* 16px - nav container padding */
+  --spacing-nav-item-gap: var(--space-6);    /* 24px - gap between nav items */
+  --spacing-nav-logo-margin: var(--space-3); /* 12px - logo margin */
+  --spacing-header-gap: var(--space-8);      /* 32px - header to content gap */
+
+  /* Hero Sections */
+  --spacing-hero-padding: var(--space-24);   /* 96px - hero vertical padding */
+  --spacing-hero-title-gap: var(--space-4);  /* 16px - hero title to subtitle */
+  --spacing-hero-subtitle-gap: var(--space-8); /* 32px - subtitle to content */
+
+  /* Card Components */
+  --spacing-card-padding: var(--space-6);    /* 24px - card internal padding */
+  --spacing-card-gap: var(--space-6);        /* 24px - gap between cards */
+  --spacing-card-element-gap: var(--space-4); /* 16px - gap between card elements */
+  --spacing-card-header-gap: var(--space-3); /* 12px - card header to content */
+
+  /* Button Spacing */
+  --spacing-button-gap: var(--space-4);      /* 16px - gap between buttons */
+  --spacing-button-padding: var(--space-8);  /* 32px - padding around button groups */
+  --spacing-button-icon-gap: var(--space-2); /* 8px - gap between button text and icon */
+
+  /* Form Elements */
+  --spacing-form-gap: var(--space-6);        /* 24px - gap between form fields */
+  --spacing-form-group-gap: var(--space-8);  /* 32px - gap between form groups */
+  --spacing-form-padding: var(--space-8);    /* 32px - form container padding */
+  --spacing-form-label-gap: var(--space-2);  /* 8px - label to field gap */
+  --spacing-form-field-padding: var(--space-3); /* 12px - form field internal padding */
+
+  /* Review System */
+  --spacing-review-carousel-padding: var(--space-8);  /* 32px - carousel top padding */
+  --spacing-review-carousel-gap: var(--space-6);     /* 24px - gap between reviews */
+  --spacing-review-carousel-bottom: var(--space-6);  /* 24px - carousel bottom padding */
+  --spacing-review-card-padding: var(--space-6);     /* 24px - review card padding */
+  --spacing-review-element-gap: var(--space-3);      /* 12px - gap between review elements */
+
+  /* Contact & CTA Sections */
+  --spacing-contact-padding: var(--space-12);    /* 48px - contact section padding */
+  --spacing-contact-card-gap: var(--space-6);    /* 24px - gap between contact cards */
+  --spacing-contact-card-padding: var(--space-8); /* 32px - contact card padding */
+  --spacing-cta-padding: var(--space-16);       /* 64px - CTA section padding */
+
+  /* Content Sections */
+  --spacing-content-header: var(--space-4);   /* 16px - after headers */
+  --spacing-content-paragraph: var(--space-6); /* 24px - after paragraphs */
+  --spacing-content-element: var(--space-4);  /* 16px - between content elements */
+  --spacing-content-list-gap: var(--space-2); /* 8px - list item gap */
+  --spacing-content-block-gap: var(--space-8); /* 32px - between content blocks */
+
+  /* Modal & Popup Spacing */
+  --spacing-modal-padding: var(--space-8);    /* 32px - modal internal padding */
+  --spacing-modal-gap: var(--space-6);        /* 24px - gap between modal elements */
+  --spacing-modal-header-gap: var(--space-4);  /* 16px - modal header to content */
+  --spacing-modal-close-offset: var(--space-4); /* 16px - close button offset */
+
+  /* Footer */
+  --spacing-footer-padding: var(--space-12);  /* 48px - footer padding */
+  --spacing-footer-section-gap: var(--space-8); /* 32px - gap between footer sections */
+  --spacing-footer-item-gap: var(--space-2);  /* 8px - gap between footer items */
+
+  /* List & Grid Spacing */
+  --spacing-list-gap: var(--space-3);         /* 12px - gap between list items */
+  --spacing-grid-gap: var(--space-6);         /* 24px - gap between grid items */
+  --spacing-carousel-gap: var(--space-6);     /* 24px - carousel item gap */
+
+  /* Special Elements */
+  --spacing-star-gap: var(--space-1);         /* 4px - gap between stars */
+  --spacing-icon-gap: var(--space-2);         /* 8px - gap between icon and text */
+  --spacing-badge-gap: var(--space-2);        /* 8px - gap between badge and text */
+  --spacing-separator-gap: var(--space-8);    /* 32px - gap around separators */
+
+  /* Container Padding */
+  --container-padding: var(--space-4);        /* 16px - standard container padding */
+  --container-padding-sm: var(--space-3);     /* 12px - small container padding */
+  --container-padding-lg: var(--space-6);     /* 24px - large container padding */
+}
+
+/* ==========================================
+   RESPONSIVE SPACING ADJUSTMENTS
+   ========================================== */
+
+/* Mobile: <= 640px */
+@media (max-width: 640px) {
+  :root {
+    --spacing-nav-padding: var(--space-3);     /* 12px */
+    --spacing-hero-padding: var(--space-16);   /* 64px */
+    --spacing-card-padding: var(--space-4);    /* 16px */
+    --spacing-container-md: var(--space-6);    /* 24px */
+  }
+}
+
+/* Tablet: 641px - 1024px */
+@media (min-width: 641px) and (max-width: 1024px) {
+  :root {
+    --spacing-hero-padding: var(--space-20);   /* 80px */
+    --spacing-card-padding: var(--space-5);    /* 20px */
+  }
+}
+
+/* ==========================================
+   UTILITY CLASSES
+   ========================================== */
+
+/* Semantic spacing classes */
+.spacing-tight { padding: var(--spacing-component-xs); }
+.spacing-snug { padding: var(--spacing-component-sm); }
+.spacing-normal { padding: var(--spacing-component-md); }
+.spacing-relaxed { padding: var(--spacing-component-lg); }
+.spacing-loose { padding: var(--spacing-component-xl); }
+
+/* Section spacing classes */
+.section-spacing-sm { padding: var(--spacing-section-sm); }
+.section-spacing-md { padding: var(--spacing-section-md); }
+.section-spacing-lg { padding: var(--spacing-section-lg); }
+.section-spacing-xl { padding: var(--spacing-section-xl); }
+
+/* Container spacing classes */
+.container-spacing-sm { padding: var(--spacing-container-sm); }
+.container-spacing-md { padding: var(--spacing-container-md); }
+.container-spacing-lg { padding: var(--spacing-container-lg); }
+
+/* Padding reset classes */
+.padding-reset { padding: var(--spacing-micro); }     /* 0px */
+.margin-reset { margin: var(--spacing-micro); }       /* 0px */
+.spacing-reset { padding: var(--spacing-micro); margin: var(--spacing-micro); }

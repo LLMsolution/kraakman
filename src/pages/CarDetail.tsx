@@ -101,37 +101,6 @@ const CarDetail = () => {
     if (id) fetchCar();
   }, [id]);
 
-  // Keyboard navigation for lightbox
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      // Only handle keyboard navigation when lightbox is open and there are images
-      if (lightboxOpen && allImages.length > 1) {
-        switch (event.key) {
-          case 'ArrowLeft':
-            event.preventDefault(); // Prevent default browser behavior
-            prevImage();
-            break;
-          case 'ArrowRight':
-            event.preventDefault(); // Prevent default browser behavior
-            nextImage();
-            break;
-          case 'Escape':
-            event.preventDefault(); // Close lightbox on Escape
-            setLightboxOpen(false);
-            break;
-        }
-      }
-    };
-
-    // Add event listener when component mounts
-    window.addEventListener('keydown', handleKeyDown);
-
-    // Clean up event listener when component unmounts
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [lightboxOpen, allImages.length, prevImage, nextImage]);
-
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -177,6 +146,37 @@ const CarDetail = () => {
   const prevImage = () => {
     setLightboxIndex((prev: number) => (prev - 1 + allImages.length) % allImages.length);
   };
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // Only handle keyboard navigation when lightbox is open and there are images
+      if (lightboxOpen && allImages.length > 1) {
+        switch (event.key) {
+          case 'ArrowLeft':
+            event.preventDefault(); // Prevent default browser behavior
+            prevImage();
+            break;
+          case 'ArrowRight':
+            event.preventDefault(); // Prevent default browser behavior
+            nextImage();
+            break;
+          case 'Escape':
+            event.preventDefault(); // Close lightbox on Escape
+            setLightboxOpen(false);
+            break;
+        }
+      }
+    };
+
+    // Add event listener when component mounts
+    window.addEventListener('keydown', handleKeyDown);
+
+    // Clean up event listener when component unmounts
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [lightboxOpen, allImages.length, prevImage, nextImage]);
 
   // Form handling functions
   const validateForm = () => {

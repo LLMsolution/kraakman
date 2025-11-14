@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Loader2, X, ChevronLeft, ChevronRight, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
+import { Loader2, X, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import CarCard from "@/components/CarCard";
 
 // Custom styling voor consistente input velden zonder focus/hover effects
@@ -565,10 +565,20 @@ const CarDetail = () => {
                     {car.omschrijving && car.omschrijving.length > 200 && (
                       <div className="flex justify-center mt-8">
                         <Button
-                          className="btn-secondary"
+                          className="btn-secondary flex items-center gap-2"
                           onClick={() => setShowFullDescription(!showFullDescription)}
                         >
-                          {showFullDescription ? 'Lees minder' : 'Lees meer'}
+                          {showFullDescription ? (
+                            <>
+                              <span>Lees minder</span>
+                              <ChevronUp className="h-4 w-4" />
+                            </>
+                          ) : (
+                            <>
+                              <span>Lees meer</span>
+                              <ChevronDown className="h-4 w-4" />
+                            </>
+                          )}
                         </Button>
                       </div>
                     )}
@@ -623,7 +633,7 @@ const CarDetail = () => {
                           <div className="flex justify-center">
                             <button
                               onClick={() => setShowAllOptions(!showAllOptions)}
-                              className="mt-4 text-sm font-medium transition-colors duration-200 border-none outline-none bg-transparent cursor-pointer"
+                              className="mt-4 text-sm font-medium flex items-center gap-2 transition-colors duration-200 border-none outline-none bg-transparent cursor-pointer"
                               style={{
                                 color: 'var(--color-primary)',
                                 fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
@@ -635,7 +645,17 @@ const CarDetail = () => {
                                 e.currentTarget.style.color = 'var(--color-primary)';
                               }}
                             >
-                              {showAllOptions ? 'Zie minder' : 'Zie meer'}
+                              {showAllOptions ? (
+                                <>
+                                  <span>Zie minder</span>
+                                  <ChevronUp className="h-4 w-4" />
+                                </>
+                              ) : (
+                                <>
+                                  <span>Zie meer</span>
+                                  <ChevronDown className="h-4 w-4" />
+                                </>
+                              )}
                             </button>
                           </div>
                         )}

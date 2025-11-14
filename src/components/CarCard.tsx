@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Car, CarImage } from "@/types";
 
 interface CarCardProps {
@@ -38,7 +38,10 @@ const CarCard = ({
   hideButton = false
 }: CarCardProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const hasImages = car_images && car_images.length > 0;
+  const [hasImages] = useState(car_images && car_images.length > 0);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [isTouching, setIsTouching] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const handlePrevImage = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -56,10 +59,65 @@ const CarCard = ({
     }
   };
 
+  // Touch event handlers for swipe functionality
+  const handleTouchStart = (e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    setTouchStartX(touch.clientX);
+    setIsTouching(true);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartX || !isTouching) return;
+    const touch = e.touches[0];
+    const diff = touch.clientX - touchStartX;
+    const imageContainer = containerRef.current;
+
+    if (!imageContainer) return;
+
+    const containerWidth = imageContainer.offsetWidth;
+    const swipeThreshold = containerWidth * 0.2; // 20% of container width
+
+    if (Math.abs(diff) > swipeThreshold) {
+      if (diff > 0) {
+        // Swipe left - show next image
+        handleNextImage(e as any);
+      } else {
+        // Swipe right - show previous image
+        handlePrevImage(e as any);
+      }
+      setTouchStartX(touch.clientX);
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setIsTouching(false);
+    setTouchStartX(null);
+  };
+
+  // Add touch event listeners
+  useEffect(() => {
+    const imageContainer = containerRef.current;
+    if (!imageContainer) return;
+
+    imageContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
+    imageContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
+    imageContainer.addEventListener('touchend', handleTouchEnd);
+
+    return () => {
+      imageContainer.removeEventListener('touchstart', handleTouchStart);
+      imageContainer.removeEventListener('touchmove', handleTouchMove);
+      imageContainer.removeEventListener('touchend', handleTouchEnd);
+    };
+  }, [hasImages, car_images, currentImageIndex, touchStartX, isTouching]);
+
   return (
     <div className="bg-card border border-border overflow-hidden hover:shadow-lg transition-all duration-300">
       {/* Image Carousel */}
-      <div className="aspect-[4/3] overflow-hidden bg-muted relative group/image-carousel">
+      <div
+        ref={containerRef}
+        className="aspect-[4/3] overflow-hidden bg-muted relative group/image-carousel cursor-pointer"
+        style={{ touchAction: 'pan-y' }}
+      >
         {hasImages ? (
           <>
             <div className="relative w-full h-full">

@@ -152,8 +152,8 @@ const AnimatedHeader = () => {
     );
 };
 
-// --- Text Content Component ---
-const TextContent = ({ text }: { text: string }) => {
+// --- Text Content Component with "Lees meer" functionality ---
+const TextContent = ({ text, showFullText = false }: { text: string; showFullText?: boolean }) => {
   const processText = (text: string) => {
     return text.split('\n').map((line, index) => {
       // Check if this line looks like a header (contains colon at the end)
@@ -161,15 +161,21 @@ const TextContent = ({ text }: { text: string }) => {
 
       if (isHeader) {
         return (
-          <h4 key={index} className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+          <h4 key={index} className="text-base sm:text-lg font-semibold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: "'Inter', -piemacemTailwindCSSFont, 'Segoe UI', sans-serif" }}>
             {line.trim()}
           </h4>
         );
       }
 
+      // Truncate or show full text based on showFullText prop
+      const maxTextLength = 120; // Shorter text for mobile
+      const textToDisplay = line.trim();
+      const shouldTruncate = !showFullText && textToDisplay.length > maxTextLength;
+      const truncatedText = shouldTruncate ? textToDisplay.substring(0, maxTextLength) + '...' : textToDisplay;
+
       return (
-        <p key={index} className="mb-3 leading-relaxed text-sm sm:text-base" style={{ color: 'var(--color-text-muted)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
-          {line.trim()}
+        <p key={index} className="mb-3 leading-relaxed text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)', fontFamily: "'Inter', -piemacemTailwindCSSFont, 'Segoe UI', sans-serif" }}>
+          {truncatedText}
         </p>
       );
     });
@@ -184,6 +190,15 @@ const TextContent = ({ text }: { text: string }) => {
 
 // This is the main component that orchestrates everything.
 export function StickyLPGSection() {
+  const [expandedTexts, setExpandedTexts] = useState<{ [key: number]: boolean }>({});
+  const toggleTextExpansion = (index: number) => {
+    setExpandedTexts(prev => ({
+      ...prev,
+      [index]: !prev[index]
+    }));
+  };
+
+
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -250,7 +265,29 @@ export function StickyLPGSection() {
                   </h3>
 
                   {feature.description && (
-                    <TextContent text={feature.description} />
+                    <div className="space-y-3">
+                      <TextContent 
+                        text={feature.description} 
+                        showFullText={expandedTexts[index]}
+                      />
+                      {feature.description.length > 120 && (
+                        <button
+                          onClick={() => toggleTextExpansion(index)}
+                          className="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-opacity"
+                          style={{ color: 'var(--color-primary)' }}
+                        >
+                          {expandedTexts[index] ? (
+                            <>
+                              <span>Lees minder</span>
+                            </>
+                          ) : (
+                            <>
+                              <span>Lees meer</span>
+                            </>
+                          )}
+                        </button>
+                      )}
+                    </div>
                   )}
                 </div>
 

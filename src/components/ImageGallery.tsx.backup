@@ -51,68 +51,12 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, carName }) =
   const closeFullscreen = () => {
     setIsFullscreen(false);
   };
-  // Touch event handlers for swipe functionality
-  const handleTouchStart = (e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    setTouchStartX(touch.clientX);
-    setIsTouching(true);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStartX || !isTouching) return;
-    
-    const touch = e.touches[0];
-    const diff = touch.clientX - touchStartX;
-    const galleryContainer = galleryRef.current;
-
-    if (!galleryContainer) return;
-
-    const containerWidth = galleryContainer.offsetWidth;
-    const swipeThreshold = containerWidth * 0.2; // 20% of container width
-
-    if (Math.abs(diff) > swipeThreshold) {
-      if (diff > 0) {
-        // Swipe right - show previous image
-        goToPrevious();
-      } else {
-        // Swipe left - show next image
-        goToNext();
-      }
-      setTouchStartX(touch.clientX);
-    }
-  };
-
-  const handleTouchEnd = () => {
-    setIsTouching(false);
-    setTouchStartX(null);
-  };
-
-  // Add touch event listeners
-  useEffect(() => {
-    const galleryContainer = galleryRef.current;
-    if (!galleryContainer || images.length <= 1) return;
-
-    galleryContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-    galleryContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-    galleryContainer.addEventListener('touchend', handleTouchEnd);
-
-    return () => {
-      galleryContainer.removeEventListener('touchstart', handleTouchStart);
-      galleryContainer.removeEventListener('touchmove', handleTouchMove);
-      galleryContainer.removeEventListener('touchend', handleTouchEnd);
-    };
-  }, [images.length, touchStartX, isTouching]);
-
 
   return (
     <div className="space-y-4">
       {/* Main Image */}
       <div className="relative group">
-        <div 
-          ref={galleryRef}
-          className="kraakman-image-container"
-          style={{ touchAction: 'pan-y' }}
-        >
+        <div className="kraakman-image-container">
           <img
             src={currentImage.url}
             alt={`${carName} - Image ${currentImageIndex + 1}`}

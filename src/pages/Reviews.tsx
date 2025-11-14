@@ -60,7 +60,7 @@ const Reviews = () => {
         }}
       >
         <div className="container-wide text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">Klantbeoordelingen</h1>
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">Klantbeoordelingen</h1>
           <p className="text-lg sm:text-xl opacity-90 mb-4">
             Wat onze klanten over ons zeggen
           </p>

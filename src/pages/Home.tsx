@@ -47,7 +47,7 @@ const Home = () => {
               Specialist in auto onderhoud, reparatie en LPG installaties.
               Meer dan 30 jaar ervaring in Wieringerwaard.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center w-full sm:w-auto">
               <Button asChild>
                 <Link to="/aanbod">
                   Bekijk ons aanbod
@@ -123,7 +123,7 @@ const Home = () => {
           <p className="text-lg mb-8 opacity-90">
             Neem contact op voor een vrijblijvend advies of maak direct een afspraak
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center w-full sm:w-auto">
             <Button asChild>
               <Link to="/contact">
                 Neem contact op

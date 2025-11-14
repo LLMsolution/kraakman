@@ -79,11 +79,11 @@ const CarCard = ({
 
     if (Math.abs(diff) > swipeThreshold) {
       if (diff > 0) {
-        // Swipe left - show next image
-        handleNextImage(e as any);
-      } else {
         // Swipe right - show previous image
         handlePrevImage(e as any);
+      } else {
+        // Swipe left - show next image
+        handleNextImage(e as any);
       }
       setTouchStartX(touch.clientX);
     }
@@ -174,10 +174,10 @@ const CarCard = ({
             {car_images && car_images.length > 1 && (
               <>
                 <div
-                  className="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full opacity-0 group-hover/image-carousel:opacity-100 transition-all duration-200 z-10 flex items-center justify-center"
+                  className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full opacity-0 group-hover/image-carousel:opacity-100 transition-all duration-200 z-10 flex items-center justify-center"
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     padding: '0',
                     margin: '0',
@@ -203,10 +203,10 @@ const CarCard = ({
                   <ChevronLeft className="h-5 w-5" style={{ color: '#030303', transition: 'color 0.2s ease' }} />
                 </div>
                 <div
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full opacity-0 group-hover/image-carousel:opacity-100 transition-all duration-200 z-10 flex items-center justify-center"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full opacity-0 group-hover/image-carousel:opacity-100 transition-all duration-200 z-10 flex items-center justify-center"
                   style={{
-                    width: '40px',
-                    height: '40px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     padding: '0',
                     margin: '0',

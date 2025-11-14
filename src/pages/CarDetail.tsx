@@ -488,7 +488,7 @@ const CarDetail = () => {
           <div style={{ marginBottom: 'var(--spacing-section-xl)' }}>
             <div style={{ marginTop: '24px' }}>
               {/* Simple Tab Navigation */}
-              <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6">
+              <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6 overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0">
                 <Button
                   className="btn-secondary w-full sm:w-auto"
                   style={{
@@ -846,7 +846,7 @@ const CarDetail = () => {
                 Vergelijkbare auto's
               </h2>
               <div
-                className="grid md:grid-cols-2 lg:grid-cols-3"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
                 style={{ gap: 'var(--spacing-card-gap)' }}
               >
                 {similarCars.map((similarCar) => (

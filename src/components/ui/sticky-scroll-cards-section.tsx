@@ -213,7 +213,7 @@ export function StickyLPGSection() {
       >
         <div className="container-wide text-center">
           <h1
-            className="text-5xl font-bold mb-6"
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-6"
             style={{ fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
           >
             Onze LPG Diensten

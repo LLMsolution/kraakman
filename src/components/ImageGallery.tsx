@@ -60,7 +60,7 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, carName }) =
 
   const handleTouchMove = (e: React.TouchEvent) => {
     if (!touchStartX || !isTouching) return;
-    
+
     const touch = e.touches[0];
     const diff = touch.clientX - touchStartX;
     const galleryContainer = galleryRef.current;
@@ -127,17 +127,19 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, carName }) =
           <>
             <button
               onClick={goToPrevious}
-              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity kraakman-carousel-button"
+              className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity kraakman-carousel-button"
               aria-label="Previous image"
+              style={{ width: '48px', height: '48px' }}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-5 w-5" />
             </button>
             <button
               onClick={goToNext}
-              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity kraakman-carousel-button"
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full opacity-0 group-hover:opacity-100 transition-opacity kraakman-carousel-button"
               aria-label="Next image"
+              style={{ width: '48px', height: '48px' }}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-5 w-5" />
             </button>
           </>
         )}
@@ -224,15 +226,17 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, carName }) =
                   onClick={goToPrevious}
                   className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full"
                   aria-label="Previous image"
+                  style={{ width: '56px', height: '56px' }}
                 >
-                  <ChevronLeft className="h-6 w-6" />
+                  <ChevronLeft className="h-7 w-7" />
                 </button>
                 <button
                   onClick={goToNext}
                   className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-3 rounded-full"
                   aria-label="Next image"
+                  style={{ width: '56px', height: '56px' }}
                 >
-                  <ChevronRight className="h-6 w-6" />
+                  <ChevronRight className="h-7 w-7" />
                 </button>
 
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/50 text-white px-3 py-1 rounded text-sm">

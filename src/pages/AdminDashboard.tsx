@@ -119,7 +119,7 @@ const AdminDashboard = () => {
     const { data: { session } } = await supabase.auth.getSession();
     
     if (!session) {
-      navigate("/admin");
+      navigate("/panel");
       return;
     }
 
@@ -221,7 +221,7 @@ const AdminDashboard = () => {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
-    navigate("/admin");
+    navigate("/panel");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

@@ -19,13 +19,13 @@ const Admin = () => {
   useEffect(() => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (session) {
-        navigate("/admin/dashboard");
+        navigate("/panel/dashboard");
       }
     });
 
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        navigate("/admin/dashboard");
+        navigate("/panel/dashboard");
       }
     });
 
@@ -74,7 +74,7 @@ const Admin = () => {
         title: "Ingelogd",
         description: "Je wordt doorgestuurd naar het dashboard.",
       });
-      navigate("/admin/dashboard");
+      navigate("/panel/dashboard");
     }
 
     setLoading(false);

@@ -300,10 +300,10 @@ const CarDetail = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Binnenkort Beschikbaar Banner - Full-width bovenaan, desktop only */}
+      {/* Binnenkort Beschikbaar Banner - Full-width bovenaan */}
       {car.binnenkort_beschikbaar && (
         <div
-          className="w-full hidden md:block"
+          className="w-full"
           style={{
             backgroundColor: 'var(--color-primary)',
             color: 'var(--color-text-inverse)'
@@ -328,10 +328,10 @@ const CarDetail = () => {
         </div>
       )}
 
-      {/* Gereserveerd Banner - Full-width bovenaan, desktop only */}
+      {/* Gereserveerd Banner - Full-width bovenaan */}
       {car.gereserveerd && (
         <div
-          className="w-full hidden md:block"
+          className="w-full"
           style={{
             backgroundColor: 'var(--color-primary)',
             color: 'var(--color-text-inverse)'
@@ -481,59 +481,96 @@ const CarDetail = () => {
             </div>
           </div>
 
-          {/* Extra vertical space */}
-          <div style={{ marginBottom: '32px' }}></div>
-
+  
         {/* Car Info */}
           <div style={{ marginBottom: 'var(--spacing-section-xl)' }}>
             <div style={{ marginTop: '24px' }}>
               {/* Simple Tab Navigation */}
               <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6 overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0">
                 <Button
-                  className="btn-secondary w-full sm:w-auto"
+                  className="w-full sm:w-auto transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500"
                   style={{
-                    backgroundColor: activeTab === 'omschrijving' ? 'var(--color-primary) !important' : '',
-                    color: activeTab === 'omschrijving' ? 'var(--color-text-inverse) !important' : '',
-                    borderColor: activeTab === 'omschrijving' ? 'var(--color-primary) !important' : '',
-                    boxShadow: activeTab === 'omschrijving' ? 'none' : '',
+                    backgroundColor: activeTab === 'omschrijving' ? 'var(--color-primary)' : 'transparent',
+                    color: activeTab === 'omschrijving' ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
+                    borderColor: activeTab === 'omschrijving' ? 'var(--color-primary)' : 'var(--color-border-primary)',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
                     minHeight: '48px'
                   }}
                   onClick={() => setActiveTab('omschrijving')}
+                  onMouseEnter={(e) => {
+                    if (activeTab !== 'omschrijving') {
+                      e.currentTarget.style.borderColor = 'var(--color-primary)';
+                      e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb, 18, 52, 88), 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeTab !== 'omschrijving') {
+                      e.currentTarget.style.borderColor = 'var(--color-border-primary)';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
                   Omschrijving
                 </Button>
                 <Button
-                  className="btn-secondary w-full sm:w-auto"
+                  className="w-full sm:w-auto transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500"
                   style={{
-                    backgroundColor: activeTab === 'opties' ? 'var(--color-primary) !important' : '',
-                    color: activeTab === 'opties' ? 'var(--color-text-inverse) !important' : '',
-                    borderColor: activeTab === 'opties' ? 'var(--color-primary) !important' : '',
-                    boxShadow: activeTab === 'opties' ? 'none' : '',
+                    backgroundColor: activeTab === 'opties' ? 'var(--color-primary)' : 'transparent',
+                    color: activeTab === 'opties' ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
+                    borderColor: activeTab === 'opties' ? 'var(--color-primary)' : 'var(--color-border-primary)',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
                     minHeight: '48px'
                   }}
                   onClick={() => setActiveTab('opties')}
+                  onMouseEnter={(e) => {
+                    if (activeTab !== 'opties') {
+                      e.currentTarget.style.borderColor = 'var(--color-primary)';
+                      e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb, 18, 52, 88), 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeTab !== 'opties') {
+                      e.currentTarget.style.borderColor = 'var(--color-border-primary)';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
                   Opties en extra's
                 </Button>
                 <Button
-                  className="btn-secondary w-full sm:w-auto"
+                  className="w-full sm:w-auto transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500"
                   style={{
-                    backgroundColor: activeTab === 'techniek' ? 'var(--color-primary) !important' : '',
-                    color: activeTab === 'techniek' ? 'var(--color-text-inverse) !important' : '',
-                    borderColor: activeTab === 'techniek' ? 'var(--color-primary) !important' : '',
-                    boxShadow: activeTab === 'techniek' ? 'none' : '',
+                    backgroundColor: activeTab === 'techniek' ? 'var(--color-primary)' : 'transparent',
+                    color: activeTab === 'techniek' ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
+                    borderColor: activeTab === 'techniek' ? 'var(--color-primary)' : 'var(--color-border-primary)',
+                    borderWidth: '1px',
+                    borderStyle: 'solid',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
                     minHeight: '48px'
                   }}
                   onClick={() => setActiveTab('techniek')}
+                  onMouseEnter={(e) => {
+                    if (activeTab !== 'techniek') {
+                      e.currentTarget.style.borderColor = 'var(--color-primary)';
+                      e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb, 18, 52, 88), 0.1)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (activeTab !== 'techniek') {
+                      e.currentTarget.style.borderColor = 'var(--color-border-primary)';
+                      e.currentTarget.style.backgroundColor = 'transparent';
+                    }
+                  }}
                 >
                   Techniek
                 </Button>
@@ -888,8 +925,8 @@ const CarDetail = () => {
                   cursor: 'pointer',
                   backgroundColor: 'transparent',
                   border: 'none',
-                  width: '40px',
-                  height: '40px',
+                  width: '48px',
+                  height: '48px',
                   borderRadius: '50%',
                   padding: 'var(--spacing-micro)',
                   margin: 'var(--spacing-micro)',
@@ -909,7 +946,7 @@ const CarDetail = () => {
                   e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                 }}
               >
-                <X className="h-5 w-5" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+                <X className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
               </button>
 
               <div className="relative w-full h-screen flex items-center justify-center">
@@ -920,8 +957,8 @@ const CarDetail = () => {
                     cursor: 'pointer',
                     backgroundColor: 'var(--color-background)',
                     border: '1px solid var(--color-secondary)',
-                    width: '40px',
-                    height: '40px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     padding: 'var(--spacing-micro)',
                     margin: 'var(--spacing-micro)'
@@ -937,7 +974,7 @@ const CarDetail = () => {
                     e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                   }}
                 >
-                  <ChevronLeft className="h-5 w-5" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+                  <ChevronLeft className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
                 </button>
 
                 <div className="relative w-full h-full">
@@ -965,8 +1002,8 @@ const CarDetail = () => {
                     cursor: 'pointer',
                     backgroundColor: 'var(--color-background)',
                     border: '1px solid var(--color-secondary)',
-                    width: '40px',
-                    height: '40px',
+                    width: '48px',
+                    height: '48px',
                     borderRadius: '50%',
                     padding: 'var(--spacing-micro)',
                     margin: 'var(--spacing-micro)'
@@ -982,7 +1019,7 @@ const CarDetail = () => {
                     e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                   }}
                 >
-                  <ChevronRight className="h-5 w-5" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+                  <ChevronRight className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
                 </button>
 
                 <div
@@ -1009,11 +1046,11 @@ const CarDetail = () => {
         }}
       >
         <div className="container-wide">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[500px]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:min-h-[500px] min-h-[auto]">
 
-            {/* Links: Formulier Sectie - Footer alignment (48px 96px) */}
+            {/* Links: Formulier Sectie - Volledige breedte op mobiel */}
             <div className="flex flex-col justify-center items-center py-12 px-4 sm:px-8 md:px-16 lg:px-24">
-            <div className="w-full">
+            <div className="w-full max-w-lg mx-auto lg:max-w-none">
               <div className="mb-6 text-center">
                 <h2
                   className="text-xl sm:text-2xl md:text-3xl font-bold"
@@ -1027,8 +1064,8 @@ const CarDetail = () => {
               </div>
 
               <form className="space-y-6" onSubmit={handleSubmit}>
-                {/* Naam en E-mail naast elkaar */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Naam en E-mail onder elkaar op mobiel, naast elkaar op desktop */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                   {/* Volledige naam */}
                   <div>
                     <Label
@@ -1164,23 +1201,12 @@ const CarDetail = () => {
             </div>
           </div>
 
-          {/* Rechts: Afbeelding Sectie - Mobiel volledige breedte, desktop schuine overlap */}
-          <div className="relative h-64 lg:h-auto overflow-hidden lg:block" style={{
+          {/* Rechts: Afbeelding Sectie - Alleen desktop */}
+          <div className="relative h-auto lg:h-auto overflow-hidden hidden lg:block" style={{
             clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 0 100%)'
           }}>
-            {/* Mobile: Volledige breedte afbeelding */}
-            <div className="lg:hidden w-full h-full">
-              <img
-                src={largeImages[0]?.url || car.car_images?.[0]?.url}
-                alt={`${car.merk} ${car.model}`}
-                className="w-full h-full object-cover"
-                style={{
-                  objectPosition: 'center 60%'
-                }}
-              />
-            </div>
             {/* Desktop: Schuine overlap */}
-            <div className="hidden lg:block absolute inset-0 w-full h-full">
+            <div className="absolute inset-0 w-full h-full">
             {/* Afbeelding met object positioning voor framing */}
             <img
               src={largeImages[0]?.url || car.car_images?.[0]?.url}

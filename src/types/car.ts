@@ -30,6 +30,7 @@ export interface Car {
   topsnelheid_kmh?: number | null;
   acceleratie_0_100?: number | null;
   binnenkort_beschikbaar?: boolean | null;
+  gereserveerd?: boolean | null;
   status?: "aanbod" | "verkocht" | null;
   car_images?: CarImage[];
   created_at?: string;
@@ -48,6 +49,7 @@ export interface CarFormData {
   prijs: number;
   status: "aanbod" | "verkocht";
   binnenkort_beschikbaar?: boolean | null;
+  gereserveerd?: boolean | null;
   omschrijving?: string | null;
   opties?: string[] | null;
   techniek?: string | null;

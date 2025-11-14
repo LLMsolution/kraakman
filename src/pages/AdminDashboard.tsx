@@ -97,6 +97,7 @@ const AdminDashboard = () => {
     btw_auto: false,
     status: "aanbod" as "aanbod" | "verkocht",
     binnenkort_beschikbaar: false,
+    gereserveerd: false,
     omschrijving: "",
     zitplaatsen: 5,
     deuren: 5,
@@ -352,6 +353,7 @@ const AdminDashboard = () => {
         btw_auto: fullCarData.btw_auto || false,
         status: fullCarData.status,
         binnenkort_beschikbaar: fullCarData.binnenkort_beschikbaar || false,
+        gereserveerd: fullCarData.gereserveerd || false,
         omschrijving: fullCarData.omschrijving || "",
         zitplaatsen: fullCarData.zitplaatsen || 5,
         deuren: fullCarData.deuren || 5,
@@ -383,6 +385,7 @@ const AdminDashboard = () => {
       btw_auto: false,
       status: "aanbod",
       binnenkort_beschikbaar: false,
+      gereserveerd: false,
       omschrijving: "",
       zitplaatsen: 5,
       deuren: 5,
@@ -580,7 +583,13 @@ const AdminDashboard = () => {
                       <CustomDropdown
                         value={formData.status}
                         onChange={(value: "aanbod" | "verkocht") =>
-                          setFormData({ ...formData, status: value })
+                          setFormData({
+                            ...formData,
+                            status: value,
+                            // If car is sold, uncheck both "Binnenkort beschikbaar" and "Gereserveerd"
+                            binnenkort_beschikbaar: value === 'verkocht' ? false : formData.binnenkort_beschikbaar,
+                            gereserveerd: value === 'verkocht' ? false : formData.gereserveerd
+                          })
                         }
                         options={["Selecteer status...", "aanbod", "verkocht"]}
                         placeholder="Selecteer status..."
@@ -591,18 +600,70 @@ const AdminDashboard = () => {
                         type="checkbox"
                         id="binnenkort_beschikbaar"
                         checked={formData.binnenkort_beschikbaar}
-                        onChange={(e) => setFormData({ ...formData, binnenkort_beschikbaar: e.target.checked })}
+                        onChange={(e) => {
+                          const newValue = e.target.checked;
+                          if (newValue) {
+                            // If "Binnenkort beschikbaar" is checked, uncheck "Gereserveerd"
+                            setFormData({
+                              ...formData,
+                              binnenkort_beschikbaar: true,
+                              gereserveerd: false
+                            });
+                          } else {
+                            setFormData({
+                              ...formData,
+                              binnenkort_beschikbaar: false
+                            });
+                          }
+                        }}
+                        disabled={formData.status === 'verkocht'}
                         style={{
                           width: '16px',
                           height: '16px',
                           borderRadius: '0px',
                           border: '1px solid #030303',
                           backgroundColor: formData.binnenkort_beschikbaar ? '#123458' : '#F1EFEC',
-                          cursor: 'pointer',
-                          accentColor: '#123458'
+                          cursor: formData.status === 'verkocht' ? 'not-allowed' : 'pointer',
+                          accentColor: '#123458',
+                          opacity: formData.status === 'verkocht' ? 0.5 : 1
                         }}
                       />
-                      <Label htmlFor="binnenkort_beschikbaar" className="cursor-pointer">Binnenkort beschikbaar</Label>
+                      <Label htmlFor="binnenkort_beschikbaar" className={`cursor-pointer ${formData.status === 'verkocht' ? 'opacity-50' : ''}`}>Binnenkort beschikbaar</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="checkbox"
+                        id="gereserveerd"
+                        checked={formData.gereserveerd}
+                        onChange={(e) => {
+                          const newValue = e.target.checked;
+                          if (newValue) {
+                            // If "Gereserveerd" is checked, uncheck "Binnenkort beschikbaar"
+                            setFormData({
+                              ...formData,
+                              gereserveerd: true,
+                              binnenkort_beschikbaar: false
+                            });
+                          } else {
+                            setFormData({
+                              ...formData,
+                              gereserveerd: false
+                            });
+                          }
+                        }}
+                        disabled={formData.status === 'verkocht'}
+                        style={{
+                          width: '16px',
+                          height: '16px',
+                          borderRadius: '0px',
+                          border: '1px solid #030303',
+                          backgroundColor: formData.gereserveerd ? '#123458' : '#F1EFEC',
+                          cursor: formData.status === 'verkocht' ? 'not-allowed' : 'pointer',
+                          accentColor: '#123458',
+                          opacity: formData.status === 'verkocht' ? 0.5 : 1
+                        }}
+                      />
+                      <Label htmlFor="gereserveerd" className={`cursor-pointer ${formData.status === 'verkocht' ? 'opacity-50' : ''}`}>Gereserveerd</Label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <input

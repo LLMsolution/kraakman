@@ -57,6 +57,21 @@ const CarDetail = () => {
   const [activeTab, setActiveTab] = useState('omschrijving');
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showAllOptions, setShowAllOptions] = useState(false);
+  const [breakpoint, setBreakpoint] = useState<'sm' | 'md' | 'lg'>('lg');
+
+  // Detect current breakpoint for responsive "Zie meer" logic
+  useEffect(() => {
+    const updateBreakpoint = () => {
+      const width = window.innerWidth;
+      if (width < 768) setBreakpoint('sm');  // 1 kolom
+      else if (width < 1024) setBreakpoint('md');  // 2 kolommen
+      else setBreakpoint('lg');  // 3 kolommen
+    };
+
+    updateBreakpoint();
+    window.addEventListener('resize', updateBreakpoint);
+    return () => window.removeEventListener('resize', updateBreakpoint);
+  }, []);
 
   // Reset showAllOptions when tab changes
   useEffect(() => {
@@ -596,8 +611,8 @@ const CarDetail = () => {
                           }}
                         >
                           {car.opties.map((optie: string, index: number) => {
-                            // Bereken hoeveel items er per rij zijn (afhankelijk van schermgrootte)
-                            const itemsPerRow = 3; // lg: 3 kolommen
+                            // Bereken items per rij op basis van huidige breakpoint
+                            const itemsPerRow = breakpoint === 'sm' ? 1 : breakpoint === 'md' ? 2 : 3;
                             const rowIndex = Math.floor(index / itemsPerRow);
                             const shouldShow = showAllOptions || rowIndex < 3;
 
@@ -629,7 +644,11 @@ const CarDetail = () => {
                         </div>
 
                         {/* Toon "Zie meer/Lees minder" knop als er meer dan 3 rijen zijn */}
-                        {car.opties.length > 9 && (
+                        {(() => {
+                          const itemsPerRow = breakpoint === 'sm' ? 1 : breakpoint === 'md' ? 2 : 3;
+                          const maxVisibleItems = 3 * itemsPerRow; // 3 rijen × items per rij
+                          return car.opties.length > maxVisibleItems;
+                        })() && (
                           <div className="flex justify-center">
                             <button
                               onClick={() => setShowAllOptions(!showAllOptions)}

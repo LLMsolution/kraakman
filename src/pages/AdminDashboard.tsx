@@ -509,7 +509,7 @@ const AdminDashboard = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">Basis Informatie</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>Merk *</Label>
                       <Input
@@ -684,7 +684,7 @@ const AdminDashboard = () => {
 
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">Specificaties</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>Transmissie</Label>
                       <Input
@@ -726,7 +726,7 @@ const AdminDashboard = () => {
 
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">Technische Gegevens</h3>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label>Motor (cc)</Label>
                       <Input

@@ -300,10 +300,10 @@ const CarDetail = () => {
     <div className="min-h-screen bg-background">
       <Navigation />
 
-      {/* Binnenkort Beschikbaar Banner - Full-width bovenaan */}
+      {/* Binnenkort Beschikbaar Banner - Full-width bovenaan, desktop only */}
       {car.binnenkort_beschikbaar && (
         <div
-          className="w-full"
+          className="w-full hidden md:block"
           style={{
             backgroundColor: 'var(--color-primary)',
             color: 'var(--color-text-inverse)'
@@ -328,10 +328,10 @@ const CarDetail = () => {
         </div>
       )}
 
-      {/* Gereserveerd Banner - Full-width bovenaan */}
+      {/* Gereserveerd Banner - Full-width bovenaan, desktop only */}
       {car.gereserveerd && (
         <div
-          className="w-full"
+          className="w-full hidden md:block"
           style={{
             backgroundColor: 'var(--color-primary)',
             color: 'var(--color-text-inverse)'
@@ -499,7 +499,7 @@ const CarDetail = () => {
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
-                    minHeight: '44px'
+                    minHeight: '48px'
                   }}
                   onClick={() => setActiveTab('omschrijving')}
                 >
@@ -515,7 +515,7 @@ const CarDetail = () => {
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
-                    minHeight: '44px'
+                    minHeight: '48px'
                   }}
                   onClick={() => setActiveTab('opties')}
                 >
@@ -531,7 +531,7 @@ const CarDetail = () => {
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
                     fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
-                    minHeight: '44px'
+                    minHeight: '48px'
                   }}
                   onClick={() => setActiveTab('techniek')}
                 >
@@ -1164,10 +1164,23 @@ const CarDetail = () => {
             </div>
           </div>
 
-          {/* Rechts: Afbeelding Sectie - Schuine overlap over blauwe kaart */}
-          <div className="relative h-64 lg:h-auto overflow-hidden" style={{
+          {/* Rechts: Afbeelding Sectie - Mobiel volledige breedte, desktop schuine overlap */}
+          <div className="relative h-64 lg:h-auto overflow-hidden lg:block" style={{
             clipPath: 'polygon(15% 0, 100% 0, 100% 100%, 0 100%)'
           }}>
+            {/* Mobile: Volledige breedte afbeelding */}
+            <div className="lg:hidden w-full h-full">
+              <img
+                src={largeImages[0]?.url || car.car_images?.[0]?.url}
+                alt={`${car.merk} ${car.model}`}
+                className="w-full h-full object-cover"
+                style={{
+                  objectPosition: 'center 60%'
+                }}
+              />
+            </div>
+            {/* Desktop: Schuine overlap */}
+            <div className="hidden lg:block absolute inset-0 w-full h-full">
             {/* Afbeelding met object positioning voor framing */}
             <img
               src={largeImages[0]?.url || car.car_images?.[0]?.url}
@@ -1178,6 +1191,7 @@ const CarDetail = () => {
                 transform: 'scale(1.1)' // Light zoom voor betere framing
               }}
             />
+            </div>
           </div>
           </div>
         </div>

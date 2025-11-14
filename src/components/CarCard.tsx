@@ -141,10 +141,10 @@ const CarCard = ({
               ))}
             </div>
 
-            {/* Binnenkort Beschikbaar Banner - Overlay on Image */}
+            {/* Binnenkort Beschikbaar Banner - Overlay on Image, desktop only */}
             {binnenkort_beschikbaar && (
               <div
-                className="absolute top-0 right-0 px-3 py-1.5 font-medium"
+                className="absolute top-0 right-0 px-3 py-1.5 font-medium hidden md:block"
                 style={{
                   backgroundColor: '#123458',
                   color: '#F1EFEC',
@@ -156,10 +156,10 @@ const CarCard = ({
               </div>
             )}
 
-            {/* Gereserveerd Banner - Overlay on Image */}
+            {/* Gereserveerd Banner - Overlay on Image, desktop only */}
             {gereserveerd && (
               <div
-                className="absolute top-0 right-0 px-3 py-1.5 font-medium"
+                className="absolute top-0 right-0 px-3 py-1.5 font-medium hidden md:block"
                 style={{
                   backgroundColor: '#123458',
                   color: '#F1EFEC',

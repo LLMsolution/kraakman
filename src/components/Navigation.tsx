@@ -13,11 +13,8 @@ const Navigation = () => {
     <nav className="w-full bg-background border-b border-border sticky top-0 z-50">
       <div className="container-wide section-padding">
         {/* Desktop Layout */}
-        <div className="hidden md:flex items-center justify-between h-20">
-          {/* Logo/Brand placeholder - kan later worden toegevoegd */}
-          <div className="w-32"></div>
-
-          {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center justify-center h-20 w-full">
+          {/* Desktop Navigation - Gecentreerd */}
           <div className="flex items-center gap-8">
             <Link
               to="/"

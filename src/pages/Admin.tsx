@@ -117,7 +117,8 @@ const Admin = () => {
           </div>
           <Button
             type="submit"
-            className="w-full btn-primary"
+            variant="secondary"
+            className="w-full"
             disabled={loading}
           >
             {loading ? "Inloggen..." : "Inloggen"}

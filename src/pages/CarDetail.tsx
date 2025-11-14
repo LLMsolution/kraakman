@@ -56,6 +56,12 @@ const CarDetail = () => {
   const [similarCars, setSimilarCars] = useState<Car[]>([]);
   const [activeTab, setActiveTab] = useState('omschrijving');
   const [showFullDescription, setShowFullDescription] = useState(false);
+  const [showAllOptions, setShowAllOptions] = useState(false);
+
+  // Reset showAllOptions when tab changes
+  useEffect(() => {
+    setShowAllOptions(false);
+  }, [activeTab]);
 
   // Proefrit form state
   const [formData, setFormData] = useState({
@@ -572,29 +578,78 @@ const CarDetail = () => {
                 {activeTab === 'opties' && (
                   <div>
                     {car.opties && car.opties.length > 0 ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" style={{ gap: '16px' }}>
-                        {car.opties.map((optie: string, index: number) => (
-                          <div
-                            key={index}
-                            className="flex items-start gap-3"
-                            style={{ gap: '12px' }}
+                      <>
+                        <div
+                          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+                          style={{
+                            gap: '16px'
+                          }}
+                        >
+                          {car.opties.map((optie: string, index: number) => {
+                            // Bereken hoeveel items er per rij zijn (afhankelijk van schermgrootte)
+                            const itemsPerRow = 3; // lg: 3 kolommen
+                            const rowIndex = Math.floor(index / itemsPerRow);
+                            const shouldShow = showAllOptions || rowIndex < 3;
+
+                            return (
+                              <div
+                                key={index}
+                                className="flex items-start gap-3 transition-all duration-300"
+                                style={{
+                                  gap: '12px',
+                                  display: shouldShow ? 'flex' : 'none'
+                                }}
+                              >
+                                <CheckCircle2
+                                  className="h-6 w-6 flex-shrink-0 mt-0.5"
+                                  style={{ color: 'var(--color-primary)' }}
+                                />
+                                <span
+                                  className="leading-relaxed text-sm"
+                                  style={{
+                                    color: 'var(--color-text-secondary)',
+                                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
+                                  }}
+                                >
+                                  {optie}
+                                </span>
+                              </div>
+                            );
+                          })}
+                        </div>
+
+                        {/* Toon "Zie meer/Lees minder" knop als er meer dan 3 rijen zijn */}
+                        {car.opties.length > 9 && (
+                          <button
+                            onClick={() => setShowAllOptions(!showAllOptions)}
+                            className="mt-4 text-sm font-medium flex items-center gap-2 transition-colors duration-200 border-none outline-none bg-transparent cursor-pointer"
+                            style={{
+                              color: 'var(--color-primary)',
+                              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.color = 'var(--color-text-primary)';
+                              e.currentTarget.style.textDecoration = 'underline';
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.color = 'var(--color-primary)';
+                              e.currentTarget.style.textDecoration = 'none';
+                            }}
                           >
-                            <CheckCircle2
-                              className="h-6 w-6 flex-shrink-0 mt-0.5"
-                              style={{ color: 'var(--color-primary)' }}
-                            />
-                            <span
-                              className="leading-relaxed text-sm"
-                              style={{
-                                color: 'var(--color-text-secondary)',
-                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
-                              }}
-                            >
-                              {optie}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
+                            {showAllOptions ? (
+                              <>
+                                <span>Zie minder</span>
+                                <ChevronLeft className="h-4 w-4 rotate-90" style={{ transform: 'rotate(90deg)' }} />
+                              </>
+                            ) : (
+                              <>
+                                <span>Zie meer</span>
+                                <ChevronLeft className="h-4 w-4 -rotate-90" style={{ transform: 'rotate(-90deg)' }} />
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </>
                     ) : (
                       <p style={{ color: 'var(--color-text-secondary)' }}>
                         Geen opties beschikbaar.

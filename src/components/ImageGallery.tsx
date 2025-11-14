@@ -122,10 +122,34 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, carName }) =
           <div className="relative w-full h-full flex items-center justify-center">
             <button
               onClick={closeFullscreen}
-              className="absolute top-4 right-4 text-white hover:text-gray-300 z-10"
+              className="absolute top-4 right-4 z-50 flex items-center justify-center transition-all duration-200 border-none outline-none"
               aria-label="Close fullscreen"
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                border: 'none',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                padding: 'var(--spacing-micro)',
+                margin: 'var(--spacing-micro)',
+                outline: 'none',
+                boxShadow: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                e.currentTarget.style.border = '1px solid var(--color-primary)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.border = 'none';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.querySelector('svg').style.color = 'white';
+              }}
             >
-              <X className="h-6 w-6" />
+              <X className="h-5 w-5" style={{ color: 'white', transition: 'color 0.2s ease' }} />
             </button>
 
             <img

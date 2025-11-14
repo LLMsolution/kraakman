@@ -488,47 +488,50 @@ const CarDetail = () => {
           <div style={{ marginBottom: 'var(--spacing-section-xl)' }}>
             <div style={{ marginTop: '24px' }}>
               {/* Simple Tab Navigation */}
-              <div className="flex gap-4 mb-6">
+              <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6">
                 <Button
-                  className="btn-secondary"
+                  className="btn-secondary w-full sm:w-auto"
                   style={{
                     backgroundColor: activeTab === 'omschrijving' ? 'var(--color-primary) !important' : '',
                     color: activeTab === 'omschrijving' ? 'var(--color-text-inverse) !important' : '',
                     borderColor: activeTab === 'omschrijving' ? 'var(--color-primary) !important' : '',
                     boxShadow: activeTab === 'omschrijving' ? 'none' : '',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: '14px',
-                    fontWeight: '500'
+                    fontSize: 'clamp(12px, 2.5vw, 14px)',
+                    fontWeight: '500',
+                    minHeight: '44px'
                   }}
                   onClick={() => setActiveTab('omschrijving')}
                 >
                   Omschrijving
                 </Button>
                 <Button
-                  className="btn-secondary"
+                  className="btn-secondary w-full sm:w-auto"
                   style={{
                     backgroundColor: activeTab === 'opties' ? 'var(--color-primary) !important' : '',
                     color: activeTab === 'opties' ? 'var(--color-text-inverse) !important' : '',
                     borderColor: activeTab === 'opties' ? 'var(--color-primary) !important' : '',
                     boxShadow: activeTab === 'opties' ? 'none' : '',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: '14px',
-                    fontWeight: '500'
+                    fontSize: 'clamp(12px, 2.5vw, 14px)',
+                    fontWeight: '500',
+                    minHeight: '44px'
                   }}
                   onClick={() => setActiveTab('opties')}
                 >
                   Opties en extra's
                 </Button>
                 <Button
-                  className="btn-secondary"
+                  className="btn-secondary w-full sm:w-auto"
                   style={{
                     backgroundColor: activeTab === 'techniek' ? 'var(--color-primary) !important' : '',
                     color: activeTab === 'techniek' ? 'var(--color-text-inverse) !important' : '',
                     borderColor: activeTab === 'techniek' ? 'var(--color-primary) !important' : '',
                     boxShadow: activeTab === 'techniek' ? 'none' : '',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: '14px',
-                    fontWeight: '500'
+                    fontSize: 'clamp(12px, 2.5vw, 14px)',
+                    fontWeight: '500',
+                    minHeight: '44px'
                   }}
                   onClick={() => setActiveTab('techniek')}
                 >

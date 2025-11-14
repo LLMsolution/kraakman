@@ -75,6 +75,10 @@ const CarCard = ({
                         ? '-translate-x-full'
                         : 'translate-x-full'
                   }`}
+                  style={{
+                    objectPosition: 'center',
+                    objectFit: 'cover'
+                  }}
                 />
               ))}
             </div>

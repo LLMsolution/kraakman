@@ -161,14 +161,14 @@ const TextContent = ({ text }: { text: string }) => {
 
       if (isHeader) {
         return (
-          <h4 key={index} className="text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+          <h4 key={index} className="text-lg sm:text-xl font-semibold mb-2" style={{ color: 'var(--color-text-primary)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
             {line.trim()}
           </h4>
         );
       }
 
       return (
-        <p key={index} className="mb-3 leading-relaxed" style={{ color: 'var(--color-text-muted)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
+        <p key={index} className="mb-3 leading-relaxed text-sm sm:text-base" style={{ color: 'var(--color-text-muted)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}>
           {line.trim()}
         </p>
       );
@@ -225,8 +225,8 @@ export function StickyLPGSection() {
               <div
                 key={index}
                 className={cn(
-                  "mb-16 sticky overflow-hidden",
-                  "grid grid-cols-1 lg:grid-cols-2 items-start gap-8 p-8 lg:p-12"
+                  "mb-12 sm:mb-16 sticky overflow-hidden",
+                  "grid grid-cols-1 lg:grid-cols-2 items-start gap-6 sm:gap-8 p-6 sm:p-8 lg:p-12"
                 )}
                 style={{
                   top: '200px', // Start sticky animation when entire hero section is behind the navbar
@@ -234,7 +234,7 @@ export function StickyLPGSection() {
                   border: `1px solid var(--color-border-primary)`,
                   borderRadius: '0',
                   fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
-                  minHeight: '500px' // Ensure all blocks have the same minimum height
+                  minHeight: '400px sm:min-h-[500px]' // Responsive minimum height
                 }}
               >
                 {/* Text Column */}
@@ -243,7 +243,7 @@ export function StickyLPGSection() {
                   index % 2 === 1 ? "lg:order-2" : "lg:order-1"
                 )}>
                   <h3
-                    className="text-2xl md:text-3xl font-semibold mb-6 tracking-tight"
+                    className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4 sm:mb-6 tracking-tight"
                     style={{ color: 'var(--color-text-primary)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
                   >
                     {feature.title}
@@ -261,22 +261,22 @@ export function StickyLPGSection() {
                 )}>
                   <div className="h-full">
                     <h3
-                      className="text-2xl md:text-3xl font-semibold mb-6 tracking-tight"
+                      className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-4 sm:mb-6 tracking-tight"
                       style={{ color: 'var(--color-text-primary)', fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" }}
                     >
                       {feature.checklistTitle}
                     </h3>
 
                     {feature.features && feature.features.length > 0 && (
-                      <ul className="space-y-3">
+                      <ul className="space-y-2 sm:space-y-3">
                         {feature.features.map((item, itemIndex) => (
-                          <li key={itemIndex} className="flex items-start gap-3">
+                          <li key={itemIndex} className="flex items-start gap-2 sm:gap-3">
                             <CheckCircle2
-                              className="h-6 w-6 flex-shrink-0 mt-0.5"
+                              className="h-5 w-5 sm:h-6 sm:w-6 flex-shrink-0 mt-0.5"
                               style={{ color: 'var(--color-primary)' }}
                             />
                             <span
-                              className="leading-relaxed"
+                              className="leading-relaxed text-sm sm:text-base"
                               style={{
                                 color: 'var(--color-text-muted)',
                                 fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"

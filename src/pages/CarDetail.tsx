@@ -918,50 +918,21 @@ const CarDetail = () => {
                 Gallerij met foto's van de {car.merk} {car.model}. Gebruik de pijltoetsen om door de afbeeldingen te navigeren.
               </DialogDescription>
 
-              <button
-                onClick={() => setLightboxOpen(false)}
-                className="absolute top-4 right-4 z-50 flex items-center justify-center rounded-full transition-all duration-200"
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  width: '48px',
-                  height: '48px',
-                  borderRadius: '50%',
-                  padding: 'var(--spacing-micro)',
-                  margin: 'var(--spacing-micro)',
-                  outline: 'none',
-                  boxShadow: 'none'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-primary)';
-                  e.currentTarget.style.border = '1px solid var(--color-primary)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.border = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
-                }}
-              >
-                <X className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
-              </button>
-
-              <div className="relative w-full h-screen flex items-center justify-center">
+              <div className="relative w-full h-full flex flex-col">
+                {/* Close Button - Above image on mobile, top-right on desktop */}
                 <button
-                  onClick={prevImage}
-                  className="absolute left-4 z-40 flex items-center justify-center rounded-full transition-all duration-200"
+                  onClick={() => setLightboxOpen(false)}
+                  className="absolute z-50 flex items-center justify-center rounded-full transition-all duration-200 lg:top-4 lg:right-4"
                   style={{
                     cursor: 'pointer',
-                    backgroundColor: 'var(--color-background)',
-                    border: '1px solid var(--color-secondary)',
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
                     width: '48px',
                     height: '48px',
                     borderRadius: '50%',
-                    padding: 'var(--spacing-micro)',
-                    margin: 'var(--spacing-micro)'
+                    top: '20px',
+                    right: '20px',
+                    outline: 'none'
                   }}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.backgroundColor = 'var(--color-primary)';
@@ -969,69 +940,107 @@ const CarDetail = () => {
                     e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-background)';
-                    e.currentTarget.style.border = '1px solid var(--color-secondary)';
-                    e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
+                    e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                    e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.querySelector('svg').style.color = 'white';
                   }}
                 >
-                  <ChevronLeft className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+                  <X className="h-6 w-6" style={{ color: 'white', transition: 'color 0.2s ease' }} />
                 </button>
 
-                <div className="relative w-full h-full">
-                  {allImages?.map((image, idx) => (
-                    <img
-                      key={idx}
-                      src={image.url}
-                      alt={`${car.merk} ${car.model}`}
-                      className={`absolute w-full h-full object-contain transition-transform duration-500 ease-in-out ${
-                        idx === lightboxIndex
-                          ? 'translate-x-0'
-                          : lightboxDirection === 'next'
-                            ? (idx < lightboxIndex ? '-translate-x-full' : 'translate-x-full')
-                            : (idx > lightboxIndex ? 'translate-x-full' : '-translate-x-full')
-                      }`}
-                      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
-                    />
-                  ))}
+                {/* Main Content Area - Image with navigation */}
+                <div className="flex-1 relative flex items-center justify-center">
+                  <button
+                    onClick={prevImage}
+                    className="absolute z-40 flex items-center justify-center rounded-full transition-all duration-200"
+                    style={{
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '50%',
+                      left: '20px',
+                      outline: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                      e.currentTarget.style.border = '1px solid var(--color-primary)';
+                      e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                      e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                      e.currentTarget.querySelector('svg').style.color = 'white';
+                    }}
+                  >
+                    <ChevronLeft className="h-6 w-6" style={{ color: 'white', transition: 'color 0.2s ease' }} />
+                  </button>
+
+                  <div className="relative max-w-full max-h-full">
+                    {allImages?.map((image, idx) => (
+                      <img
+                        key={idx}
+                        src={image.url}
+                        alt={`${car.merk} ${car.model}`}
+                        className={`max-w-full max-h-[calc(100vh-120px)] object-contain transition-transform duration-500 ease-in-out ${
+                          idx === lightboxIndex
+                            ? 'translate-x-0 opacity-100'
+                            : lightboxDirection === 'next'
+                              ? (idx < lightboxIndex ? '-translate-x-full opacity-0' : 'translate-x-full opacity-0')
+                              : (idx > lightboxIndex ? 'translate-x-full opacity-0' : '-translate-x-full opacity-0')
+                        }`}
+                        style={{
+                          maxWidth: '90vw',
+                          maxHeight: 'calc(100vh - 120px)',
+                          display: idx === lightboxIndex ? 'block' : 'none'
+                        }}
+                      />
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={nextImage}
+                    className="absolute z-40 flex items-center justify-center rounded-full transition-all duration-200"
+                    style={{
+                      cursor: 'pointer',
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      width: '48px',
+                      height: '48px',
+                      borderRadius: '50%',
+                      right: '20px',
+                      outline: 'none'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                      e.currentTarget.style.border = '1px solid var(--color-primary)';
+                      e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+                      e.currentTarget.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                      e.currentTarget.querySelector('svg').style.color = 'white';
+                    }}
+                  >
+                    <ChevronRight className="h-6 w-6" style={{ color: 'white', transition: 'color 0.2s ease' }} />
+                  </button>
                 </div>
 
-                <button
-                  onClick={nextImage}
-                  className="absolute right-4 z-40 flex items-center justify-center rounded-full transition-all duration-200"
-                  style={{
-                    cursor: 'pointer',
-                    backgroundColor: 'var(--color-background)',
-                    border: '1px solid var(--color-secondary)',
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    padding: 'var(--spacing-micro)',
-                    margin: 'var(--spacing-micro)'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-primary)';
-                    e.currentTarget.style.border = '1px solid var(--color-primary)';
-                    e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'var(--color-background)';
-                    e.currentTarget.style.border = '1px solid var(--color-secondary)';
-                    e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
-                  }}
-                >
-                  <ChevronRight className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
-                </button>
-
-                <div
-                  className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm px-4 py-2 rounded-full"
-                  style={{
-                    backgroundColor: 'var(--color-background)',
-                    padding: 'var(--spacing-component-sm) var(--spacing-component-md)',
-                    borderRadius: '20px',
-                    color: 'var(--color-text-primary)'
-                  }}
-                >
-                  {lightboxIndex + 1} / {allImages.length}
+                {/* Image Counter - Below image */}
+                <div className="absolute bottom-0 left-0 right-0 flex justify-center pb-4">
+                  <div
+                    className="text-white text-sm px-4 py-2 rounded-full"
+                    style={{
+                      backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      borderRadius: '20px',
+                      fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
+                      fontWeight: '500'
+                    }}
+                  >
+                    {lightboxIndex + 1} / {allImages.length}
+                  </div>
                 </div>
               </div>
             </DialogContent>

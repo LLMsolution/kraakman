@@ -12,12 +12,13 @@ const Navigation = () => {
   return (
     <nav className="w-full bg-background border-b border-border sticky top-0 z-50">
       <div className="container-wide section-padding">
-        <div className="flex items-center justify-between h-20">
+        {/* Desktop Layout */}
+        <div className="hidden md:flex items-center justify-between h-20">
           {/* Logo/Brand placeholder - kan later worden toegevoegd */}
           <div className="w-32"></div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
+          <div className="flex items-center gap-8">
             <Link
               to="/"
               className={cn(
@@ -91,10 +92,16 @@ const Navigation = () => {
               )}
             </Link>
           </div>
+        </div>
+
+        {/* Mobile Layout */}
+        <div className="md:hidden flex items-center justify-between h-20">
+          {/* Logo/Brand placeholder - kan later worden toegevoegd */}
+          <div className="w-32"></div>
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden p-2 rounded-lg hover:bg-muted transition-colors"
+            className="p-2 rounded-lg hover:bg-muted transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >

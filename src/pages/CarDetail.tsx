@@ -372,7 +372,7 @@ const CarDetail = () => {
 
             {/* Car Title */}
             <h1
-              className="text-4xl md:text-5xl font-bold"
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold"
               style={{
                 marginBottom: 'var(--spacing-component-sm)',
                 color: 'var(--color-text-primary)'
@@ -398,7 +398,7 @@ const CarDetail = () => {
               {/* Large Images - First 3 */}
               {largeImages.length > 0 && (
                 <div
-                  className="grid md:grid-cols-2 lg:grid-cols-3 mb-4"
+                  className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-4"
                   style={{ gap: 'var(--spacing-grid-gap)' }}
                 >
                   {largeImages.map((image: CarImage, index: number) => (
@@ -425,7 +425,7 @@ const CarDetail = () => {
                     <div
                       key={`small-${index}`}
                       onClick={() => openLightbox(index + 3)} // Correct index for lightbox
-                      className="flex-shrink-0 relative w-20 h-16 overflow-hidden rounded cursor-pointer"
+                      className="flex-shrink-0 relative w-24 h-20 sm:w-20 sm:h-16 overflow-hidden rounded cursor-pointer"
                       style={{ borderRadius: '4px' }}
                     >
                       <img
@@ -497,7 +497,7 @@ const CarDetail = () => {
                     borderColor: activeTab === 'omschrijving' ? 'var(--color-primary) !important' : '',
                     boxShadow: activeTab === 'omschrijving' ? 'none' : '',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: 'clamp(12px, 2.5vw, 14px)',
+                    fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
                     minHeight: '44px'
                   }}
@@ -513,7 +513,7 @@ const CarDetail = () => {
                     borderColor: activeTab === 'opties' ? 'var(--color-primary) !important' : '',
                     boxShadow: activeTab === 'opties' ? 'none' : '',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: 'clamp(12px, 2.5vw, 14px)',
+                    fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
                     minHeight: '44px'
                   }}
@@ -529,7 +529,7 @@ const CarDetail = () => {
                     borderColor: activeTab === 'techniek' ? 'var(--color-primary) !important' : '',
                     boxShadow: activeTab === 'techniek' ? 'none' : '',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: 'clamp(12px, 2.5vw, 14px)',
+                    fontSize: 'clamp(14px, 4vw, 16px)',
                     fontWeight: '500',
                     minHeight: '44px'
                   }}
@@ -1012,11 +1012,11 @@ const CarDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 min-h-[500px]">
 
             {/* Links: Formulier Sectie - Footer alignment (48px 96px) */}
-            <div className="flex flex-col justify-center items-center py-12 md:py-12 lg:py-24 xl:py-24" style={{ paddingLeft: '96px', paddingRight: '96px' }}>
+            <div className="flex flex-col justify-center items-center py-12 px-4 sm:px-8 md:px-16 lg:px-24">
             <div className="w-full">
-              <div className="mb-8 text-center">
+              <div className="mb-6 text-center">
                 <h2
-                  className="text-3xl font-bold"
+                  className="text-xl sm:text-2xl md:text-3xl font-bold"
                   style={{
                     color: 'var(--color-text-inverse)',
                     fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'

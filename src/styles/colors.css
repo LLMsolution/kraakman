@@ -34,7 +34,7 @@
   --color-button-secondary-border: var(--color-secondary); /* #030303 */
   --color-button-secondary-text: var(--color-secondary);  /* #030303 */
   --color-button-secondary-hover-bg: var(--color-primary);    /* #123458 */
-  --color-button-secondary-hover-border: #123458; /* #123458 - BLAUWE BORDER OP HOVER */
+  --color-button-secondary-hover-border: #030303; /* #030303 - ZWARTE BORDER OP HOVER */
   --color-button-secondary-hover-text: var(--color-background); /* #F1EFEC */
 
   --color-star-filled: var(--color-primary);

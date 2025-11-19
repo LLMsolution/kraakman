@@ -16,27 +16,12 @@ import {
 // Custom styling om te matchen met de rest van de site
 const inputClass = "kraakman-input";
 const textareaClass = "kraakman-textarea";
-const selectClass = "kraakman-native-select";
-const selectWrapperClass = "relative";
-const selectTriggerClass = "kraakman-select-trigger";
-const selectContentClass = "kraakman-select-content";
-const selectItemClass = "kraakman-select-item";
-const submitButtonClass = "kraakman-button-secondary";
-const deleteButtonClass = "kraakman-button-danger";
-const editButtonClass = "kraakman-button-secondary";
 import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import PhotoManager from "@/components/PhotoManager";
 import { LogOut, Plus, Image, Trash2, Pencil, X } from "lucide-react";
 import CarFilters, { CustomDropdown } from "@/components/CarFilters";
 import TagInput from "@/components/TagInput";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 type Car = {
   id: string;
@@ -49,7 +34,7 @@ type Car = {
   kilometerstand: number | null;
   prijs: number;
   status: "aanbod" | "verkocht";
-  binnenkort_beschikbaar: boolean | null;
+  binnenkort_beschikbaar?: boolean | null;
   omschrijving: string | null;
   opties: string[] | null;
   techniek: string | null;
@@ -63,6 +48,9 @@ type Car = {
   gewicht_kg: number | null;
   topsnelheid_kmh: number | null;
   acceleratie_0_100: number | null;
+  gereserveerd?: boolean | null;
+  btw_auto?: boolean | null;
+  created_at?: string;
 };
 
 const AdminDashboard = () => {
@@ -116,6 +104,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     checkAuth();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const checkAuth = async () => {
@@ -271,10 +260,11 @@ const AdminDashboard = () => {
       setIsDialogOpen(false);
       resetForm();
       loadCars();
-    } catch (error: any) {
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Er is een onbekende fout opgetreden";
       toast({
         title: "Fout",
-        description: error.message,
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -352,31 +342,32 @@ const AdminDashboard = () => {
       .single();
 
     if (fullCarData) {
+      const carData = fullCarData as Car;
       setFormData({
-        merk: fullCarData.merk,
-        model: fullCarData.model,
-        voertuig_type: fullCarData.voertuig_type || "",
-        bouwjaar: fullCarData.bouwjaar,
-        transmissie: fullCarData.transmissie || "",
-        kleur: fullCarData.kleur || "",
-        kilometerstand: fullCarData.kilometerstand || 0,
-        prijs: fullCarData.prijs,
-        btw_auto: fullCarData.btw_auto || false,
-        status: fullCarData.status,
-        binnenkort_beschikbaar: fullCarData.binnenkort_beschikbaar || false,
-        gereserveerd: fullCarData.gereserveerd || false,
-        omschrijving: fullCarData.omschrijving || "",
-        zitplaatsen: fullCarData.zitplaatsen || 5,
-        deuren: fullCarData.deuren || 5,
-        brandstof_type: fullCarData.brandstof_type || "",
-        motor_cc: fullCarData.motor_cc || 0,
-        motor_cilinders: fullCarData.motor_cilinders || 0,
-        vermogen_pk: fullCarData.vermogen_pk || 0,
-        gewicht_kg: fullCarData.gewicht_kg || 0,
-        topsnelheid_kmh: fullCarData.topsnelheid_kmh || 0,
-        acceleratie_0_100: fullCarData.acceleratie_0_100 || 0,
+        merk: carData.merk,
+        model: carData.model,
+        voertuig_type: carData.voertuig_type || "",
+        bouwjaar: carData.bouwjaar,
+        transmissie: carData.transmissie || "",
+        kleur: carData.kleur || "",
+        kilometerstand: carData.kilometerstand || 0,
+        prijs: carData.prijs,
+        btw_auto: carData.btw_auto || false,
+        status: carData.status,
+        binnenkort_beschikbaar: carData.binnenkort_beschikbaar || false,
+        gereserveerd: carData.gereserveerd || false,
+        omschrijving: carData.omschrijving || "",
+        zitplaatsen: carData.zitplaatsen || 5,
+        deuren: carData.deuren || 5,
+        brandstof_type: carData.brandstof_type || "",
+        motor_cc: carData.motor_cc || 0,
+        motor_cilinders: carData.motor_cilinders || 0,
+        vermogen_pk: carData.vermogen_pk || 0,
+        gewicht_kg: carData.gewicht_kg || 0,
+        topsnelheid_kmh: carData.topsnelheid_kmh || 0,
+        acceleratie_0_100: carData.acceleratie_0_100 || 0,
       });
-      setOpties(fullCarData.opties || []);
+      setOpties(carData.opties || []);
     }
     setIsDialogOpen(true);
   };

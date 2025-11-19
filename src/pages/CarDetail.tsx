@@ -43,6 +43,7 @@ interface Car {
   topsnelheid_kmh?: number;
   acceleratie_0_100?: number;
   binnenkort_beschikbaar?: boolean;
+  gereserveerd?: boolean;
   car_images: CarImage[];
 }
 

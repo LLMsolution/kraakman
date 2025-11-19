@@ -91,7 +91,7 @@ const Verkocht = () => {
         (car) =>
           car.merk.toLowerCase().includes(searchLower) ||
           car.model.toLowerCase().includes(searchLower) ||
-          car.type?.toLowerCase().includes(searchLower)
+          car.voertuig_type?.toLowerCase().includes(searchLower)
       );
     }
 
@@ -206,7 +206,6 @@ const Verkocht = () => {
                       id={car.id}
                       merk={car.merk}
                       model={car.model}
-                      type={car.type || undefined}
                       voertuig_type={car.voertuig_type || undefined}
                       bouwjaar={car.bouwjaar}
                       kilometerstand={car.kilometerstand || undefined}

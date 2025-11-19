@@ -7,7 +7,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { X, ChevronDown, Filter } from "lucide-react";
 
 // Custom styling voor consistente input velden zonder hover/focus effecten
-const inputClass = "h-12 border border-[#030303] bg-background focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none leading-6 px-4 py-3";
+const inputClass = "border border-[#030303] bg-background focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none leading-6";
 const selectClass = "kraakman-native-select";
 const selectWrapperClass = "relative";
 

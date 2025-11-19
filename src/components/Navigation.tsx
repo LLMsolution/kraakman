@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 const Navigation = () => {
   const location = useLocation();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  
+
   const isActive = (path: string) => location.pathname === path;
 
   return (
@@ -100,35 +100,18 @@ const Navigation = () => {
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
-            className="flex items-center justify-center transition-all duration-200"
+            className="flex items-center justify-center"
             style={{
-              cursor: 'pointer',
               backgroundColor: 'transparent',
               border: 'none',
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
               padding: '8px',
-              outline: 'none',
-              boxShadow: 'none'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-primary)';
-              e.currentTarget.style.border = '1px solid var(--color-primary)';
-              e.currentTarget.style.boxShadow = 'none';
-              e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.border = 'none';
-              e.currentTarget.style.boxShadow = 'none';
-              e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
+              cursor: 'pointer'
             }}
           >
             {isMobileMenuOpen ? (
-              <X className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+              <X className="h-6 w-6" style={{ color: '#030303' }} />
             ) : (
-              <Menu className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+              <Menu className="h-6 w-6" style={{ color: '#030303' }} />
             )}
           </button>
         </div>
@@ -140,7 +123,7 @@ const Navigation = () => {
               <Link
                 to="/"
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground py-2",
+                  "text-sm font-medium py-2",
                   isActive("/") ? "text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -150,7 +133,7 @@ const Navigation = () => {
               <Link
                 to="/aanbod"
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground py-2",
+                  "text-sm font-medium py-2",
                   isActive("/aanbod") ? "text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -160,7 +143,7 @@ const Navigation = () => {
               <Link
                 to="/verkocht"
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground py-2",
+                  "text-sm font-medium py-2",
                   isActive("/verkocht") ? "text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -170,7 +153,7 @@ const Navigation = () => {
               <Link
                 to="/lpg"
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground py-2",
+                  "text-sm font-medium py-2",
                   isActive("/lpg") ? "text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -180,7 +163,7 @@ const Navigation = () => {
               <Link
                 to="/reviews"
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground py-2",
+                  "text-sm font-medium py-2",
                   isActive("/reviews") ? "text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}
@@ -190,7 +173,7 @@ const Navigation = () => {
               <Link
                 to="/contact"
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-foreground py-2",
+                  "text-sm font-medium py-2",
                   isActive("/contact") ? "text-foreground" : "text-muted-foreground"
                 )}
                 onClick={() => setIsMobileMenuOpen(false)}

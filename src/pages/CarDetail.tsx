@@ -652,20 +652,10 @@ const CarDetail = () => {
                           const maxVisibleItems = 3 * itemsPerRow; // 3 rijen × items per rij
                           return car.opties.length > maxVisibleItems;
                         })() && (
-                          <div className="flex justify-center">
-                            <button
+                          <div className="flex justify-center mt-8">
+                            <Button
+                              className="btn-secondary flex items-center gap-2"
                               onClick={() => setShowAllOptions(!showAllOptions)}
-                              className="mt-4 text-sm font-medium flex items-center gap-2 transition-colors duration-200 border-none outline-none bg-transparent cursor-pointer"
-                              style={{
-                                color: 'var(--color-primary)',
-                                fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif'
-                              }}
-                              onMouseEnter={(e) => {
-                                e.currentTarget.style.color = 'var(--color-text-primary)';
-                              }}
-                              onMouseLeave={(e) => {
-                                e.currentTarget.style.color = 'var(--color-primary)';
-                              }}
                             >
                               {showAllOptions ? (
                                 <>
@@ -678,7 +668,7 @@ const CarDetail = () => {
                                   <ChevronDown className="h-4 w-4" />
                                 </>
                               )}
-                            </button>
+                            </Button>
                           </div>
                         )}
                       </>

@@ -12,7 +12,6 @@ import Reviews from "./pages/Reviews";
 import CarDetail from "./pages/CarDetail";
 import Admin from "./pages/Admin";
 import AdminDashboard from "./pages/AdminDashboard";
-import TestPage from "./pages/TestPage";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,7 +32,6 @@ const App = () => (
           <Route path="/auto/:id" element={<CarDetail />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
-          <Route path="/test" element={<TestPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

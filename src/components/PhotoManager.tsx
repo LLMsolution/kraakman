@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Upload, X, Loader2, GripVertical, ChevronUp, ChevronDown } from "lucide-react";
+import { Upload, X, Loader2, GripVertical, ChevronUp, ChevronDown, Plus } from "lucide-react";
 
 interface Photo {
   id: string;
@@ -178,7 +178,24 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
   return (
     <div className="space-y-4">
       <div>
-        <Label htmlFor="photo-upload">Foto's uploaden</Label>
+        <Button
+          variant="secondary"
+          size="lg"
+          onClick={() => document.getElementById('photo-upload')?.click()}
+          disabled={uploading}
+        >
+          {uploading ? (
+            <>
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              Uploaden...
+            </>
+          ) : (
+            <>
+              <Plus className="w-4 h-4 mr-2" />
+              Foto's toevoegen
+            </>
+          )}
+        </Button>
         <Input
           id="photo-upload"
           type="file"
@@ -186,10 +203,8 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
           accept="image/*"
           onChange={handleUpload}
           disabled={uploading}
+          className="hidden"
         />
-        {uploading && (
-          <p className="text-sm text-muted-foreground mt-2">Uploaden...</p>
-        )}
       </div>
 
       {photos.length > 0 && (
@@ -211,10 +226,10 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
                   className="flex items-center justify-center transition-all duration-200"
                   style={{
                     cursor: index === 0 ? 'not-allowed' : 'pointer',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    width: '32px',
-                    height: '32px',
+                    backgroundColor: 'var(--color-background)',
+                    border: '1px solid var(--color-secondary)',
+                    width: '44px',
+                    height: '44px',
                     borderRadius: '50%',
                     padding: '6px',
                     margin: '4px',
@@ -232,8 +247,8 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
                   }}
                   onMouseLeave={(e) => {
                     if (index !== 0) {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.border = 'none';
+                      e.currentTarget.style.backgroundColor = 'var(--color-background)';
+                      e.currentTarget.style.border = '1px solid var(--color-secondary)';
                       e.currentTarget.style.boxShadow = 'none';
                       e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                     }
@@ -247,10 +262,10 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
                   className="flex items-center justify-center transition-all duration-200"
                   style={{
                     cursor: index === photos.length - 1 ? 'not-allowed' : 'pointer',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    width: '32px',
-                    height: '32px',
+                    backgroundColor: 'var(--color-background)',
+                    border: '1px solid var(--color-secondary)',
+                    width: '44px',
+                    height: '44px',
                     borderRadius: '50%',
                     padding: '6px',
                     margin: '4px',
@@ -268,8 +283,8 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
                   }}
                   onMouseLeave={(e) => {
                     if (index !== photos.length - 1) {
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                      e.currentTarget.style.border = 'none';
+                      e.currentTarget.style.backgroundColor = 'var(--color-background)';
+                      e.currentTarget.style.border = '1px solid var(--color-secondary)';
                       e.currentTarget.style.boxShadow = 'none';
                       e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                     }
@@ -282,10 +297,10 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
                   className="flex items-center justify-center transition-all duration-200"
                   style={{
                     cursor: 'pointer',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    width: '32px',
-                    height: '32px',
+                    backgroundColor: 'var(--color-background)',
+                    border: '1px solid var(--color-secondary)',
+                    width: '44px',
+                    height: '44px',
                     borderRadius: '50%',
                     padding: '6px',
                     margin: '4px',
@@ -299,8 +314,8 @@ const PhotoManager = ({ carId }: PhotoManagerProps) => {
                     e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'transparent';
-                    e.currentTarget.style.border = 'none';
+                    e.currentTarget.style.backgroundColor = 'var(--color-background)';
+                    e.currentTarget.style.border = '1px solid var(--color-secondary)';
                     e.currentTarget.style.boxShadow = 'none';
                     e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                   }}

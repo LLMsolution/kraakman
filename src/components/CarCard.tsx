@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Car, CarImage } from "@/types";
@@ -8,6 +8,7 @@ interface CarCardProps {
   id: string;
   merk: string;
   model: string;
+  voertuig_type?: string;
   bouwjaar: number;
   kilometerstand?: number;
   prijs: number;
@@ -25,6 +26,7 @@ const CarCard = ({
   id,
   merk,
   model,
+  voertuig_type,
   bouwjaar,
   kilometerstand,
   prijs,
@@ -173,64 +175,24 @@ const CarCard = ({
 
             {car_images && car_images.length > 1 && (
               <>
-                <div
-                  className="absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full opacity-0 group-hover/image-carousel:opacity-100 transition-all duration-200 z-10 flex items-center justify-center"
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    padding: '0',
-                    margin: '0',
-                    cursor: 'pointer',
-                    backgroundColor: '#F1EFEC',
-                    border: '1px solid #030303'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#123458';
-                    e.currentTarget.style.border = '1px solid #123458';
-                    e.currentTarget.querySelector('svg').style.color = '#F1EFEC';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#F1EFEC';
-                    e.currentTarget.style.border = '1px solid #030303';
-                    e.currentTarget.querySelector('svg').style.color = '#030303';
-                  }}
+                <Button
+                  variant="default"
+                  size="icon"
+                  className="carousel-nav-button absolute left-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full opacity-100 lg:opacity-0 lg:group-hover/image-carousel:opacity-100 transition-all duration-200 z-10"
                   onClick={handlePrevImage}
-                  role="button"
                   aria-label="Vorige foto"
-                  tabIndex={0}
                 >
-                  <ChevronLeft className="h-5 w-5" style={{ color: '#030303', transition: 'color 0.2s ease' }} />
-                </div>
-                <div
-                  className="absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full opacity-0 group-hover/image-carousel:opacity-100 transition-all duration-200 z-10 flex items-center justify-center"
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    padding: '0',
-                    margin: '0',
-                    cursor: 'pointer',
-                    backgroundColor: '#F1EFEC',
-                    border: '1px solid #030303'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = '#123458';
-                    e.currentTarget.style.border = '1px solid #123458';
-                    e.currentTarget.querySelector('svg').style.color = '#F1EFEC';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = '#F1EFEC';
-                    e.currentTarget.style.border = '1px solid #030303';
-                    e.currentTarget.querySelector('svg').style.color = '#030303';
-                  }}
+                  <ChevronLeft className="h-5 w-5" />
+                </Button>
+                <Button
+                  variant="default"
+                  size="icon"
+                  className="carousel-nav-button absolute right-2 top-1/2 -translate-y-1/2 w-12 h-12 rounded-full opacity-100 lg:opacity-0 lg:group-hover/image-carousel:opacity-100 transition-all duration-200 z-10"
                   onClick={handleNextImage}
-                  role="button"
                   aria-label="Volgende foto"
-                  tabIndex={0}
                 >
-                  <ChevronRight className="h-5 w-5" style={{ color: '#030303', transition: 'color 0.2s ease' }} />
-                </div>
+                  <ChevronRight className="h-5 w-5" />
+                </Button>
                 <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
                   {car_images?.map((_, idx) => (
                     <div
@@ -292,6 +254,11 @@ const CarCard = ({
               <h3 className="text-xl font-semibold mb-1">
                 {merk} {model}
               </h3>
+              {voertuig_type && (
+                <p className="text-sm text-muted-foreground">
+                  {voertuig_type}
+                </p>
+              )}
             </div>
 
             {(brandstof_type || transmissie || bouwjaar || kilometerstand) && (
@@ -328,6 +295,11 @@ const CarCard = ({
                 <h3 className="text-xl font-semibold mb-1">
                   {merk} {model}
                 </h3>
+                {voertuig_type && (
+                  <p className="text-sm text-muted-foreground">
+                    {voertuig_type}
+                  </p>
+                )}
               </div>
               <p className="text-xl font-semibold">
                 € {prijs.toLocaleString('nl-NL')}

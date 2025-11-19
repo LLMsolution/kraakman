@@ -1,475 +1,199 @@
-# Kraakman Auto Platform - Complete Technical Documentation
+# Kraakman Automotive Platform
 
-## Table of Contents
-1. [Project Overview](#project-overview)
-2. [Development Setup](#development-setup)
-3. [Technical Architecture](#technical-architecture)
-4. [Database Structure](#database-structure)
-5. [Authentication & Authorization](#authentication--authorization)
-6. [File Structure & Components](#file-structure--components)
-7. [Supabase Integration](#supabase-integration)
-8. [Edge Functions](#edge-functions)
-9. [Deployment](#deployment)
-10. [Supabase MCP Integration](#supabase-mcp-integration)
-11. [Future Development](#future-development)
+🚗 **Professionele auto showroom en administratief platform**
 
 ---
 
-## Project Overview
+## 📚 Documentatie Overzicht
 
-**Kraakman** is a full-stack automotive dealership platform built with React and Supabase. The application serves as both a public-facing car showroom and an administrative management system for vehicle inventory.
+Deze README is een verwijzing naar complete project documentatie. Voor diepgaande informatie over architectuur, componenten, database, security en development, zie de **[project-context](./project-context)** map.
 
-### Key Features
-- **Public**: Browse vehicle inventory, filter/search cars, view detailed information, request test drives
-- **Admin**: Complete CRUD operations for vehicles, image management, status tracking, user role management
-- **Authentication**: Secure admin login with role-based access control
-- **Media**: Image upload/management with Supabase Storage
-- **Communication**: Automated email notifications via Edge Functions
+### 📖 Belangrijke Documentatie
+
+| Document | Doel | Wanneer lezen |
+|---------|------|--------------|
+| [**Project Context**](./project-context/README.md) | Volledig project overzicht | **Eerst lezen** |
+| [**Architectuur**](./project-context/architecture.md) | Systeemarchuur & data flow diagram's | Na inleiding |
+| [**Database**](./project-context/database.md) | Database schema & RLS policies | Bij data wijzigingen |
+| [**Componenten**](./project-context/components.md) | UI componenten & patterns | Bij component ontwikkeling |
+| [**Security**](./project-context/security.md) | Auth & security implementatie | Bij security vraagstukken |
+| [**Data Flow**](./project-context/data-flow.md) | API patterns & state management | Bij data issues |
+| [**Deployment**](./project-context/deployment.md) | Deployment & CI/CD setup | Bij deploy problemen |
+| [**Development**](./project-context/development.md) | Setup & development gids | Bij development starten |
 
 ---
 
-## Development Setup
+## 🎯 Snel Start
 
 ### Prerequisites
-- Node.js (v18+) and npm
-- Git
-- Supabase CLI (optional, for local development)
+- **Node.js** 18.x of hoger
+- **npm** 9.x of hoger
+- **Git** 2.40+ (voor hooks en features)
 
-### Installation & Development
+### Installatie
+
 ```bash
-# Clone the repository
-git clone <YOUR_GIT_URL>
-cd Kraakman
+# Clone repository
+git clone <repository-url>
+cd kraakman
 
-# Install dependencies
+# Installeer dependencies
 npm install
 
 # Start development server
 npm run dev
-
-# Build for production
-npm run build
-
-# Run production build locally
-npm run preview
 ```
 
-### Environment Variables
-The project uses Supabase configuration in `src/integrations/supabase/client.ts`:
-- `SUPABASE_URL`: Your Supabase project URL
-- `SUPABASE_PUBLISHABLE_KEY`: Public API key for client-side access
+Bezoek `http://localhost:8080` voor de ontwikkelversomgeving.
+
+### Environment Setup
+
+```bash
+# Kopieer environment template
+cp .env.example .env.local
+
+# Vul Supabase credentials in
+code .env.local
+```
 
 ---
 
-## Technical Architecture
+## 🚀 Project Overzicht
 
-### Technology Stack
-- **Frontend**: React 18 + TypeScript + Vite
-- **UI Framework**: Tailwind CSS + Shadcn/ui components
-- **State Management**: React hooks + TanStack Query for server state
-- **Routing**: React Router DOM
+**Kraakman** is een full-stack automotive dealership platform gebouwd met React + TypeScript + Supabase. Het dient als zowel een publiekgerichte auto showroom als een administratief beheersysteem voor voertuiginventaris met geavanceerde afbeeldingbeheer, authenticatie en rol-gebaseerde toegangscontrole.
+
+### 🏗️ Architectuur Patroon
+
+- **Frontend**: React 18 + TypeScript + Vite + Tailwind CSS
 - **Backend**: Supabase (PostgreSQL + Auth + Storage + Edge Functions)
-- **Build Tool**: Vite with SWC
+- **Security**: Row Level Security (RLS) + Role-Based Access Control
+- **Type Safety**: Auto-generated TypeScript types van Supabase schema
 
-### Architecture Pattern
-- **Client-First**: Direct database access from frontend via Supabase
-- **Security**: Row Level Security (RLS) policies for data protection
-- **Type Safety**: Auto-generated TypeScript types from Supabase schema
-- **Component-Based**: Modular React components with clear separation of concerns
+### 📊 Kern Features
 
-### Data Flow
-```
-User Interface → React Components → Supabase Client → RLS Policies → PostgreSQL Database
-                                     ↓
-                              Authentication Check → User Roles Table
-                                     ↓
-                              File Upload → Supabase Storage → Database References
-```
+#### **Publieke Functionaliteiten:**
+- Bladeren door auto inventaris met filteren/zoek mogelijkheden
+- Gedetailleerde voertuiginformatie met afbeeldinggalerijen
+- Proefrit aanvragen via Edge Functions
+- Klant reviews sectie
 
----
-
-## Database Structure
-
-### Tables
-
-#### `cars` (Main vehicle catalog)
-**Purpose**: Central repository for all vehicle information
-**Key Fields**:
-- `id` (UUID, Primary Key, auto-generated)
-- `merk` (TEXT) - Vehicle brand
-- `model` (TEXT) - Vehicle model
-- `type` (TEXT, nullable) - Vehicle type/submodel
-- `bouwjaar` (INTEGER) - Manufacturing year
-- `prijs` (NUMERIC) - Price in euros
-- `status` (ENUM: 'aanbod'|'verkocht') - Vehicle status
-- `kilometerstand` (INTEGER, nullable) - Mileage
-- `transmissie`, `kleur`, `brandstof_type` (TEXT, nullable) - Basic specs
-- `motor_cc`, `vermogen_pk`, `topsnelheid_kmh`, `acceleratie_0_100` (NUMERIC, nullable) - Performance specs
-- `voertuig_type`, `zitplaatsen`, `deuren` (INTEGER/TEXT, nullable) - Physical specs
-- `btw_auto` (BOOLEAN) - VAT applicability
-- `omschrijving` (TEXT, nullable) - Description
-- `opties` (TEXT[], nullable) - Options/features array
-- `created_at`, `updated_at` (TIMESTAMP) - Timestamps
-
-#### `car_images` (Vehicle images)
-**Purpose**: Stores image URLs and display order for each vehicle
-**Key Fields**:
-- `id` (UUID, Primary Key, auto-generated)
-- `car_id` (UUID, Foreign Key → cars.id)
-- `url` (TEXT) - Image URL (from Supabase Storage)
-- `display_order` (INTEGER) - Sort order for images
-- `created_at` (TIMESTAMP)
-
-#### `user_roles` (Role management)
-**Purpose**: Maps Supabase auth users to application roles
-**Key Fields**:
-- `id` (UUID, Primary Key, auto-generated)
-- `user_id` (UUID, Foreign Key → auth.users.id)
-- `role` (ENUM: 'admin'|'user') - User role
-- `created_at` (TIMESTAMP)
-
-### Database Functions
-
-#### `is_admin(user_id UUID) RETURNS BOOLEAN`
-**Purpose**: Security function to check if user has admin privileges
-**Implementation**: Queries `user_roles` table for admin role
-**Security Level**: `SECURITY DEFINER` (runs with database owner privileges)
-
-### Row Level Security (RLS) Policies
-
-**Public Access**:
-- Anyone can `SELECT` from cars and car_images (view inventory)
-- No `INSERT/UPDATE/DELETE` permissions for public users
-
-**Admin Access** (via `is_admin()` function):
-- Full CRUD operations on all tables
-- Policy checks: `is_admin(auth.uid())` returns true for authorized users
+#### **Admin Functionaliteiten:**
+- Complete CRUD operaties voor voertuigen
+- Afbeelding upload/beheer met Supabase Storage
+- Status tracking (aanbod/verkocht)
+- Gebruikersrol management en authenticatie
+- Admin dashboard met sorteren/filteren
 
 ---
 
-## Authentication & Authorization
+## 🔧 Componenten Systeem
 
-### Authentication Flow
-1. **Admin Login** (`/admin` route):
-   - Standard Supabase `signInWithPassword()`
-   - Successful login triggers admin role verification
-   - Uses `supabase.rpc('is_admin', {user_id})` to check permissions
+Het project gebruikt een gestandaardiseerde componenten architectuur met Shadcn/ui als basis:
 
-2. **Session Management**:
-   - Sessions stored in localStorage
-   - Auto-refresh tokens enabled
-   - Auth state change listeners for reactive UI updates
-
-3. **Authorization Checks**:
-   - Frontend: Route guards and component-level auth checks
-   - Backend: RLS policies enforce database-level security
-   - Function-based: `is_admin()` centralizes permission logic
-
-### Role System
-- **Admin**: Full vehicle management, image uploads, status changes
-- **Public**: Browse inventory, view details, request test drives
-
----
-
-## File Structure & Components
-
-### Core Application Files
-
-#### `src/App.tsx`
-**Purpose**: Root application component with routing configuration
-**Routes Defined**:
-- `/` → Home (landing page)
-- `/aanbod` → Available vehicles (status = 'aanbod')
-- `/verkocht` → Sold vehicles (status = 'verkocht')
-- `/lpg` → LPG vehicles page
-- `/reviews` → Customer reviews
-- `/contact` → Contact page
-- `/auto/:id` → Vehicle detail page
-- `/admin` → Admin login
-- `/admin/dashboard` → Admin dashboard
-
-#### `src/integrations/supabase/`
-**client.ts**:
-- Supabase client configuration
-- Database connection settings
-- Authentication configuration (localStorage, persistSession, autoRefresh)
-
-**types.ts**:
-- Auto-generated TypeScript types from Supabase schema
-- Complete type definitions for all tables, functions, and enums
-- Ensures type safety across the application
-
-### Page Components
-
-#### `src/pages/Admin.tsx`
-**Purpose**: Admin authentication interface
-**Key Features**:
-- Email/password login form
-- Post-login admin role verification
-- Automatic redirect to dashboard on success
-- Error handling for invalid credentials/permissions
-
-#### `src/pages/AdminDashboard.tsx`
-**Purpose**: Complete vehicle management interface
-**Key Features**:
-- Vehicle listing with sorting/filtering
-- CRUD operations for vehicles
-- Image management integration
-- Form handling for all vehicle fields
-- Status management (aanbod/verkocht)
-- Logout functionality
-
-#### `src/pages/Aanbod.tsx`
-**Purpose**: Public vehicle catalog
-**Key Features**:
-- Fetches vehicles with `status = 'aanbod'`
-- Dynamic filtering (brand, price range, year)
-- Grid layout with vehicle cards
-- Integration with search functionality
-
-### UI Components
-
-#### `src/components/CarCard.tsx`
-**Purpose**: Vehicle display card for catalog listings
-**Key Features**:
-- Image carousel with navigation controls
-- Vehicle information display
-- Pricing and basic specifications
-- Link to detailed vehicle page
-- Responsive design with hover effects
-
-#### `src/components/CarFilters.tsx`
-**Purpose**: Dynamic filtering component for vehicle catalog
-**Key Features**:
-- Brand filtering (dynamically populated)
-- Price range slider
-- Year range selection
-- Search functionality across brand/model/type
-
-#### `src/components/Navigation.tsx`
-**Purpose**: Site navigation component
-**Key Features**:
-- Main navigation menu
-- Admin section (hidden for non-admins)
-- Responsive mobile menu
-
----
-
-## Supabase Integration
-
-### Database Operations
-
-#### Vehicle Queries
 ```typescript
-// Fetch available vehicles with images
-const { data } = await supabase
-  .from('cars')
-  .select(`
-    *,
-    car_images (url)
-  `)
-  .eq('status', 'aanbod')
-  .order('created_at', { ascending: false });
+// Voorbeeld: Gestandaardiseerde Button
+import { Button } from "@/components/ui/button"
+
+<Button variant="secondary" size="lg" onClick={handleAction}>
+  <Plus className="w-4 h-4 mr-2" />
+  Nieuwe Auto
+</Button>
 ```
 
-#### Image Upload Process
-1. File selection in frontend form
-2. Upload to Supabase Storage bucket `car-images`
-3. Generate public URL for each uploaded image
-4. Insert image records into `car_images` table with display order
-
-#### Authentication Flow
-```typescript
-// Admin login with role verification
-const { data, error } = await supabase.auth.signInWithPassword({
-  email,
-  password,
-});
-
-// Check admin privileges
-const { data: isAdminData } = await supabase.rpc('is_admin', {
-  user_id: data.user.id
-});
-```
-
-### Storage Configuration
-- **Bucket**: `car-images`
-- **Access**: Public URLs for vehicle images
-- **File Path Structure**: `{carId}/{randomName}.{extension}`
-
-### Real-time Capabilities
-- Auth state change listeners
-- Potential for real-time inventory updates
-- Session management with automatic token refresh
+**Key Componenten:**
+- **CarCard**: Voertuig display met afbeelding carousel
+- **CarFilters**: Geavanceerd filter interface
+- **Navigation**: Responsive navigatie met mobile menu
+- **AdminDashboard**: Compleet administratief interface
+- **PhotoManager**: Afbeelding beheer met drag & drop
 
 ---
 
-## Edge Functions
+## 🔐 Database Structuur
 
-### `send-testdrive-request` (`supabase/functions/send-testdrive-request/index.ts`)
-**Purpose**: Handle test drive requests and send email notifications
+### Hoofd Tabellen
 
-**Functionality**:
-- Accepts POST requests with test drive details
-- Sends email to business (info@autoservicevanderwaals.nl)
-- Sends confirmation email to customer
-- Uses Resend API for email delivery
-- CORS enabled for cross-origin requests
+```sql
+-- Auto catalogus met volledige specificaties
+CREATE TABLE cars (
+  id UUID PRIMARY KEY,
+  merk TEXT NOT NULL,           -- bv. BMW, Volkswagen
+  model TEXT NOT NULL,          -- bv. 3 Series, Golf
+  bouwjaar INTEGER NOT NULL,       -- Productiejaar
+  prijs DECIMAL(10,2) NOT NULL,      -- Prijs in EUR
+  status car_status DEFAULT 'aanbod',  -- 'aanbod' | 'verkocht'
+  opties TEXT[],                -- Opties als array
+  -- ... technische specificaties
+);
 
-**Request Schema**:
-```typescript
-interface TestDriveRequest {
-  name: string;
-  email: string;
-  carBrand: string;
-  carModel: string;
-}
+-- Afbeeldingen met display order
+CREATE TABLE car_images (
+  id UUID PRIMARY KEY,
+  car_id UUID REFERENCES cars(id),
+  url TEXT NOT NULL,           -- Image URL
+  display_order INTEGER DEFAULT 0    -- Sorteer volgorde
+);
+
+-- Rol-gebaseerde toegangscontrole
+CREATE TABLE user_roles (
+  user_id UUID REFERENCES auth.users(id),
+  role app_role DEFAULT 'user',      -- 'admin' | 'user'
+);
 ```
 
-**Environment Variables**:
-- `RESEND_API_KEY`: API key for Resend email service
+### Security Model
+
+**Row Level Security (RLS)** zorgt voor database-level toegangscontrole:
+- **Publieke leestoegang**: Iedereen kan auto's en afbeeldingen bekijken
+- **Admin only schrijfrechten**: Alleen admins kunnen data wijzigen
 
 ---
 
-## Deployment
+## 🚀 Deployment
 
-### Local Development
+### Development
+
 ```bash
-npm run dev          # Development server with hot reload
-npm run build        # Production build
-npm run preview      # Preview production build locally
+npm run dev      # Development server
+npm run build    # Productie build
+npm run preview  # Preview productie build
 ```
 
-### Production Deployment
-The application can be deployed to any static hosting service:
-- Vercel
-- Netlify
-- Supabase Hosting
-- GitHub Pages (with configuration)
-- AWS S3 + CloudFront
+### Productie
 
-### Environment Configuration
-- Supabase URL and keys are embedded in the client configuration
-- Edge functions require environment variables (RESEND_API_KEY)
-- No additional build configuration needed
+De applicatie is geconfigureerd voor Vercel deployment met:
+- **Automatische CI/CD** via GitHub Actions
+- **Environment management** met secrets
+- **Performance monitoring** met analytics
+- **HTTPS/security** headers automatisch
 
 ---
 
-## Supabase MCP Integration
+## 🔗 Project Structuur
 
-### Project Information
-- **Project ID**: `olmfshnswumcehnpclgz`
-- **Database**: PostgreSQL 17.6.1.036
-- **Region**: EU North-1
-- **Status**: Active and Healthy
-
-### MCP (Model Context Protocol) Capabilities
-
-#### Database Management via MCP
-The Supabase MCP server enables AI assistants to perform database operations:
-
-**Schema Exploration**:
-```bash
-# List all tables
-mcp__supabase__list_tables(project_id="olmfshnswumcehnpclgz")
-
-# List database extensions
-mcp__supabase__list_extensions(project_id="olmfshnswumcehnpclgz")
 ```
-
-**Data Operations**:
-```bash
-# Execute SQL queries
-mcp__supabase__execute_sql(
-  project_id="olmfshnswumcehnpclgz",
-  query="SELECT COUNT(*) FROM cars WHERE status = 'aanbod';"
-)
+src/
+├── components/          # Herbruikbare UI componenten
+│   ├── ui/             # Shadcn/ui basis componenten
+│   ├── CarCard.tsx    # Auto display component
+│   ├── CarFilters.tsx # Filter interface
+│   └── Navigation.tsx # Site navigatie
+├── pages/             # App pagina's
+│   ├── Aanbod.tsx     # Beschikbare auto's
+│   ├── CarDetail.tsx  # Auto detail pagina
+│   ├── Admin.tsx      # Admin login
+│   └── AdminDashboard.tsx # Admin dashboard
+├── services/          # Business logic laag
+│   └── carService.ts  # Auto data operaties
+├── integrations/       # Externe services
+│   └── supabase/      # Supabase client & types
+└── styles/            # CSS & design system
 ```
-
-**Security Analysis**:
-```bash
-# Review RLS policies
-mcp__supabase__execute_sql(
-  project_id="olmfshnswumcehnpclgz",
-  query="SELECT * FROM pg_policies WHERE schemaname = 'public';"
-)
-```
-
-#### Development Workflow with MCP
-
-**1. Schema Modifications**:
-- Add new tables/columns via SQL execution
-- Update RLS policies for new features
-- Modify user role system
-
-**2. Data Analysis**:
-- Query vehicle inventory statistics
-- Analyze user activity patterns
-- Generate reports from database
-
-**3. Debugging & Maintenance**:
-- Check database performance
-- Review query execution plans
-- Manage user roles and permissions
-
-**4. Migration Management**:
-```bash
-# List migrations
-mcp__supabase__list_migrations(project_id="olmfshnswumcehnpclgz")
-
-# Apply new migration
-mcp__supabase__apply_migration(
-  project_id="olmfshnswumcehnpclgz",
-  name="add_vehicle_features",
-  query="ALTER TABLE cars ADD COLUMN features JSONB;"
-)
-```
-
-### MCP Server Configuration
-The project uses the Supabase MCP server with these capabilities:
-- **HTTP Transport**: `https://mcp.supabase.com/mcp`
-- **Authentication**: OAuth-based (connected to your account)
-- **Project Access**: Full administrative access to Kraakman project
 
 ---
 
-## Future Development
+## 🤝 Support
 
-### Suggested Enhancements
-
-#### Technical Improvements
-1. **Advanced Search**: Implement full-text search with PostgreSQL FTS
-2. **Image Optimization**: Add image compression and responsive variants
-3. **Caching Strategy**: Implement React Query caching for better performance
-4. **Real-time Updates**: WebSocket integration for live inventory changes
-5. **API Layer**: Add backend API for complex business logic
-
-#### Feature Additions
-1. **Customer Management**: Extend user_roles for customer accounts
-2. **Appointment System**: Calendar integration for test drives
-3. **Analytics Dashboard**: Vehicle views, inquiries, conversion tracking
-4. **Multi-language Support**: Internationalization framework
-5. **Mobile App**: React Native or PWA implementation
-
-#### Database Extensions
-1. **Vehicle History**: Add service history and documentation tracking
-2. **Customer Reviews**: Review system with ratings
-3. **Price History**: Track price changes and market trends
-4. **Location Management**: Multiple dealership locations
-5. **Integration APIs**: Connect to external vehicle databases
-
-#### MCP-Powered Development
-1. **Automated Testing**: Generate test cases from schema analysis
-2. **Documentation**: Auto-generate API documentation
-3. **Performance Analysis**: Query optimization suggestions
-4. **Security Audits**: Automated RLS policy validation
-5. **Data Migration**: AI-assisted schema migrations
-
-### Development Guidelines
-1. **Type Safety**: Always use generated TypeScript types
-2. **Security**: Implement RLS policies for all new tables
-3. **Testing**: Write unit tests for business logic
-4. **Performance**: Monitor database query performance
-5. **Documentation**: Keep README and code comments updated
-
-This technical documentation provides a complete understanding of the Kraakman platform's architecture, implementation details, and development workflows. The Supabase MCP integration enables powerful AI-assisted development and database management capabilities.
+- **Issues**: Meld problemen via GitHub issues
+- **Documentation**: Bekijk [project-context](./project-context/) voor technische details
+- **Development**: Volg [Development Guide](./project-context/development.md)

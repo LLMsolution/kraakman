@@ -35,7 +35,7 @@ const TagInput = ({ tags, onChange, placeholder = "Voeg optie toe..." }: TagInpu
         onChange={(e) => setInputValue(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="h-12 border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none px-4 py-3 w-full"
+        className="h-14 border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none px-4 py-4 w-full"
       />
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">

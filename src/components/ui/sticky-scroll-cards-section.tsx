@@ -152,8 +152,8 @@ const AnimatedHeader = () => {
     );
 };
 
-// --- Text Content Component with "Lees meer" functionality ---
-const TextContent = ({ text, showFullText = false }: { text: string; showFullText?: boolean }) => {
+// --- Text Content Component ---
+const TextContent = ({ text }: { text: string }) => {
   const processText = (text: string) => {
     return text.split('\n').map((line, index) => {
       // Check if this line looks like a header (contains colon at the end)
@@ -167,15 +167,9 @@ const TextContent = ({ text, showFullText = false }: { text: string; showFullTex
         );
       }
 
-      // Truncate or show full text based on showFullText prop
-      const maxTextLength = 120; // Shorter text for mobile
-      const textToDisplay = line.trim();
-      const shouldTruncate = !showFullText && textToDisplay.length > maxTextLength;
-      const truncatedText = shouldTruncate ? textToDisplay.substring(0, maxTextLength) + '...' : textToDisplay;
-
       return (
         <p key={index} className="mb-3 leading-relaxed text-xs sm:text-sm leading-relaxed" style={{ color: 'var(--color-text-muted)', fontFamily: "'Inter', -piemacemTailwindCSSFont, 'Segoe UI', sans-serif" }}>
-          {truncatedText}
+          {line.trim()}
         </p>
       );
     });
@@ -190,13 +184,6 @@ const TextContent = ({ text, showFullText = false }: { text: string; showFullTex
 
 // This is the main component that orchestrates everything.
 export function StickyLPGSection() {
-  const [expandedTexts, setExpandedTexts] = useState<{ [key: number]: boolean }>({});
-  const toggleTextExpansion = (index: number) => {
-    setExpandedTexts(prev => ({
-      ...prev,
-      [index]: !prev[index]
-    }));
-  };
 
 
   return (
@@ -227,15 +214,79 @@ export function StickyLPGSection() {
         </div>
       </section>
 
-      {/* The main section for the LPG features */}
+      {/* The main section for the LPG features - Mobile First Design */}
       <section
-        className="section-padding py-32 flex flex-col items-center"
+        className="section-padding py-16 lg:py-32"
         style={{ backgroundColor: '#d4c9bf4d' }}
       >
         <div className="container-wide max-w-6xl">
+          {/* Mobile Layout - Default, visible on mobile and tablet */}
+          <div className="lg:hidden w-full space-y-6">
+            {lpgFeatures.map((feature, index) => (
+              <div
+                key={index}
+                className="w-full bg-[#F1EFEC] border border-[var(--color-border-primary)] rounded-lg p-5 sm:p-6 shadow-sm"
+                style={{
+                  fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif",
+                }}
+              >
+                {/* Service Title */}
+                <h3
+                  className="text-lg sm:text-xl font-semibold mb-4 tracking-tight leading-tight"
+                  style={{
+                    color: 'var(--color-text-primary)',
+                    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                  }}
+                >
+                  {feature.title}
+                </h3>
 
-          {/* The container for the sticky cards */}
-          <div className="w-full" style={{ paddingBottom: '0px' }}>
+                {/* Service Description */}
+                {feature.description && (
+                  <div className="mb-6">
+                    <TextContent text={feature.description} />
+                  </div>
+                )}
+
+                {/* Service Features */}
+                {feature.features && feature.features.length > 0 && (
+                  <div>
+                    <h4
+                      className="text-base sm:text-lg font-semibold mb-3"
+                      style={{
+                        color: 'var(--color-text-primary)',
+                        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                      }}
+                    >
+                      {feature.checklistTitle}
+                    </h4>
+                    <ul className="space-y-3 sm:space-y-2.5">
+                      {feature.features.map((item, itemIndex) => (
+                        <li key={itemIndex} className="flex items-start gap-3 sm:gap-2.5">
+                          <CheckCircle2
+                            className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0 mt-0.5"
+                            style={{ color: 'var(--color-primary)' }}
+                          />
+                          <span
+                            className="text-xs sm:text-sm leading-relaxed"
+                            style={{
+                              color: 'var(--color-text-muted)',
+                              fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                            }}
+                          >
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Layout - Original sticky cards, hidden on mobile/tablet */}
+          <div className="hidden lg:block w-full" style={{ paddingBottom: '0px' }}>
             {lpgFeatures.map((feature, index) => (
               <div
                 key={index}
@@ -266,27 +317,9 @@ export function StickyLPGSection() {
 
                   {feature.description && (
                     <div className="space-y-3">
-                      <TextContent 
-                        text={feature.description} 
-                        showFullText={expandedTexts[index]}
+                      <TextContent
+                        text={feature.description}
                       />
-                      {feature.description.length > 120 && (
-                        <button
-                          onClick={() => toggleTextExpansion(index)}
-                          className="text-sm font-medium flex items-center gap-1 hover:opacity-80 transition-opacity"
-                          style={{ color: 'var(--color-primary)' }}
-                        >
-                          {expandedTexts[index] ? (
-                            <>
-                              <span>Lees minder</span>
-                            </>
-                          ) : (
-                            <>
-                              <span>Lees meer</span>
-                            </>
-                          )}
-                        </button>
-                      )}
                     </div>
                   )}
                 </div>

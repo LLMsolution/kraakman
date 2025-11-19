@@ -66,143 +66,32 @@
     @apply max-w-[1600px] mx-auto;
   }
 
-  .btn-primary {
-    display: flex;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    gap: 8px;
-    justify-content: center;
-    line-height: 24px;
-    padding: 12px 16px;
-    text-align: center;
-    align-items: center;
-    transition: colors;
-    border: 1px solid;
-    background-color: var(--color-button-primary-bg) !important;
-    color: var(--color-button-primary-text) !important;
-    border-color: var(--color-button-primary-border) !important;
+  /* Carousel navigation buttons - fix mobile roundness */
+  .carousel-nav-button {
+    width: 48px !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    border-radius: 50% !important;
   }
 
-  .btn-primary:hover {
-    background-color: var(--color-button-primary-hover-bg) !important;
-    color: var(--color-button-primary-hover-text) !important;
-    border-color: var(--color-button-primary-hover-border) !important;
-  }
+  /* Utility classes using the spacing system */
+  .padding-tight { padding: var(--spacing-component-xs); }
+  .padding-snug { padding: var(--spacing-component-sm); }
+  .padding-normal { padding: var(--spacing-component-md); }
+  .padding-relaxed { padding: var(--spacing-component-lg); }
+  .padding-loose { padding: var(--spacing-component-xl); }
 
-  .btn-secondary {
-    display: flex;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    gap: 8px;
-    justify-content: center;
-    line-height: 24px;
-    padding: 12px 16px;
-    text-align: center;
-    align-items: center;
-    transition: colors;
-    border: 1px solid;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-    background-color: var(--color-button-secondary-bg) !important;
-    color: var(--color-button-secondary-text) !important;
-    border-color: var(--color-button-secondary-border) !important;
-  }
+  .margin-tight { margin: var(--spacing-component-xs); }
+  .margin-snug { margin: var(--spacing-component-sm); }
+  .margin-normal { margin: var(--spacing-component-md); }
+  .margin-relaxed { margin: var(--spacing-component-lg); }
+  .margin-loose { margin: var(--spacing-component-xl); }
 
-  .btn-secondary:hover {
-    background-color: var(--color-button-secondary-hover-bg) !important;
-    color: var(--color-button-secondary-hover-text) !important;
-    border-color: var(--color-button-secondary-hover-border) !important;
-  }
-
-  /* Active filter buttons - blue styling */
-  .active-filter-btn,
-  .brandstof-filter {
-    display: flex;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    gap: 8px;
-    justify-content: center;
-    line-height: 24px;
-    padding: 12px 16px;
-    text-align: center;
-    align-items: center;
-    transition: colors;
-    border: 1px solid;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-    background-color: var(--color-button-primary-bg) !important;
-    color: var(--color-button-primary-text) !important;
-    border-color: var(--color-button-primary-border) !important;
-  }
-
-  .active-filter-btn:hover,
-  .brandstof-filter:hover {
-    background-color: var(--color-button-primary-hover-bg) !important;
-    color: var(--color-button-primary-hover-text) !important;
-    border-color: var(--color-button-primary-hover-border) !important;
-  }
-
-  /* Default button variant */
-  button[data-variant="default"],
-  .btn-default,
-  button:not([variant]):not([data-variant]):not(.brandstof-filter):not(.active-filter-btn) {
-    display: flex;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    gap: 8px;
-    justify-content: center;
-    line-height: 24px;
-    padding: 12px 16px;
-    text-align: center;
-    align-items: center;
-    transition: colors;
-    border: 1px solid;
-    box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
-    background-color: var(--color-button-secondary-bg) !important;
-    color: var(--color-button-secondary-text) !important;
-    border-color: var(--color-button-secondary-border) !important;
-  }
-
-  /* Default button hover */
-  button[data-variant="default"]:hover,
-  .btn-default:hover,
-  button:not([variant]):not([data-variant]):not(.brandstof-filter):not(.active-filter-btn):hover {
-    background-color: var(--color-button-secondary-hover-bg) !important;
-    color: var(--color-button-secondary-hover-text) !important;
-    border-color: var(--color-button-secondary-hover-border) !important;
-  }
-
-  /* Make all buttons consistent styling */
-  button {
-    display: flex;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    font-size: 14px;
-    font-weight: 500;
-    gap: 8px;
-    justify-content: center;
-    line-height: 24px;
-    padding: 12px 16px;
-    text-align: center;
-    align-items: center;
-    transition: colors;
-  }
-
-  /* Explicit 1px border for dropdown buttons */
-  button.kraakman-dropdown {
-    border: 1px solid #030303 !important;
-  }
-
-  /* Explicit 1px borders for dropdown option buttons */
-  .kraakman-dropdown + div button {
-    border-bottom: 1px solid #030303 !important;
-  }
-
-  /* Remove bottom border from last dropdown option */
-  .kraakman-dropdown + div button:last-child {
-    border-bottom: none !important;
-  }
+  .gap-tight { gap: var(--spacing-component-xs); }
+  .gap-snug { gap: var(--spacing-component-sm); }
+  .gap-normal { gap: var(--spacing-component-md); }
+  .gap-relaxed { gap: var(--spacing-component-lg); }
+  .gap-loose { gap: var(--spacing-component-xl); }
 
   .arrow-animate {
     @apply transition-transform duration-300 group-hover:translate-x-1;

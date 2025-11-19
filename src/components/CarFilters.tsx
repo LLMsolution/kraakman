@@ -11,7 +11,7 @@ const inputClass = "h-12 border border-[#030303] bg-background focus:border-[#03
 const selectClass = "kraakman-native-select";
 const selectWrapperClass = "relative";
 
-// Custom Dropdown Component
+// Custom Dropdown Component using Button variant
 const CustomDropdown = ({ value, onChange, options, placeholder, disabled = false }: {
   value: string;
   onChange: (value: string) => void;
@@ -41,32 +41,35 @@ const CustomDropdown = ({ value, onChange, options, placeholder, disabled = fals
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <button
+      <Button
+        variant="default"
+        size="default"
         type="button"
-        className="kraakman-dropdown h-12 group border border-[#030303] bg-[#F1EFEC] hover:bg-[#123458] hover:text-[#F1EFEC] focus:bg-[#123458] focus:text-[#F1EFEC] focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none leading-6 px-4 py-3 w-full pr-10 appearance-none text-left cursor-pointer flex items-center justify-start"
+        className="w-full justify-start pr-10 appearance-none"
         onClick={() => setIsOpen(!isOpen)}
         disabled={disabled}
       >
-        <span className="text-[#030303] text-left flex-1 group-hover:text-[#F1EFEC]">
+        <span className="text-left flex-1">
           {selectedLabel}
         </span>
-        <ChevronDown className={`w-4 h-4 transition-transform flex-shrink-0 group-hover:text-[#F1EFEC] ${isOpen ? 'rotate-180' : ''}`} />
-      </button>
+        <ChevronDown className={`w-4 h-4 transition-transform flex-shrink-0 ${isOpen ? 'rotate-180' : ''}`} />
+      </Button>
 
       {isOpen && (
-        <div className="absolute z-50 w-full mt-[-1px] bg-[#F1EFEC] border border-[#030303] rounded-md shadow-lg max-h-60 overflow-auto">
+        <div className="absolute z-50 w-full mt-[-1px] bg-background border border-[#030303] rounded-md shadow-lg max-h-60 overflow-auto">
           {options.filter(option => option !== placeholder).map((option) => (
-            <button
+            <Button
               key={option}
+              variant="dropdown"
               type="button"
-              className="w-full text-left px-4 py-3 text-[#030303] border-b border-[#030303] last:border-b-0 hover:bg-[#123458] hover:text-white focus:bg-[#123458] focus:text-white focus:outline-none transition-colors"
+              className="w-full justify-start rounded-none border-x-0 border-t-0 border-b border-[#030303] last:border-b-0"
               onClick={() => {
                 onChange(option);
                 setIsOpen(false);
               }}
             >
               {option}
-            </button>
+            </Button>
           ))}
         </div>
       )}
@@ -199,58 +202,55 @@ const CarFilters = ({ options, onFilterChange }: CarFiltersProps) => {
   return (
     <div className="mb-8">
       {/* Filter and Sort Controls */}
-      <div className="flex items-center gap-4 mb-4 flex-wrap">
-        {/* Sort Label */}
-        <span className="text-sm font-medium">Sorteren op:</span>
+      <div className="space-y-4 mb-4">
+        {/* Sort Controls Row */}
+        <div className="flex flex-col items-start gap-4">
+          <div className="flex flex-row gap-3 w-full">
+            {/* Sort By Button */}
+            <div className="flex-1">
+              <CustomDropdown
+                value={sortBy === 'created_at' ? 'Datum' : sortBy === 'prijs' ? 'Prijs' : sortBy === 'bouwjaar' ? 'Bouwjaar vanaf' : 'Kilometerstand'}
+                onChange={(value) => setSortBy(value === 'Datum' ? 'created_at' : value === 'Prijs' ? 'prijs' : value === 'Bouwjaar vanaf' ? 'bouwjaar' : 'kilometerstand')}
+                options={["Datum", "Prijs", "Bouwjaar vanaf", "Kilometerstand"]}
+                placeholder="Datum"
+              />
+            </div>
 
-        {/* Sort By Button */}
-        <div className="h-12 min-h-[48px] px-4 py-3 text-sm font-medium leading-6 whitespace-nowrap inline-flex items-center justify-center gap-2 border transition-all focus-visible:outline-none focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 bg-[#F1EFEC] text-[#030303] border-[#030303] hover:bg-[#123458] hover:text-[#F1EFEC] hover:border-[#123458] rounded-md cursor-pointer">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className="bg-transparent border-none outline-none cursor-pointer text-sm font-medium w-full"
-          >
-            <option value="created_at">Datum</option>
-            <option value="prijs">Prijs</option>
-            <option value="bouwjaar">Bouwjaar vanaf</option>
-            <option value="kilometerstand">Kilometerstand</option>
-          </select>
+            {/* Sort Order Button */}
+            <div className="flex-1">
+              <CustomDropdown
+                value={sortOrder === 'desc' ? 'Aflopend' : 'Oplopend'}
+                onChange={(value) => setSortOrder(value === 'Aflopend' ? 'desc' : 'asc')}
+                options={["Aflopend", "Oplopend"]}
+                placeholder="Aflopend"
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Sort Order Button */}
-        <div className="h-12 min-h-[48px] px-4 py-3 text-sm font-medium leading-6 whitespace-nowrap inline-flex items-center justify-center gap-2 border transition-all focus-visible:outline-none focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 bg-[#F1EFEC] text-[#030303] border-[#030303] hover:bg-[#123458] hover:text-[#F1EFEC] hover:border-[#123458] rounded-md cursor-pointer">
-          <select
-            value={sortOrder}
-            onChange={(e) => setSortOrder(e.target.value as 'asc' | 'desc')}
-            className="bg-transparent border-none outline-none cursor-pointer text-sm font-medium w-full"
-          >
-            <option value="desc">Aflopend</option>
-            <option value="asc">Oplopend</option>
-          </select>
-        </div>
-
-        {/* Filter Toggle Button */}
-        <div className="flex items-center gap-2">
+        {/* Filter and Reset Controls Row */}
+        <div className="flex flex-col gap-4">
+          {/* Filter Toggle Button */}
           <Collapsible open={isOpen} onOpenChange={setIsOpen}>
             <CollapsibleTrigger asChild>
-              <div className="h-12 min-h-[48px] px-4 py-3 text-sm font-medium leading-6 whitespace-nowrap inline-flex items-center justify-center gap-2 border transition-all focus-visible:outline-none focus-visible:ring-0 disabled:pointer-events-none disabled:opacity-50 bg-[#F1EFEC] text-[#030303] border-[#030303] hover:bg-[#123458] hover:text-[#F1EFEC] hover:border-[#123458] rounded-md cursor-pointer">
+              <Button variant="default" size="default" className="w-full">
                 <Filter className="h-4 w-4 shrink-0" />
-                Filters
+                <span>Filters</span>
                 {activeFilterCount > 0 && (
                   <Badge variant="secondary" className="ml-1 px-2 py-0 text-xs">
                     {activeFilterCount}
                   </Badge>
                 )}
                 <ChevronDown className={`h-4 w-4 shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-              </div>
+              </Button>
             </CollapsibleTrigger>
           </Collapsible>
 
           {/* Reset All Button */}
           {hasActiveFilters && (
-            <Button variant="default" size="sm" onClick={handleReset} className="btn-primary">
+            <Button variant="default" size="sm" onClick={handleReset} className="w-full">
               <X className="h-4 w-4 mr-1" />
-              Reset alle filters
+              <span>Reset filters</span>
             </Button>
           )}
         </div>
@@ -262,44 +262,44 @@ const CarFilters = ({ options, onFilterChange }: CarFiltersProps) => {
         <div className="flex items-center gap-4 flex-wrap mb-4">
           {/* Active Filters as Badges */}
           {search && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('search')} className="active-filter-btn">
+            <Button variant="active" size="sm" onClick={() => clearFilter('search')}>
               Zoeken: {search}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}
           {selectedMerk && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('merk')} className="active-filter-btn">
+            <Button variant="active" size="sm" onClick={() => clearFilter('merk')}>
               Merk: {selectedMerk}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}
           {(minPrijs !== options.minPrijs || maxPrijs !== options.maxPrijs) && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('prijs')} className="active-filter-btn">
+            <Button variant="active" size="sm" onClick={() => clearFilter('prijs')}>
               Prijs: €{minPrijs.toLocaleString()} - €{maxPrijs.toLocaleString()}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}
           {(minBouwjaar !== options.minBouwjaar || maxBouwjaar !== options.maxBouwjaar) && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('bouwjaar')} className="active-filter-btn">
+            <Button variant="active" size="sm" onClick={() => clearFilter('bouwjaar')}>
               Bouwjaar: {minBouwjaar} - {maxBouwjaar}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}
           {selectedBrandstofType && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('brandstof')} className="active-filter-btn">
+            <Button variant="active" size="sm" onClick={() => clearFilter('brandstof')}>
               Brandstof: {selectedBrandstofType}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}
           {selectedTransmissie && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('transmissie')} className="active-filter-btn">
+            <Button variant="active" size="sm" onClick={() => clearFilter('transmissie')}>
               Transmissie: {selectedTransmissie}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}
           {(sortBy !== "created_at" || sortOrder !== "desc") && (
-            <Button variant="default" size="sm" onClick={() => clearFilter('sortering')} className="active-filter-btn">
-              Sortering: {sortBy === 'prijs' ? 'Prijs' : sortBy === 'bouwjaar' ? 'Bouwjaar' : 'Datum'} {sortOrder === 'asc' ? '↑' : '↓'}
+            <Button variant="active" size="sm" onClick={() => clearFilter('sortering')}>
+              Sortering: {sortBy === 'created_at' ? 'Datum' : sortBy === 'prijs' ? 'Prijs' : sortBy === 'bouwjaar' ? 'Bouwjaar vanaf' : 'Kilometerstand'} {sortOrder === 'asc' ? '↑' : '↓'}
               <X className="h-3 w-3 ml-1" />
             </Button>
           )}

@@ -5,24 +5,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-
-// Custom styling om te matchen met de rest van de site
-const inputClass = "h-12 border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none px-4 py-3";
-const textareaClass = "min-h-[100px] border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 transition-none resize-none !hover:border-transparent";
-const selectClass = "kraakman-native-select";
-const selectWrapperClass = "relative";
-const selectTriggerClass = "!h-12 !border !border-[#030303] !bg-[#F1EFEC] !text-[#030303] focus:!border-[#030303] focus:!ring-0 hover:!border-[#030303] transition-none";
-const selectContentClass = "!border-2 !border-[#030303] !bg-[#F1EFEC]";
-const selectItemClass = "hover:bg-[#d4c9bf4d] focus:bg-[#d4c9bf4d] cursor-pointer";
-const submitButtonClass = "h-12 border-2 border-[#030303] bg-[#F1EFEC] text-[#030303] hover:bg-[#123458] hover:text-[#F1EFEC] transition-colors font-medium";
-const deleteButtonClass = "h-12 border-2 border-[#030303] bg-[#F1EFEC] text-[#030303] hover:bg-red-600 hover:text-white transition-colors font-medium";
-const editButtonClass = "h-12 border-2 border-[#030303] bg-[#F1EFEC] text-[#030303] hover:bg-[#123458] hover:text-[#F1EFEC] transition-colors font-medium";
-import { useToast } from "@/hooks/use-toast";
-import Navigation from "@/components/Navigation";
-import PhotoManager from "@/components/PhotoManager";
-import { LogOut, Plus, Image, Trash2, Pencil, X } from "lucide-react";
-import CarFilters, { CustomDropdown } from "@/components/CarFilters";
-import TagInput from "@/components/TagInput";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +12,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
+// Custom styling om te matchen met de rest van de site
+const inputClass = "kraakman-input";
+const textareaClass = "kraakman-textarea";
+const selectClass = "kraakman-native-select";
+const selectWrapperClass = "relative";
+const selectTriggerClass = "kraakman-select-trigger";
+const selectContentClass = "kraakman-select-content";
+const selectItemClass = "kraakman-select-item";
+const submitButtonClass = "kraakman-button-secondary";
+const deleteButtonClass = "kraakman-button-danger";
+const editButtonClass = "kraakman-button-secondary";
+import { useToast } from "@/hooks/use-toast";
+import Navigation from "@/components/Navigation";
+import PhotoManager from "@/components/PhotoManager";
+import { LogOut, Plus, Image, Trash2, Pencil, X } from "lucide-react";
+import CarFilters, { CustomDropdown } from "@/components/CarFilters";
+import TagInput from "@/components/TagInput";
 import {
   Select,
   SelectContent,
@@ -73,8 +73,11 @@ const AdminDashboard = () => {
   const [filteredCars, setFilteredCars] = useState<Car[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isPhotoDialogOpen, setIsPhotoDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [editingCar, setEditingCar] = useState<Car | null>(null);
   const [photoCarId, setPhotoCarId] = useState<string | null>(null);
+  const [carToDelete, setCarToDelete] = useState<Car | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
   const [filterOptions, setFilterOptions] = useState({
     merken: [] as string[],
     minPrijs: 0,
@@ -308,10 +311,16 @@ const AdminDashboard = () => {
     }
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Weet je zeker dat je deze auto wilt verwijderen?")) return;
+  const handleDelete = (car: Car) => {
+    setCarToDelete(car);
+    setDeleteConfirmation("");
+    setIsDeleteDialogOpen(true);
+  };
 
-    const { error } = await supabase.from("cars").delete().eq("id", id);
+  const confirmDelete = async () => {
+    if (!carToDelete || deleteConfirmation !== carToDelete.merk) return;
+
+    const { error } = await supabase.from("cars").delete().eq("id", carToDelete.id);
 
     if (error) {
       toast({
@@ -321,11 +330,15 @@ const AdminDashboard = () => {
       });
     } else {
       toast({
-        title: "Verwijderd",
-        description: "Auto succesvol verwijderd.",
+        title: "Permanent Verwijderd",
+        description: `${carToDelete.merk} ${carToDelete.model} is permanent verwijderd uit de database.`,
       });
       loadCars();
     }
+
+    setIsDeleteDialogOpen(false);
+    setCarToDelete(null);
+    setDeleteConfirmation("");
   };
 
   const openEditDialog = async (car: Car) => {
@@ -402,37 +415,17 @@ const AdminDashboard = () => {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--color-bg-primary)' }}>
       <Navigation />
       <div style={{ borderBottom: '1px solid var(--color-border-primary)' }}>
-        <div className="container-wide section-padding flex justify-between items-center" style={{ paddingTop: '64px', paddingBottom: '64px' }}>
-          <h1 className="text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Admin Dashboard</h1>
-          <button
-            onClick={handleLogout}
-            className="inline-flex items-center gap-2 font-medium px-8 transition-colors border"
-            style={{
-              backgroundColor: 'var(--color-button-secondary-bg)',
-              color: 'var(--color-button-secondary-text)',
-              borderColor: 'var(--color-button-secondary-border)',
-              minHeight: '2.5rem',
-              paddingTop: '0.75rem',
-              paddingBottom: '0.75rem'
-            }}
-            onMouseOver={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-hover-bg)';
-              e.currentTarget.style.color = 'var(--color-button-secondary-hover-text)';
-              e.currentTarget.style.borderColor = 'var(--color-button-secondary-hover-border)';
-            }}
-            onMouseOut={(e) => {
-              e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-bg)';
-              e.currentTarget.style.color = 'var(--color-button-secondary-text)';
-              e.currentTarget.style.borderColor = 'var(--color-button-secondary-border)';
-            }}
-          >
+        <div className="container-wide flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-4 py-8 sm:py-16" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+          <h1 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Admin Dashboard</h1>
+          <Button variant="secondary" size="lg" onClick={handleLogout} className="w-full sm:w-auto">
             <LogOut className="w-4 h-4 mr-2" />
-            Uitloggen
-          </button>
+            <span className="hidden sm:inline">Uitloggen</span>
+            <span className="sm:hidden">Logout</span>
+          </Button>
         </div>
       </div>
 
-      <div className="container-wide section-padding" style={{ paddingTop: '64px', paddingBottom: '64px' }}>
+      <div className="container-wide px-4 py-8 sm:py-16" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
         {cars.length > 0 && (
           <CarFilters
             options={filterOptions}
@@ -444,72 +437,51 @@ const AdminDashboard = () => {
           <h2 className="text-xl font-semibold" style={{ color: 'var(--color-text-primary)' }}>Auto's Beheer</h2>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <button
-                onClick={resetForm}
-                className="inline-flex items-center gap-2 font-medium px-8 transition-colors border"
-                style={{
-                  backgroundColor: 'var(--color-button-secondary-bg)',
-                  color: 'var(--color-button-secondary-text)',
-                  borderColor: 'var(--color-button-secondary-border)',
-                  minHeight: '2.5rem',
-                  paddingTop: '0.75rem',
-                  paddingBottom: '0.75rem'
-                }}
-                onMouseOver={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-hover-bg)';
-                  e.currentTarget.style.color = 'var(--color-button-secondary-hover-text)';
-                  e.currentTarget.style.borderColor = 'var(--color-button-secondary-hover-border)';
-                }}
-                onMouseOut={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-bg)';
-                  e.currentTarget.style.color = 'var(--color-button-secondary-text)';
-                  e.currentTarget.style.borderColor = 'var(--color-button-secondary-border)';
-                }}
-              >
+              <Button variant="secondary" size="lg" onClick={resetForm}>
                 <Plus className="w-4 h-4 mr-2" />
                 Nieuwe Auto
-              </button>
+              </Button>
             </DialogTrigger>
-            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '1200px' }} hideCloseButton={true}>
+            <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '1800px' }} hideCloseButton={true}>
               <button
-                onClick={() => setIsDialogOpen(false)}
-                className="absolute top-4 right-4 z-50 flex items-center justify-center transition-all duration-200"
-                style={{
-                  cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  border: 'none',
-                  width: '40px',
-                  height: '40px',
-                  borderRadius: '50%',
-                  padding: 'var(--spacing-micro)',
-                  margin: 'var(--spacing-micro)',
-                  outline: 'none',
-                  boxShadow: 'none'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.backgroundColor = 'var(--color-primary)';
-                  e.currentTarget.style.border = '1px solid var(--color-primary)';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.border = 'none';
-                  e.currentTarget.style.boxShadow = 'none';
-                  e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
-                }}
-              >
-                <X className="h-5 w-5" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
-              </button>
+              onClick={() => setIsDialogOpen(false)}
+              className="absolute top-4 right-4 z-50 flex items-center justify-center transition-all duration-200"
+              style={{
+                cursor: 'pointer',
+                backgroundColor: 'transparent',
+                border: 'none',
+                width: '40px',
+                height: '40px',
+                borderRadius: '50%',
+                padding: 'var(--spacing-micro)',
+                margin: 'var(--spacing-micro)',
+                outline: 'none',
+                boxShadow: 'none'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+                e.currentTarget.style.border = '1px solid var(--color-primary)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.border = 'none';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
+              }}
+            >
+              <X className="h-5 w-5" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
+            </button>
               <DialogHeader className="pr-16">
-                <DialogTitle>
-                  {editingCar ? "Auto Bewerken" : "Nieuwe Auto Toevoegen"}
-                </DialogTitle>
-              </DialogHeader>
+              <DialogTitle>
+                {editingCar ? "Auto Bewerken" : "Nieuwe Auto Toevoegen"}
+              </DialogTitle>
+            </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">Basis Informatie</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label>Merk *</Label>
                       <Input
@@ -595,6 +567,7 @@ const AdminDashboard = () => {
                       <input
                         type="checkbox"
                         id="binnenkort_beschikbaar"
+                        className="kraakman-checkbox"
                         checked={formData.binnenkort_beschikbaar}
                         onChange={(e) => {
                           const newValue = e.target.checked;
@@ -613,23 +586,19 @@ const AdminDashboard = () => {
                           }
                         }}
                         disabled={formData.status === 'verkocht'}
-                        style={{
-                          width: '16px',
-                          height: '16px',
-                          borderRadius: '0px',
-                          border: '1px solid #030303',
-                          backgroundColor: formData.binnenkort_beschikbaar ? '#123458' : '#F1EFEC',
-                          cursor: formData.status === 'verkocht' ? 'not-allowed' : 'pointer',
-                          accentColor: '#123458',
-                          opacity: formData.status === 'verkocht' ? 0.5 : 1
-                        }}
                       />
-                      <Label htmlFor="binnenkort_beschikbaar" className={`cursor-pointer ${formData.status === 'verkocht' ? 'opacity-50' : ''}`}>Binnenkort beschikbaar</Label>
+                      <label
+                        htmlFor="binnenkort_beschikbaar"
+                        className={`kraakman-checkbox-label cursor-pointer ${formData.status === 'verkocht' ? 'opacity-50' : ''}`}
+                      >
+                        Binnenkort beschikbaar
+                      </label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
                         id="gereserveerd"
+                        className="kraakman-checkbox"
                         checked={formData.gereserveerd}
                         onChange={(e) => {
                           const newValue = e.target.checked;
@@ -648,43 +617,35 @@ const AdminDashboard = () => {
                           }
                         }}
                         disabled={formData.status === 'verkocht'}
-                        style={{
-                          width: '16px',
-                          height: '16px',
-                          borderRadius: '0px',
-                          border: '1px solid #030303',
-                          backgroundColor: formData.gereserveerd ? '#123458' : '#F1EFEC',
-                          cursor: formData.status === 'verkocht' ? 'not-allowed' : 'pointer',
-                          accentColor: '#123458',
-                          opacity: formData.status === 'verkocht' ? 0.5 : 1
-                        }}
                       />
-                      <Label htmlFor="gereserveerd" className={`cursor-pointer ${formData.status === 'verkocht' ? 'opacity-50' : ''}`}>Gereserveerd</Label>
+                      <label
+                        htmlFor="gereserveerd"
+                        className={`kraakman-checkbox-label cursor-pointer ${formData.status === 'verkocht' ? 'opacity-50' : ''}`}
+                      >
+                        Gereserveerd
+                      </label>
                     </div>
                     <div className="flex items-center space-x-2">
                       <input
                         type="checkbox"
                         id="btw_auto"
+                        className="kraakman-checkbox"
                         checked={formData.btw_auto}
                         onChange={(e) => setFormData({ ...formData, btw_auto: e.target.checked })}
-                        style={{
-                          width: '16px',
-                          height: '16px',
-                          borderRadius: '0px',
-                          border: '1px solid #030303',
-                          backgroundColor: formData.btw_auto ? '#123458' : '#F1EFEC',
-                          cursor: 'pointer',
-                          accentColor: '#123458'
-                        }}
                       />
-                      <Label htmlFor="btw_auto" className="cursor-pointer">BTW Auto</Label>
+                      <label
+                        htmlFor="btw_auto"
+                        className="kraakman-checkbox-label cursor-pointer"
+                      >
+                        BTW Auto
+                      </label>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">Specificaties</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label>Transmissie</Label>
                       <Input
@@ -726,7 +687,7 @@ const AdminDashboard = () => {
 
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">Technische Gegevens</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label>Motor (cc)</Label>
                       <Input
@@ -815,7 +776,7 @@ const AdminDashboard = () => {
                     />
                   </div>
                 )}
-                <Button type="submit" className={`${submitButtonClass} w-full`} disabled={loading}>
+                <Button type="submit" variant="secondary" size="lg" className="w-full" disabled={loading}>
                   {loading ? "Opslaan..." : editingCar ? "Bijwerken" : "Toevoegen"}
                 </Button>
               </form>
@@ -834,122 +795,213 @@ const AdminDashboard = () => {
             </p>
           </div>
         ) : (
-          <div style={{ border: '1px solid var(--color-border-primary)' }}>
-            <table className="w-full">
-              <thead style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
-                <tr>
-                  <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Merk</th>
-                  <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Model</th>
-                  <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Bouwjaar</th>
-                  <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Prijs</th>
-                  <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Status</th>
-                  <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Acties</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCars.map((car) => (
-                  <tr key={car.id} style={{ borderTop: '1px solid var(--color-border-primary)' }}>
-                    <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>{car.merk}</td>
-                    <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>{car.model}</td>
-                    <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>{car.bouwjaar}</td>
-                    <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>€ {car.prijs.toLocaleString()}</td>
-                    <td className="p-4">
-                      <span
-                        className="px-2 py-1 text-xs rounded"
-                        style={{
-                          backgroundColor: car.status === "aanbod" ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
-                          color: car.status === "aanbod" ? 'var(--color-background)' : 'var(--color-text-primary)'
-                        }}
-                      >
-                        {car.status}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            setPhotoCarId(car.id);
-                            setIsPhotoDialogOpen(true);
-                          }}
-                          title="Foto's beheren"
-                          className="inline-flex items-center gap-1 font-medium px-3 py-1 transition-colors border text-sm"
-                          style={{
-                            backgroundColor: 'var(--color-button-secondary-bg)',
-                            color: 'var(--color-button-secondary-text)',
-                            borderColor: 'var(--color-button-secondary-border)',
-                            minHeight: '2rem'
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-hover-bg)';
-                            e.currentTarget.style.color = 'var(--color-button-secondary-hover-text)';
-                            e.currentTarget.style.borderColor = 'var(--color-button-secondary-hover-border)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-bg)';
-                            e.currentTarget.style.color = 'var(--color-button-secondary-text)';
-                            e.currentTarget.style.borderColor = 'var(--color-button-secondary-border)';
-                          }}
-                        >
-                          <Image className="w-4 h-4 mr-1" />
-                          Foto's
-                        </button>
-                        <button
-                          onClick={() => openEditDialog(car)}
-                          className="inline-flex items-center gap-1 font-medium px-3 py-1 transition-colors border text-sm"
-                          style={{
-                            backgroundColor: 'var(--color-button-secondary-bg)',
-                            color: 'var(--color-button-secondary-text)',
-                            borderColor: 'var(--color-button-secondary-border)',
-                            minHeight: '2rem'
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-hover-bg)';
-                            e.currentTarget.style.color = 'var(--color-button-secondary-hover-text)';
-                            e.currentTarget.style.borderColor = 'var(--color-button-secondary-hover-border)';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-bg)';
-                            e.currentTarget.style.color = 'var(--color-button-secondary-text)';
-                            e.currentTarget.style.borderColor = 'var(--color-button-secondary-border)';
-                          }}
-                        >
-                          <Pencil className="w-4 h-4 mr-1" />
-                          Bewerken
-                        </button>
-                        <button
-                          onClick={() => handleDelete(car.id)}
-                          className="inline-flex items-center gap-1 font-medium px-3 py-1 transition-colors border text-sm"
-                          style={{
-                            backgroundColor: 'var(--color-button-secondary-bg)',
-                            color: 'var(--color-button-secondary-text)',
-                            borderColor: 'var(--color-button-secondary-border)',
-                            minHeight: '2rem'
-                          }}
-                          onMouseOver={(e) => {
-                            e.currentTarget.style.backgroundColor = '#dc2626';
-                            e.currentTarget.style.color = 'white';
-                            e.currentTarget.style.borderColor = '#dc2626';
-                          }}
-                          onMouseOut={(e) => {
-                            e.currentTarget.style.backgroundColor = 'var(--color-button-secondary-bg)';
-                            e.currentTarget.style.color = 'var(--color-button-secondary-text)';
-                            e.currentTarget.style.borderColor = 'var(--color-button-secondary-border)';
-                          }}
-                        >
-                          <Trash2 className="h-4 w-4" />
-                          Verwijder
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="space-y-4">
+            {/* Desktop/Tablet Table View */}
+            <div className="hidden lg:block">
+              <div style={{ border: '1px solid var(--color-border-primary)' }}>
+                <table className="w-full">
+                  <thead style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
+                    <tr>
+                      <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Merk</th>
+                      <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Model</th>
+                      <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Bouwjaar</th>
+                      <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Prijs</th>
+                      <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Status</th>
+                      <th className="text-left p-4" style={{ color: 'var(--color-text-primary)' }}>Acties</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCars.map((car) => (
+                      <tr key={car.id} style={{ borderTop: '1px solid var(--color-border-primary)' }}>
+                        <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>{car.merk}</td>
+                        <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>{car.model}</td>
+                        <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>{car.bouwjaar}</td>
+                        <td className="p-4" style={{ color: 'var(--color-text-primary)' }}>€ {car.prijs.toLocaleString()}</td>
+                        <td className="p-4">
+                          <span
+                            className="px-2 py-1 text-xs rounded"
+                            style={{
+                              backgroundColor: car.status === "aanbod" ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
+                              color: car.status === "aanbod" ? 'var(--color-background)' : 'var(--color-text-primary)'
+                            }}
+                          >
+                            {car.status}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex gap-2">
+                            <Button
+                              size="sm"
+                              onClick={() => {
+                                setPhotoCarId(car.id);
+                                setIsPhotoDialogOpen(true);
+                              }}
+                              title="Foto's beheren"
+                            >
+                              <Image className="w-4 h-4 mr-1" />
+                              Foto's
+                            </Button>
+                            <Button
+                              variant="secondary"
+                              size="sm"
+                              onClick={() => openEditDialog(car)}
+                            >
+                              <Pencil className="w-4 h-4 mr-1" />
+                              Bewerken
+                            </Button>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              onClick={() => handleDelete(car)}
+                              className="hover:bg-red-600 hover:text-white hover:border-red-600"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                              Verwijder
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Tablet View - Simplified Table */}
+            <div className="hidden md:block lg:hidden">
+              <div style={{ border: '1px solid var(--color-border-primary)' }}>
+                <table className="w-full">
+                  <thead style={{ backgroundColor: 'var(--color-bg-secondary)' }}>
+                    <tr>
+                      <th className="text-left p-3" style={{ color: 'var(--color-text-primary)' }}>Auto</th>
+                      <th className="text-left p-3" style={{ color: 'var(--color-text-primary)' }}>Prijs</th>
+                      <th className="text-left p-3" style={{ color: 'var(--color-text-primary)' }}>Status</th>
+                      <th className="text-left p-3" style={{ color: 'var(--color-text-primary)' }}>Acties</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredCars.map((car) => (
+                      <tr key={car.id} style={{ borderTop: '1px solid var(--color-border-primary)' }}>
+                        <td className="p-3" style={{ color: 'var(--color-text-primary)' }}>
+                          <div className="font-medium">{car.merk} {car.model}</div>
+                          <div className="text-sm opacity-75">{car.bouwjaar}</div>
+                        </td>
+                        <td className="p-3" style={{ color: 'var(--color-text-primary)' }}>€ {car.prijs.toLocaleString()}</td>
+                        <td className="p-3">
+                          <span
+                            className="px-2 py-1 text-xs rounded"
+                            style={{
+                              backgroundColor: car.status === "aanbod" ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
+                              color: car.status === "aanbod" ? 'var(--color-background)' : 'var(--color-text-primary)'
+                            }}
+                          >
+                            {car.status}
+                          </span>
+                        </td>
+                        <td className="p-3">
+                          <div className="flex gap-1">
+                            <Button
+                              size="sm"
+                              onClick={() => openEditDialog(car)}
+                              title="Bewerken"
+                            >
+                              <Pencil className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              variant="default"
+                              size="sm"
+                              onClick={() => handleDelete(car)}
+                              className="hover:bg-red-600 hover:text-white hover:border-red-600"
+                              title="Verwijderen"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            {/* Mobile View - Card Layout */}
+            <div className="md:hidden space-y-3">
+              {filteredCars.map((car) => (
+                <div
+                  key={car.id}
+                  className="border rounded-lg p-4 space-y-3"
+                  style={{
+                    backgroundColor: 'var(--color-bg-card)',
+                    borderColor: 'var(--color-border-primary)'
+                  }}
+                >
+                  {/* Header with Title and Status */}
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-lg" style={{ color: 'var(--color-text-primary)' }}>
+                        {car.merk} {car.model}
+                      </h3>
+                      <p className="text-sm opacity-75" style={{ color: 'var(--color-text-secondary)' }}>
+                        {car.bouwjaar}
+                      </p>
+                    </div>
+                    <span
+                      className="px-2 py-1 text-xs rounded"
+                      style={{
+                        backgroundColor: car.status === "aanbod" ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
+                        color: car.status === "aanbod" ? 'var(--color-background)' : 'var(--color-text-primary)',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      {car.status}
+                    </span>
+                  </div>
+
+                  {/* Price */}
+                  <div className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                    € {car.prijs.toLocaleString()}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-2 pt-2">
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => {
+                        setPhotoCarId(car.id);
+                        setIsPhotoDialogOpen(true);
+                      }}
+                      className="flex-1"
+                    >
+                      <Image className="w-4 h-4 mr-1" />
+                      Foto's
+                    </Button>
+                    <Button
+                      size="sm"
+                      onClick={() => openEditDialog(car)}
+                      className="flex-1"
+                    >
+                      <Pencil className="w-4 h-4 mr-1" />
+                      Bewerken
+                    </Button>
+                    <Button
+                      variant="default"
+                      size="sm"
+                      onClick={() => handleDelete(car)}
+                      className="hover:bg-red-600 hover:text-white hover:border-red-600"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
         <Dialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen}>
-          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '1200px' }} hideCloseButton={true}>
+          <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '1800px' }} hideCloseButton={true}>
             <button
               onClick={() => setIsPhotoDialogOpen(false)}
               className="absolute top-4 right-4 z-50 flex items-center justify-center transition-all duration-200"
@@ -984,6 +1036,85 @@ const AdminDashboard = () => {
               <DialogTitle>Foto's Beheren</DialogTitle>
             </DialogHeader>
             {photoCarId && <PhotoManager carId={photoCarId} />}
+          </DialogContent>
+        </Dialog>
+
+        {/* Delete Confirmation Dialog */}
+        <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+          <DialogContent
+            className="max-w-md w-full"
+            style={{ backgroundColor: 'var(--color-bg-card)', border: '1px solid var(--color-border-primary)' }}
+            hideCloseButton={true}
+          >
+            <DialogHeader>
+              <DialogTitle style={{ color: 'var(--color-secondary)' }}>Auto Permanent Verwijderen</DialogTitle>
+            </DialogHeader>
+
+            {carToDelete && (
+              <div className="space-y-4">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                  <p className="text-sm font-medium text-red-800 mb-2">⚠️ WAARSCHUWING</p>
+                  <p className="text-xs text-red-700 mb-3">
+                    Deze actie is permanent en kan niet ongedaan worden gemaakt.
+                    De auto en alle gerelateerde data worden permanent uit de database verwijderd.
+                  </p>
+                  <div className="text-sm text-gray-700">
+                    <p><strong>Auto:</strong> {carToDelete.merk} {carToDelete.model}</p>
+                    <p><strong>Bouwjaar:</strong> {carToDelete.bouwjaar}</p>
+                    <p><strong>Prijs:</strong> €{carToDelete.prijs.toLocaleString()}</p>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="deleteConfirmation">
+                    Typ <strong>"{carToDelete.merk}"</strong> om te bevestigen:
+                  </Label>
+                  <Input
+                    id="deleteConfirmation"
+                    className="kraakman-input"
+                    value={deleteConfirmation}
+                    onChange={(e) => setDeleteConfirmation(e.target.value)}
+                    placeholder={carToDelete.merk}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && deleteConfirmation === carToDelete.merk) {
+                        confirmDelete();
+                      }
+                    }}
+                  />
+                </div>
+
+                <div className="flex gap-3 pt-2">
+                  <Button
+                    variant="default"
+                    size="default"
+                    onClick={confirmDelete}
+                    disabled={deleteConfirmation !== carToDelete.merk}
+                    className="flex-1 bg-red-600 text-white border-red-600 hover:bg-red-700 hover:border-red-700 disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Permanent Verwijderen
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="default"
+                    onClick={() => {
+                      setIsDeleteDialogOpen(false);
+                      setCarToDelete(null);
+                      setDeleteConfirmation("");
+                    }}
+                    className="flex-1"
+                  >
+                    Annuleren
+                  </Button>
+                </div>
+
+                {deleteConfirmation && deleteConfirmation !== carToDelete.merk && (
+                  <p className="text-xs text-red-600 text-center">
+                    Merk komt niet overeen. Typ "{carToDelete.merk}" om te bevestigen.
+                  </p>
+                )}
+              </div>
+            )}
           </DialogContent>
         </Dialog>
       </div>

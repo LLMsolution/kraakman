@@ -98,14 +98,37 @@ const Navigation = () => {
 
           {/* Mobile Menu Button */}
           <button
-            className="p-2 rounded-lg hover:bg-muted transition-colors"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
+            className="flex items-center justify-center transition-all duration-200"
+            style={{
+              cursor: 'pointer',
+              backgroundColor: 'transparent',
+              border: 'none',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              padding: '8px',
+              outline: 'none',
+              boxShadow: 'none'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+              e.currentTarget.style.border = '1px solid var(--color-primary)';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = 'transparent';
+              e.currentTarget.style.border = 'none';
+              e.currentTarget.style.boxShadow = 'none';
+              e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
+            }}
           >
             {isMobileMenuOpen ? (
-              <X className="h-6 w-6" />
+              <X className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
             ) : (
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" style={{ color: 'var(--color-text-primary)', transition: 'color 0.2s ease' }} />
             )}
           </button>
         </div>

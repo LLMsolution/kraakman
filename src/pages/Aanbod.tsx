@@ -208,6 +208,7 @@ const Aanbod = () => {
                       merk={car.merk}
                       model={car.model}
                       type={car.type || undefined}
+                      voertuig_type={car.voertuig_type || undefined}
                       bouwjaar={car.bouwjaar}
                       kilometerstand={car.kilometerstand || undefined}
                       prijs={car.prijs}

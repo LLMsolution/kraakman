@@ -10,8 +10,8 @@ import { Dialog, DialogContent, DialogTitle, DialogDescription } from "@/compone
 import { Loader2, X, ChevronLeft, ChevronRight, ChevronDown, ChevronUp, ArrowLeft, CheckCircle2, AlertCircle } from "lucide-react";
 import CarCard from "@/components/CarCard";
 
-// Custom styling voor consistente input velden zonder focus/hover effects
-const inputClass = "h-12 border border-black bg-[#F1EFEC] focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-black hover:border-black transition-none leading-6 px-4 py-3";
+// Standardized input styling
+const inputClass = "h-12 border border-secondary bg-background focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-secondary hover:border-secondary transition-none leading-6 px-4 py-3";
 
 // Define proper TypeScript interfaces
 interface CarImage {
@@ -58,6 +58,7 @@ const CarDetail = () => {
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showAllOptions, setShowAllOptions] = useState(false);
   const [breakpoint, setBreakpoint] = useState<'sm' | 'md' | 'lg'>('lg');
+  const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
   // Detect current breakpoint for responsive "Zie meer" logic
   useEffect(() => {
@@ -488,89 +489,50 @@ const CarDetail = () => {
               {/* Simple Tab Navigation */}
               <div className="flex flex-col sm:flex-row sm:gap-4 gap-2 mb-6 overflow-x-auto sm:overflow-x-visible pb-2 sm:pb-0">
                 <Button
-                  className="w-full sm:w-auto transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500"
+                  variant="default"
+                  className="w-full sm:w-auto"
                   style={{
-                    backgroundColor: activeTab === 'omschrijving' ? 'var(--color-primary)' : 'transparent',
-                    color: activeTab === 'omschrijving' ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
-                    borderColor: activeTab === 'omschrijving' ? 'var(--color-primary)' : 'var(--color-border-primary)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: 'clamp(14px, 4vw, 16px)',
-                    fontWeight: '500',
-                    minHeight: '48px'
+                    backgroundColor: activeTab === 'omschrijving' || hoveredTab === 'omschrijving' ? '#123458' : '#F1EFEC',
+                    color: activeTab === 'omschrijving' || hoveredTab === 'omschrijving' ? '#F1EFEC' : '#030303',
+                    borderColor: activeTab === 'omschrijving' || hoveredTab === 'omschrijving' ? '#123458' : '#030303',
                   }}
                   onClick={() => setActiveTab('omschrijving')}
-                  onMouseEnter={(e) => {
-                    if (activeTab !== 'omschrijving') {
-                      e.currentTarget.style.borderColor = 'var(--color-primary)';
-                      e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb, 18, 52, 88), 0.1)';
-                    }
+                  onMouseEnter={() => {
+                    if (activeTab !== 'omschrijving') setHoveredTab('omschrijving');
                   }}
-                  onMouseLeave={(e) => {
-                    if (activeTab !== 'omschrijving') {
-                      e.currentTarget.style.borderColor = 'var(--color-border-primary)';
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }
-                  }}
+                  onMouseLeave={() => setHoveredTab(null)}
                 >
                   Omschrijving
                 </Button>
                 <Button
-                  className="w-full sm:w-auto transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500"
+                  variant="default"
+                  className="w-full sm:w-auto"
                   style={{
-                    backgroundColor: activeTab === 'opties' ? 'var(--color-primary)' : 'transparent',
-                    color: activeTab === 'opties' ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
-                    borderColor: activeTab === 'opties' ? 'var(--color-primary)' : 'var(--color-border-primary)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: 'clamp(14px, 4vw, 16px)',
-                    fontWeight: '500',
-                    minHeight: '48px'
+                    backgroundColor: activeTab === 'opties' || hoveredTab === 'opties' ? '#123458' : '#F1EFEC',
+                    color: activeTab === 'opties' || hoveredTab === 'opties' ? '#F1EFEC' : '#030303',
+                    borderColor: activeTab === 'opties' || hoveredTab === 'opties' ? '#123458' : '#030303',
                   }}
                   onClick={() => setActiveTab('opties')}
-                  onMouseEnter={(e) => {
-                    if (activeTab !== 'opties') {
-                      e.currentTarget.style.borderColor = 'var(--color-primary)';
-                      e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb, 18, 52, 88), 0.1)';
-                    }
+                  onMouseEnter={() => {
+                    if (activeTab !== 'opties') setHoveredTab('opties');
                   }}
-                  onMouseLeave={(e) => {
-                    if (activeTab !== 'opties') {
-                      e.currentTarget.style.borderColor = 'var(--color-border-primary)';
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }
-                  }}
+                  onMouseLeave={() => setHoveredTab(null)}
                 >
                   Opties en extra's
                 </Button>
                 <Button
-                  className="w-full sm:w-auto transition-all duration-200 hover:border-blue-500 focus:border-blue-500 focus:ring-blue-500"
+                  variant="default"
+                  className="w-full sm:w-auto"
                   style={{
-                    backgroundColor: activeTab === 'techniek' ? 'var(--color-primary)' : 'transparent',
-                    color: activeTab === 'techniek' ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
-                    borderColor: activeTab === 'techniek' ? 'var(--color-primary)' : 'var(--color-border-primary)',
-                    borderWidth: '1px',
-                    borderStyle: 'solid',
-                    fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif',
-                    fontSize: 'clamp(14px, 4vw, 16px)',
-                    fontWeight: '500',
-                    minHeight: '48px'
+                    backgroundColor: activeTab === 'techniek' || hoveredTab === 'techniek' ? '#123458' : '#F1EFEC',
+                    color: activeTab === 'techniek' || hoveredTab === 'techniek' ? '#F1EFEC' : '#030303',
+                    borderColor: activeTab === 'techniek' || hoveredTab === 'techniek' ? '#123458' : '#030303',
                   }}
                   onClick={() => setActiveTab('techniek')}
-                  onMouseEnter={(e) => {
-                    if (activeTab !== 'techniek') {
-                      e.currentTarget.style.borderColor = 'var(--color-primary)';
-                      e.currentTarget.style.backgroundColor = 'rgba(var(--color-primary-rgb, 18, 52, 88), 0.1)';
-                    }
+                  onMouseEnter={() => {
+                    if (activeTab !== 'techniek') setHoveredTab('techniek');
                   }}
-                  onMouseLeave={(e) => {
-                    if (activeTab !== 'techniek') {
-                      e.currentTarget.style.borderColor = 'var(--color-border-primary)';
-                      e.currentTarget.style.backgroundColor = 'transparent';
-                    }
-                  }}
+                  onMouseLeave={() => setHoveredTab(null)}
                 >
                   Techniek
                 </Button>
@@ -892,7 +854,7 @@ const CarDetail = () => {
                     id={similarCar.id}
                     merk={similarCar.merk}
                     model={similarCar.model}
-                    type={similarCar.type || undefined}
+
                     bouwjaar={similarCar.bouwjaar}
                     kilometerstand={similarCar.kilometerstand || undefined}
                     prijs={similarCar.prijs}
@@ -920,18 +882,20 @@ const CarDetail = () => {
 
               <button
                 onClick={() => setLightboxOpen(false)}
-                className="absolute top-4 right-4 z-50 flex items-center justify-center rounded-full transition-all duration-200"
+                className="absolute sm:top-4 sm:right-4 z-50 flex items-center justify-center rounded-full transition-all duration-200"
                 style={{
                   cursor: 'pointer',
-                  backgroundColor: 'transparent',
-                  border: 'none',
+                  backgroundColor: 'var(--color-background)',
+                  border: '1px solid var(--color-secondary)',
                   width: '48px',
                   height: '48px',
                   borderRadius: '50%',
                   padding: 'var(--spacing-micro)',
                   margin: 'var(--spacing-micro)',
                   outline: 'none',
-                  boxShadow: 'none'
+                  boxShadow: 'none',
+                  top: 'var(--spacing-component-md)',
+                  right: 'var(--spacing-component-md)'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.backgroundColor = 'var(--color-primary)';
@@ -940,8 +904,8 @@ const CarDetail = () => {
                   e.currentTarget.querySelector('svg').style.color = 'var(--color-text-inverse)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.border = 'none';
+                  e.currentTarget.style.backgroundColor = 'var(--color-background)';
+                  e.currentTarget.style.border = '1px solid var(--color-secondary)';
                   e.currentTarget.style.boxShadow = 'none';
                   e.currentTarget.querySelector('svg').style.color = 'var(--color-text-primary)';
                 }}
@@ -1023,12 +987,13 @@ const CarDetail = () => {
                 </button>
 
                 <div
-                  className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white text-sm px-4 py-2 rounded-full"
+                  className="absolute left-1/2 -translate-x-1/2 sm:bottom-4 text-white text-sm px-4 py-2 rounded-full"
                   style={{
                     backgroundColor: 'var(--color-background)',
                     padding: 'var(--spacing-component-sm) var(--spacing-component-md)',
                     borderRadius: '20px',
-                    color: 'var(--color-text-primary)'
+                    color: 'var(--color-text-primary)',
+                    bottom: 'var(--spacing-component-md)'
                   }}
                 >
                   {lightboxIndex + 1} / {allImages.length}

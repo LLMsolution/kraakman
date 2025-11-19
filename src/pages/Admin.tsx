@@ -6,8 +6,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 
-// Custom styling om te matchen met de rest van de site
-const inputClass = "h-12 border border-[#030303] bg-[#F1EFEC] focus:border-[#030303] focus:ring-0 focus:ring-offset-0 focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 hover:border-[#030303] transition-none px-4 py-3";
+// Standardized input styling
+const inputClass = "kraakman-input h-12 bg-white px-4 py-3";
 
 const Admin = () => {
   const navigate = useNavigate();

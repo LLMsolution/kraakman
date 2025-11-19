@@ -3,47 +3,77 @@
 
 /* Form Input Styles */
 .kraakman-input {
-  @apply h-10 border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
-         focus:border-[var(--color-border-primary)] focus:ring-0 focus:ring-offset-0
+  border: 1px solid #030303 !important;
+  @apply h-14 bg-[var(--color-bg-primary)]
+         px-4 py-4 focus:ring-0 focus:ring-offset-0
          focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0
-         hover:border-[var(--color-border-primary)] transition-none leading-6;
+         transition-none leading-6;
+}
+
+.kraakman-input:hover {
+  border: 1px solid #030303 !important;
 }
 
 .kraakman-input:focus {
-  outline: none;
-  box-shadow: none;
+  border: 1px solid #030303 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Textarea Styles */
 .kraakman-textarea {
-  @apply min-h-[100px] border border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
-         focus:border-[var(--color-border-primary)] focus:ring-0
+  border: 1px solid #030303 !important;
+  @apply min-h-[100px] bg-[var(--color-bg-primary)]
+         px-4 py-4 focus:ring-0
          transition-none resize-none;
+}
+
+.kraakman-textarea:hover {
+  border: 1px solid #030303 !important;
+}
+
+.kraakman-textarea:focus {
+  border: 1px solid #030303 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Specifieke override voor de omschrijving textarea */
 .omschrijving-textarea {
-  border-color: #030303 !important;
+  border: 1px solid #030303 !important;
+  @apply px-4 py-4;
 }
 
 .omschrijving-textarea:hover {
-  border-color: #030303 !important;
+  border: 1px solid #030303 !important;
 }
 
-.kraakman-textarea:focus {
-  outline: none;
-  box-shadow: none;
+.omschrijving-textarea:focus {
+  border: 1px solid #030303 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Select Component Overrides */
 .kraakman-select-trigger {
-  @apply !h-10 !border !border-[var(--color-border-primary)] !bg-[var(--color-bg-primary)]
-         !text-[var(--color-text-primary)] focus:!border-[var(--color-border-primary)]
-         focus:!ring-0 hover:!border-[var(--color-border-primary)] transition-none;
+  border-color: #030303 !important;
+  @apply !h-14 !border !bg-[var(--color-bg-primary)]
+         !text-[var(--color-text-primary)] focus:!ring-0 transition-none;
+}
+
+.kraakman-select-trigger:hover {
+  border-color: #030303 !important;
+}
+
+.kraakman-select-trigger:focus {
+  border-color: #030303 !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .kraakman-select-content {
-  @apply !border-2 !border-[var(--color-border-primary)] !bg-[var(--color-bg-primary)];
+  border-color: #030303 !important;
+  @apply !border-2 !bg-[var(--color-bg-primary)];
 }
 
 .kraakman-select-item {
@@ -52,11 +82,11 @@
 
 /* Custom Native Select Styling */
 .kraakman-native-select {
-  @apply h-12 border-2 border-[var(--color-border-primary)] bg-[#F1EFEC]
+  @apply h-14 border-2 border-[var(--color-border-primary)] bg-[#F1EFEC]
          focus:border-[var(--color-border-primary)] focus:ring-0 focus:ring-offset-0
          focus:outline-none focus-visible:outline-none focus-visible:ring-0
          focus-visible:ring-offset-0 hover:border-[var(--color-border-primary)]
-         transition-none leading-6 px-4 py-3 w-full pr-10 appearance-none
+         transition-none leading-6 px-4 py-4 w-full pr-10 appearance-none
          text-[var(--color-text-primary)] cursor-pointer text-left;
 }
 
@@ -135,21 +165,47 @@
   border-bottom: none !important;
 }
 
+/* CustomDropdown specific styling */
+.kraakman-custom-dropdown-trigger {
+  @apply h-14 border border-[#030303] bg-[var(--color-bg-primary)]
+         text-[var(--color-text-primary)] hover:bg-[var(--color-primary)]
+         hover:text-[var(--color-text-inverse)] transition-all duration-200
+         px-4 py-4 w-full justify-start pr-10 appearance-none;
+}
+
+.kraakman-custom-dropdown-content {
+  @apply absolute z-50 w-full mt-[-1px] bg-[var(--color-bg-primary)]
+         border border-[#030303] rounded-md shadow-lg max-h-60 overflow-auto;
+  border-width: 1px !important;
+}
+
+.kraakman-custom-dropdown-option {
+  @apply w-full justify-start rounded-none;
+  border-bottom: 1px solid #030303 !important;
+  border-left: none !important;
+  border-right: none !important;
+  border-top: none !important;
+}
+
+.kraakman-custom-dropdown-option:last-child {
+  border-bottom: none !important;
+}
+
 /* Button Styles */
 .kraakman-button-secondary {
-  @apply h-10 border-2 border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
+  @apply h-14 border-2 border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
          text-[var(--color-text-primary)] hover:bg-[var(--color-primary)]
          hover:text-[var(--color-text-inverse)] transition-colors font-medium;
 }
 
 .kraakman-button-primary {
-  @apply h-10 border-2 border-[var(--color-primary)] bg-[var(--color-primary)]
+  @apply h-14 border-2 border-[var(--color-primary)] bg-[var(--color-primary)]
          text-[var(--color-text-inverse)] hover:bg-[var(--color-bg-primary)]
          hover:text-[var(--color-text-primary)] transition-colors font-medium;
 }
 
 .kraakman-button-danger {
-  @apply h-10 border-2 border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
+  @apply h-14 border-2 border-[var(--color-border-primary)] bg-[var(--color-bg-primary)]
          text-[var(--color-text-primary)] hover:bg-red-600 hover:text-white
          transition-colors font-medium;
 }
@@ -278,4 +334,100 @@
 
 .kraakman-form-field > textarea {
   @apply kraakman-textarea;
+}
+
+/* Custom Checkbox Styling - Kraakman Design System */
+.kraakman-checkbox {
+  /* Hide default browser checkbox completely */
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+
+  /* Reset and sizing */
+  width: 22px !important;
+  height: 22px !important;
+  margin: 0;
+  padding: 0;
+  cursor: pointer;
+
+  /* Custom styling - unselected state: zwarte border, witte achtergrond */
+  background-color: var(--color-bg-primary); /* #F1EFEC */
+  border: 2px solid var(--color-border-primary); /* #030303 */
+  border-radius: 0;
+
+  /* Transitions */
+  transition: all 0.2s ease-in-out;
+
+  /* Focus states - consistent met buttons */
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500/50 focus-visible:ring-offset-2;
+
+  /* Positioning for custom content */
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hover state - unselected: blauwe achtergrond */
+.kraakman-checkbox:hover:not(:checked):not(:disabled) {
+  background-color: var(--color-primary); /* #123458 */
+  border-color: var(--color-primary);
+}
+
+/* Checked/Selected state: blauwe achtergrond, witte vink */
+.kraakman-checkbox:checked {
+  background-color: var(--color-primary); /* #123458 */
+  border-color: var(--color-primary);
+}
+
+/* Custom checkmark SVG - witte vickmark */
+.kraakman-checkbox:checked::before {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2 6L5 9L10 3' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 1;
+  transform: scale(1);
+  transition: all 0.15s ease-in-out;
+}
+
+/* Subtle scale animation on check */
+.kraakman-checkbox:checked::before {
+  animation: checkboxCheck 0.2s ease-in-out;
+}
+
+@keyframes checkboxCheck {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Disabled state */
+.kraakman-checkbox:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--color-bg-primary);
+  border-color: var(--color-border-primary);
+}
+
+.kraakman-checkbox:disabled:checked::before {
+  opacity: 0.7;
+}
+
+/* Checkbox Labels with proper touch targets */
+.kraakman-checkbox-label {
+  @apply flex items-center gap-3 text-sm font-medium leading-6 cursor-pointer select-none;
+  min-height: 44px;
 }

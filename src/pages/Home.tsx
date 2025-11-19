@@ -1,12 +1,14 @@
+import React from "react";
+import { Timeline } from "@/components/ui/timeline";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import heroImage from "@/assets/hero-home.jpg";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, CheckCircle2 } from "lucide-react";
 import { useCachedReviews } from "@/hooks/useCachedReviews";
+import heroImage from "@/assets/hero-home.jpg";
 
-const Home = () => {
+export default function TimelinePage() {
   const { reviewsData, loading } = useCachedReviews();
 
   // Helper function to render stars
@@ -27,8 +29,238 @@ const Home = () => {
     ));
   };
 
+  const data = [
+    {
+      title: "Stefan van der Waals",
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Technische Expertise
+          </h3>
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Stefan is vanaf zijn 16e werkzaam in de automotive branche en is in 2007 Autoservice van der Waals gestart uit pure liefhebberij. Diverse opleidingen en meer dan 30 jaar ervaring hebben ervoor gezorgd dat Autoservice van der Waals allround is. De werkplaats in Wieringerwaard is voorzien van alle mogelijke benodigdheden voor onderhoud, modificatie en reparatie aan uw auto.
+          </p>
+
+          <div className="space-y-4 mt-8">
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Meer dan 30 jaar ervaring:</strong> Actief in de automotive branche sinds 16e
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Allround dienstverlening:</strong> Onderhoud, modificatie en reparatie
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <div className="flex flex-col">
+                <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                  <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Werkplaats in Wieringerwaard:</strong> Volledig uitgeruste werkplaats
+                </p>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Kees Kraakman",
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Commerciële Kracht
+          </h3>
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Waar Kees eerst als tevreden klant over de vloer kwam bij Autoservice van der Waals, is dit vanuit daar uitgegroeid tot een goede vriendschap en uiteindelijk de grondlegging geweest voor WK Auto Selectie. Kees, die zelf ook opgeleid is aan de IVA en een automotive achtergrond heeft, is dus absoluut niet onbekend op dit terrein.
+          </p>
+
+          <div className="space-y-4 mt-8">
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>IVA opgeleid:</strong> Professionele automotive achtergrond
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Commercieel inzicht:</strong> Klantgericht ondernemerschap
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Goede vriendschap:</strong> Basis voor succesvolle samenwerking
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "De Ideale Match",
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Technische en Commerciële Synergie
+          </h3>
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            De combinatie van de technische achtergrond van Stefan met de commerciële achtergrond van Kees zijn de ideale match en zo wordt WK Auto Selectie gestart in 2022.
+          </p>
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Aangezien service en kwaliteit hoog in het vaandel staan, worden de auto's bij WK Auto Selectie, die in het assortiment beschikbaar zijn, door ons zelf opgehaald. Op deze manier worden de auto's persoonlijk gecontroleerd, zodat zij aan de hoge kwaliteitseisen voldoen. Hierbij is een sluitende onderhoudshistorie een absolute must.
+          </p>
+          <div className="space-y-4 mt-6">
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Persoonlijke selectie:</strong> Alle auto's worden door ons zelf opgehaald en gecontroleerd
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Hoge kwaliteitseisen:</strong> Alleen auto's die voldoen aan onze strikte eisen
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Sluitende historie:</strong> Volledige onderhoudsgeschiedenis is vereist
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Kwaliteit & Service",
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Hoogste Kwaliteitsstandaarden
+          </h3>
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Aangezien service en kwaliteit hoog in het vaandel staan, worden de auto's bij WK Auto Selectie, die in het assortiment beschikbaar zijn, door ons zelf opgehaald. Op deze manier worden de auto's persoonlijk gecontroleerd, zodat zij aan de hoge kwaliteitseisen voldoen. Hierbij is een sluitende onderhoudshistorie een absolute must.
+          </p>
+          <div className="space-y-4 mt-6">
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Persoonlijke selectie:</strong> Alle auto's worden door ons zelf opgehaald en gecontroleerd
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Hoge kwaliteitseisen:</strong> Alleen auto's die voldoen aan onze strikte eisen
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Sluitende historie:</strong> Volledige onderhoudsgeschiedenis is vereist
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+    {
+      title: "Maatwerk & Service",
+      content: (
+        <div className="space-y-6">
+          <h3 className="text-2xl font-semibold mb-4" style={{ color: 'var(--color-text-primary)' }}>
+            Uw Wens, Onze Service
+          </h3>
+          <p className="text-base md:text-lg leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Maatwerk nodig? Bel ons! Met aandacht voor de klant en een luisterend oor betreffende de wensen, gaan wij voor u persoonlijk op zoek naar datgene dat volledig bij uw wensen aansluit. Van brommer tot bedrijfsbus, wij zijn uw adres!
+          </p>
+          <div className="space-y-4 mt-6">
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Persoonlijke benadering:</strong> Met aandacht voor de klant en een luisterend oor voor uw wensen
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Technische expertise:</strong> Deskundig advies en professionele uitvoering
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Van brommer tot bedrijfsbus:</strong> Alle typen voertuigen welkom
+              </p>
+            </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2
+                className="h-6 w-6 flex-shrink-0 mt-0.5"
+                style={{ color: 'var(--color-primary)' }}
+              />
+              <p className="text-base" style={{ color: 'var(--color-text-secondary)' }}>
+                <strong className="font-medium" style={{ color: 'var(--color-text-primary)' }}>Maatwerk oplossingen:</strong> Zoeken naar het perfecte voertuig dat bij uw wensen aansluit
+              </p>
+            </div>
+          </div>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--color-background)' }}>
       <Navigation />
 
       {/* Hero Section */}
@@ -39,7 +271,7 @@ const Home = () => {
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <div className="text-center text-white section-padding">
+          <div className="text-center text-white px-4 py-16 md:px-8 md:py-12 lg:px-16 lg:py-16">
             <h1 className="text-5xl md:text-7xl font-bold mb-6">
               Auto Service van der Waals
             </h1>
@@ -47,7 +279,7 @@ const Home = () => {
               Specialist in auto onderhoud, reparatie en LPG installaties.
               Meer dan 30 jaar ervaring in Wieringerwaard.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
               <Button asChild>
                 <Link to="/aanbod">
                   Bekijk ons aanbod
@@ -65,8 +297,8 @@ const Home = () => {
       </section>
 
       {/* Reviews Section */}
-      <section className="section-padding py-20 bg-[#F1EFEC]">
-        <div className="container-wide">
+      <section className="py-16 md:py-12 lg:py-16" style={{ backgroundColor: 'var(--color-accent)' }}>
+        <div className="px-4 md:px-8 lg:px-16 container-wide">
           <div className="text-center">
             <h2 className="text-3xl font-bold mb-8" style={{ color: 'var(--color-text-primary)' }}>Kies voor zekerheid</h2>
 
@@ -114,34 +346,34 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="section-padding py-20 bg-primary text-primary-foreground">
-        <div className="container-wide text-center">
-          <h2 className="text-3xl font-bold mb-4">
-            Klaar voor uw volgende auto-ervaring?
-          </h2>
-          <p className="text-lg mb-8 opacity-90">
-            Neem contact op voor een vrijblijvend advies of maak direct een afspraak
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center w-full sm:w-auto">
-            <Button asChild>
-              <Link to="/contact">
-                Neem contact op
-              </Link>
-            </Button>
-            <Button asChild>
-              <Link to="/aanbod">
-                Bekijk occasions
-              </Link>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <main>
+        <Timeline data={data} />
 
-  
+        {/* CTA Section */}
+        <section className="py-16 md:py-12 lg:py-16" style={{ backgroundColor: 'var(--color-primary)' }}>
+          <div className="px-4 md:px-8 lg:px-16 container-wide text-center">
+            <h2 className="text-3xl font-bold mb-4" style={{ color: 'var(--color-text-inverse)' }}>
+              Klaar voor uw volgende auto-ervaring?
+            </h2>
+            <p className="text-lg mb-8" style={{ color: 'var(--color-text-inverse)', opacity: 0.9 }}>
+              Neem contact op voor een vrijblijvend advies of maak direct een afspraak
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center">
+              <Button asChild>
+                <Link to="/contact">
+                  Neem contact op
+                </Link>
+              </Button>
+              <Button asChild>
+                <Link to="/aanbod">
+                  Bekijk occasions
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+      </main>
       <Footer />
     </div>
   );
-};
-
-export default Home;
+}

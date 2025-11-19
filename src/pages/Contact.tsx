@@ -201,12 +201,12 @@ const Contact = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" variant="secondary" className="w-full" disabled={loading}>
                   {loading ? "Verzenden..." : "Verstuur bericht"}
                 </Button>
               </div>
 
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground text-center">
                 Door dit formulier te verzenden gaat u akkoord met onze privacy voorwaarden.
                 Wij behandelen uw gegevens vertrouwelijk.
               </p>

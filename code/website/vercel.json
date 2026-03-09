@@ -1,0 +1,131 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "vite",
+  "redirects": [
+    { "source": "/lpg.php", "destination": "/lpg", "permanent": true },
+
+    { "source": "/listings/", "destination": "/aanbod", "permanent": true },
+    { "source": "/listings", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/listing/:slug", "destination": "/aanbod", "permanent": true },
+    { "source": "/listing/:slug/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/over-ons", "destination": "/", "permanent": true },
+    { "source": "/over-ons/", "destination": "/", "permanent": true },
+
+    { "source": "/diensten", "destination": "/", "permanent": true },
+    { "source": "/diensten/", "destination": "/", "permanent": true },
+
+    { "source": "/voorbeelden", "destination": "/", "permanent": true },
+    { "source": "/voorbeelden/", "destination": "/", "permanent": true },
+
+    { "source": "/find-your-favorite-car-in-a-minute", "destination": "/aanbod", "permanent": true },
+    { "source": "/find-your-favorite-car-in-a-minute/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/im-looking-for", "destination": "/aanbod", "permanent": true },
+    { "source": "/im-looking-for/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/body-type/:slug", "destination": "/aanbod", "permanent": true },
+    { "source": "/body-type/:slug/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/tag/:slug", "destination": "/aanbod", "permanent": true },
+    { "source": "/tag/:slug/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/category/:slug", "destination": "/aanbod", "permanent": true },
+    { "source": "/category/:slug/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/author/:slug", "destination": "/", "permanent": true },
+    { "source": "/author/:slug/", "destination": "/", "permanent": true },
+
+    { "source": "/page/:number", "destination": "/aanbod", "permanent": true },
+    { "source": "/page/:number/", "destination": "/aanbod", "permanent": true },
+
+    { "source": "/feed", "destination": "/", "permanent": true },
+    { "source": "/feed/", "destination": "/", "permanent": true },
+    { "source": "/comments/feed", "destination": "/", "permanent": true },
+    { "source": "/comments/feed/", "destination": "/", "permanent": true },
+    { "source": "/:path*/feed", "destination": "/", "permanent": true },
+    { "source": "/:path*/feed/", "destination": "/", "permanent": true },
+
+    { "source": "/wp-admin/:path*", "destination": "/", "permanent": false },
+    { "source": "/wp-login.php", "destination": "/", "permanent": false },
+    { "source": "/wp-cron.php", "destination": "/", "permanent": false },
+    { "source": "/wp-content/:path*", "destination": "/", "permanent": false },
+    { "source": "/wp-includes/:path*", "destination": "/", "permanent": false },
+    { "source": "/xmlrpc.php", "destination": "/", "permanent": false },
+
+    { "source": "/lpg/", "destination": "/lpg", "permanent": true },
+    { "source": "/contact/", "destination": "/contact", "permanent": true },
+
+    { "source": "/:path+/", "destination": "/:path+", "permanent": true }
+  ],
+  "rewrites": [
+    {
+      "source": "/sitemap.xml",
+      "destination": "/api/sitemap"
+    },
+    {
+      "source": "/llms.txt",
+      "destination": "/api/llms"
+    },
+    {
+      "source": "/auto/:id",
+      "has": [
+        {
+          "type": "header",
+          "key": "user-agent",
+          "value": "(?i).*(WhatsApp|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|Discordbot|Pinterest|Googlebot|bingbot|Applebot).*"
+        }
+      ],
+      "destination": "/api/og/:id"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
+        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
+        { "key": "Strict-Transport-Security", "value": "max-age=31536000; includeSubDomains" },
+        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://va.vercel-scripts.com https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://*.supabase.co data:; connect-src 'self' https://*.supabase.co https://vitals.vercel-insights.com https://challenges.cloudflare.com; font-src 'self'; frame-src https://challenges.cloudflare.com https://maps.google.com https://www.google.com; frame-ancestors 'none'; object-src 'none'" },
+        { "key": "Content-Language", "value": "nl" }
+      ]
+    },
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        { "key": "Content-Type", "value": "application/xml" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/robots.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/llms.txt",
+      "headers": [
+        { "key": "Content-Type", "value": "text/plain; charset=utf-8" },
+        { "key": "Cache-Control", "value": "public, max-age=86400" }
+      ]
+    },
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }
+      ]
+    }
+  ]
+}

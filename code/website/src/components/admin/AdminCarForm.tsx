@@ -54,7 +54,7 @@ export const INITIAL_FORM_STATE: CarFormState = {
   merk: "",
   model: "",
   voertuig_type: "",
-  bouwjaar: new Date().getFullYear(),
+  bouwjaar: 0,
   transmissie: "",
   kleur: "",
   kilometerstand: 0,
@@ -252,6 +252,8 @@ const AdminCarForm = ({
             acceleratie_0_100: formData.acceleratie_0_100,
             zitplaatsen: formData.zitplaatsen,
             deuren: formData.deuren,
+            prijs: formData.prijs,
+            kenteken: formData.kenteken || undefined,
             opties: opties.length > 0 ? opties : undefined,
           }),
         }
@@ -399,9 +401,9 @@ const AdminCarForm = ({
                 <Input
                   className={inputClass}
                   type="number"
-                  value={formData.bouwjaar}
-                  onChange={(e) => setFormData({ ...formData, bouwjaar: parseInt(e.target.value) })}
-                  required
+                  value={formData.bouwjaar || ""}
+                  onChange={(e) => setFormData({ ...formData, bouwjaar: parseInt(e.target.value) || 0 })}
+                  placeholder="Bijv. 2021"
                 />
               </div>
               <div>

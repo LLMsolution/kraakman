@@ -67,32 +67,32 @@ async function enrichWithLLM(
     .map(([k, v]) => `${k}: ${v}`)
     .join("\n");
 
-  const prompt = `Je bent een automotive expert. Op basis van de volgende bekende gegevens van een auto, vul de ontbrekende technische specificaties in. Geef ook een lijst van standaard opties en extra's die dit model typisch heeft.
+  const prompt = `Je bent een automotive database met kennis van alle auto's. Geef de technische specificaties voor de onderstaande auto.
 
 Bekende gegevens:
 ${carInfo}
 
-Geef je antwoord ALLEEN als JSON object met de volgende velden (laat velden weg die je niet met zekerheid kunt invullen):
+Geef je antwoord als JSON object. Vul ALLE velden in — voor bekende modellen zijn deze specificaties algemeen beschikbaar:
 {
-  "voertuig_type": "Personenauto", "Bedrijfswagen", "SUV", "MPV", etc.,
-  "brandstof_type": "Benzine", "Diesel", "Elektrisch", "Hybride", "LPG", etc.,
+  "voertuig_type": "Personenauto" of "SUV" of "MPV" of "Bedrijfswagen" of "Cabrio" of "Coupé" of "Station",
+  "brandstof_type": "Benzine" of "Diesel" of "Elektrisch" of "Hybride" of "LPG",
   "transmissie": "Automaat" of "Handgeschakeld",
   "vermogen_pk": getal,
   "topsnelheid_kmh": getal,
-  "acceleratie_0_100": getal (in seconden, bijv. 8.5),
-  "motor_cc": getal (0 voor elektrische auto's, alleen als niet al bekend),
-  "motor_cilinders": getal (0 voor elektrische auto's, alleen als niet al bekend),
+  "acceleratie_0_100": getal in seconden,
+  "motor_cc": getal (0 voor volledig elektrisch),
+  "motor_cilinders": getal (0 voor volledig elektrisch),
   "zitplaatsen": getal,
   "deuren": getal,
-  "gewicht_kg": getal (rijklaar gewicht),
+  "gewicht_kg": getal rijklaar,
   "opties": ["optie 1", "optie 2", ...]
 }
 
-Belangrijk:
-- Vul voertuig_type en brandstof_type ALTIJD in als het merk en model bekend zijn
-- Geef alleen opties die standaard of zeer gebruikelijk zijn voor dit specifieke model en uitvoering
-- Als je een waarde niet zeker weet, laat die weg
-- Geef het antwoord als puur JSON, geen andere tekst`;
+Regels:
+- Vul ALLE technische velden in (voertuig_type, brandstof_type, transmissie, vermogen_pk, topsnelheid_kmh, acceleratie_0_100, motor_cc, motor_cilinders, zitplaatsen, deuren, gewicht_kg)
+- Gebruik de meest verkochte uitvoering als er meerdere varianten bestaan
+- Geef 5-15 standaard opties voor dit model
+- Antwoord ALLEEN met het JSON object, geen tekst eromheen`;
 
   const response = await fetch(
     "https://openrouter.ai/api/v1/chat/completions",
@@ -105,7 +105,7 @@ Belangrijk:
       body: JSON.stringify({
         model: OPENROUTER_MODEL,
         messages: [{ role: "user", content: prompt }],
-        temperature: 0.3,
+        temperature: 0,
       }),
     }
   );

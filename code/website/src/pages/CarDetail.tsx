@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -19,8 +19,14 @@ import SEO, { buildCarSchema, buildBreadcrumbSchema } from "@/components/SEO";
 const inputClass = "h-12 border border-secondary bg-background focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-secondary hover:border-secondary transition-none leading-6 px-4 py-3";
 
 const CarDetail = () => {
+  const { id } = useParams<{ id: string }>();
   const { car, similarCars: hookSimilarCars, loading, error } = useCarDetail();
   const similarCars = (hookSimilarCars || []).slice(0, 3);
+
+  // Scroll to top when navigating to a different car (e.g. via similar cars)
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [id]);
 
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [lightboxIndex, setLightboxIndex] = useState(0);

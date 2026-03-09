@@ -10,11 +10,11 @@ const OPENROUTER_MODEL = "google/gemini-2.0-flash-001";
 
 const FEW_SHOT_EXAMPLE = `Voorbeeld van een goede omschrijving:
 
-Auto: Volvo XC60 2.0 T Powershift, 2010, 203 pk, Automaat, Benzine, 123.000 km
+Auto gegevens: Volvo XC60 2.0 T Powershift, 2010, 203 pk, Automaat, Benzine, 123.000 km, Zwart
 Opties: Leren bekleding, Stoelverwarming, Automatische climate control, Navigatiesysteem, Trekhaak, Parkeersensoren, Cruise control, BLIS dodehoekbewaking
 
-Omschrijving:
-Een ruime gezins-SUV met 203 pk turbomotor en Powershift automaat. De verhoogde zitpositie geeft goed overzicht en het interieur biedt voldoende ruimte voor het hele gezin. De motor is soepel en maakt inhalen moeiteloos.
+Gewenste output (direct de tekst, geen titel):
+Een ruime gezins-SUV met 203 pk turbomotor en Powershift automaat. Deze zwarte XC60 biedt met zijn verhoogde zitpositie goed overzicht en het interieur heeft voldoende ruimte voor het hele gezin. De motor is soepel en maakt inhalen moeiteloos.
 
 Het leren interieur met stoelverwarming is prettig op koude ochtenden. De automatische climate control houdt het binnenklimaat aangenaam, en met de trekhaak kunt u een aanhanger of fietsendrager meenemen.
 
@@ -48,32 +48,30 @@ serve(async (req) => {
 
     const carData = await req.json();
 
-    // Build car summary from all available fields
-    const parts: string[] = [];
-    if (carData.merk) parts.push(`Merk: ${carData.merk}`);
-    if (carData.model) parts.push(`Model: ${carData.model}`);
-    if (carData.bouwjaar) parts.push(`Bouwjaar: ${carData.bouwjaar}`);
-    if (carData.voertuig_type)
-      parts.push(`Type: ${carData.voertuig_type}`);
-    if (carData.brandstof_type)
-      parts.push(`Brandstof: ${carData.brandstof_type}`);
-    if (carData.transmissie)
-      parts.push(`Transmissie: ${carData.transmissie}`);
-    if (carData.vermogen_pk) parts.push(`Vermogen: ${carData.vermogen_pk} pk`);
-    if (carData.motor_cc) parts.push(`Motor: ${carData.motor_cc} cc`);
-    if (carData.motor_cilinders)
-      parts.push(`Cilinders: ${carData.motor_cilinders}`);
-    if (carData.kilometerstand)
-      parts.push(`Kilometerstand: ${carData.kilometerstand.toLocaleString("nl-NL")} km`);
-    if (carData.kleur) parts.push(`Kleur: ${carData.kleur}`);
-    if (carData.gewicht_kg) parts.push(`Gewicht: ${carData.gewicht_kg} kg`);
-    if (carData.topsnelheid_kmh)
-      parts.push(`Topsnelheid: ${carData.topsnelheid_kmh} km/u`);
-    if (carData.acceleratie_0_100)
-      parts.push(`0-100 km/u: ${carData.acceleratie_0_100} s`);
-    if (carData.zitplaatsen)
-      parts.push(`Zitplaatsen: ${carData.zitplaatsen}`);
-    if (carData.deuren) parts.push(`Deuren: ${carData.deuren}`);
+    // Build car summary from all available fields (use != null to allow 0 values)
+    const fields: [string, unknown, string?][] = [
+      ["Merk", carData.merk],
+      ["Model", carData.model],
+      ["Bouwjaar", carData.bouwjaar],
+      ["Type", carData.voertuig_type],
+      ["Kleur", carData.kleur],
+      ["Prijs", carData.prijs, " euro"],
+      ["Kilometerstand", carData.kilometerstand, " km"],
+      ["Brandstof", carData.brandstof_type],
+      ["Transmissie", carData.transmissie],
+      ["Vermogen", carData.vermogen_pk, " pk"],
+      ["Motor", carData.motor_cc, " cc"],
+      ["Cilinders", carData.motor_cilinders],
+      ["Gewicht", carData.gewicht_kg, " kg"],
+      ["Topsnelheid", carData.topsnelheid_kmh, " km/u"],
+      ["0-100 km/u", carData.acceleratie_0_100, " s"],
+      ["Zitplaatsen", carData.zitplaatsen],
+      ["Deuren", carData.deuren],
+      ["Kenteken", carData.kenteken],
+    ];
+    const parts: string[] = fields
+      .filter(([, val]) => val != null && val !== "" && val !== 0)
+      .map(([label, val, suffix]) => `${label}: ${val}${suffix || ""}`);
     if (carData.opties && carData.opties.length > 0)
       parts.push(`Opties: ${carData.opties.join(", ")}`);
 
@@ -85,15 +83,20 @@ ${FEW_SHOT_EXAMPLE}
 
 ---
 
+Vandaag is het ${new Date().toISOString().split("T")[0]}. Houd hier rekening mee bij het beoordelen van de leeftijd van de auto.
+
 Schrijf nu een omschrijving voor de volgende auto:
 
 ${carSummary}
 
 Regels:
-- Begin met een korte samenvatting van wat de auto is (type, motor, transmissie)
+- Begin DIRECT met de omschrijvende tekst — GEEN titel, header, autonaam of "Omschrijving:" label
+- De lezer weet al welke auto het is, dus begin meteen met beschrijven
+- Je krijgt alle beschikbare informatie mee: basis gegevens, technische specificaties, opties/extra's, kleur, prijs, kilometerstand, etc. Gebruik deze gegevens slim — verwerk ze alleen als ze de omschrijving waardevoller maken voor de lezer. Voorbeelden: noem de acceleratie als die sportief is ("in 4.5 seconden van 0 naar 100"), noem de kleur als het de auto typeert ("het witte exterieur geeft de auto een strakke uitstraling"), noem de prijs-kwaliteitverhouding als die opvalt. Niet elk gegeven hoeft benoemd te worden
 - Beschrijf het praktische gebruik (voor wie is deze auto geschikt?)
 - Maak een opsomming met bullet points (•) van de belangrijkste opties
 - Sluit af met een eerlijke beoordeling, inclusief eventuele aandachtspunten
+- Eindig ALTIJD met een korte call-to-action: "Heeft u vragen of wilt u meer weten? Neem gerust contact met ons op via de contactpagina of direct via de WhatsApp-button. U kunt hieronder ook direct een proefrit inplannen."
 - Gebruik "u" als aanspreking, niet "je"
 - Geen superlatieven zoals "prachtig", "schitterend", "fantastisch"
 - Wees concreet en informatief
@@ -128,7 +131,10 @@ Regels:
     }
 
     const data = await response.json();
-    const description = data.choices?.[0]?.message?.content?.trim() || "";
+    let description = data.choices?.[0]?.message?.content?.trim() || "";
+
+    // Strip any header/title the LLM might add (e.g. "Auto: BMW i3...\n\nOmschrijving:\n")
+    description = description.replace(/^(Auto:.*\n+)?(Omschrijving:\s*\n?)/i, "").trim();
 
     return new Response(
       JSON.stringify({ success: true, data: { omschrijving: description } }),

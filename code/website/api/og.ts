@@ -83,7 +83,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "description": car.omschrijving || undefined,
   };
 
-  // Remove undefined values
   const cleanJsonLd = JSON.stringify(jsonLd, (_, v) => v === undefined ? undefined : v);
 
   const breadcrumbLd = JSON.stringify({

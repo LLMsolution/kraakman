@@ -80,7 +80,7 @@
           "value": "(?i).*(WhatsApp|facebookexternalhit|Facebot|Twitterbot|LinkedInBot|Slackbot|TelegramBot|Discordbot|Pinterest|Googlebot|bingbot|Applebot).*"
         }
       ],
-      "destination": "/api/og/:id"
+      "destination": "/api/og?id=:id"
     },
     {
       "source": "/(.*)",

@@ -13,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/utils/logger";
 import { BUSINESS } from "@/config/business";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
+import { galleryUrl, thumbnailUrl, lightboxUrl } from "@/utils/imageUrl";
 import type { CarImage } from "@/types";
 import SEO, { buildCarSchema, buildBreadcrumbSchema } from "@/components/SEO";
 
@@ -455,8 +456,10 @@ const CarDetail = () => {
                       style={{ borderRadius: 'var(--radius-card)' }}
                     >
                       <img
-                        src={image.url}
+                        src={galleryUrl(image.url)}
                         alt={`${car.merk} ${car.model} - foto ${index + 1}`}
+                        loading={index === 0 ? "eager" : "lazy"}
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
@@ -475,8 +478,10 @@ const CarDetail = () => {
                       style={{ borderRadius: '4px' }}
                     >
                       <img
-                        src={image.url}
+                        src={thumbnailUrl(image.url)}
                         alt={`${car.merk} ${car.model} - foto ${index + 4}`}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
                       />
                     </div>
@@ -1002,21 +1007,28 @@ const CarDetail = () => {
                 </button>
 
                 <div className="relative w-full h-full">
-                  {allImages?.map((image, idx) => (
-                    <img
-                      key={idx}
-                      src={image.url}
-                      alt={`${car.merk} ${car.model}`}
-                      className={`absolute w-full h-full object-contain transition-transform duration-500 ease-in-out ${
-                        idx === lightboxIndex
-                          ? 'translate-x-0'
-                          : lightboxDirection === 'next'
-                            ? (idx < lightboxIndex ? '-translate-x-full' : 'translate-x-full')
-                            : (idx > lightboxIndex ? 'translate-x-full' : '-translate-x-full')
-                      }`}
-                      style={{ maxWidth: '100vw', maxHeight: '100vh' }}
-                    />
-                  ))}
+                  {allImages?.map((image, idx) => {
+                    const isVisible = idx === lightboxIndex;
+                    const isAdjacent = Math.abs(idx - lightboxIndex) <= 1
+                      || (lightboxIndex === 0 && idx === allImages.length - 1)
+                      || (lightboxIndex === allImages.length - 1 && idx === 0);
+                    if (!isVisible && !isAdjacent) return null;
+                    return (
+                      <img
+                        key={idx}
+                        src={lightboxUrl(image.url)}
+                        alt={`${car.merk} ${car.model}`}
+                        className={`absolute w-full h-full object-contain transition-transform duration-500 ease-in-out ${
+                          idx === lightboxIndex
+                            ? 'translate-x-0'
+                            : lightboxDirection === 'next'
+                              ? (idx < lightboxIndex ? '-translate-x-full' : 'translate-x-full')
+                              : (idx > lightboxIndex ? 'translate-x-full' : '-translate-x-full')
+                        }`}
+                        style={{ maxWidth: '100vw', maxHeight: '100vh' }}
+                      />
+                    );
+                  })}
                 </div>
 
                 <button

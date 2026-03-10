@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Car, CarImage } from "@/types";
+import { thumbnailUrl } from "@/utils/imageUrl";
 
 interface CarCardProps {
   id: string;
@@ -128,25 +129,30 @@ const CarCard = ({
         {hasImages ? (
           <>
             <div className="relative w-full h-full overflow-hidden">
-              {displayImages.map((image, idx) => (
-                <img
-                  key={idx}
-                  src={image.url}
-                  alt={`${merk} ${model}`}
-                  loading={idx === 0 ? "eager" : "lazy"}
-                  className={`absolute w-full h-full object-cover transition-transform duration-500 ease-in-out ${
-                    idx === currentImageIndex
-                      ? 'translate-x-0'
-                      : idx < currentImageIndex
-                        ? '-translate-x-full'
-                        : 'translate-x-full'
-                  }`}
-                  style={{
-                    objectPosition: 'center',
-                    objectFit: 'cover'
-                  }}
-                />
-              ))}
+              {displayImages.map((image, idx) => {
+                // Only render current image and its direct neighbors
+                const isVisible = idx === currentImageIndex;
+                const isAdjacent = Math.abs(idx - currentImageIndex) === 1
+                  || (currentImageIndex === 0 && idx === displayImages.length - 1)
+                  || (currentImageIndex === displayImages.length - 1 && idx === 0);
+                if (!isVisible && !isAdjacent) return null;
+                return (
+                  <img
+                    key={idx}
+                    src={thumbnailUrl(image.url)}
+                    alt={`${merk} ${model}`}
+                    loading={idx === 0 ? "eager" : "lazy"}
+                    decoding="async"
+                    className={`absolute w-full h-full object-cover transition-transform duration-500 ease-in-out ${
+                      idx === currentImageIndex
+                        ? 'translate-x-0'
+                        : idx < currentImageIndex
+                          ? '-translate-x-full'
+                          : 'translate-x-full'
+                    }`}
+                  />
+                );
+              })}
             </div>
 
             {binnenkort_beschikbaar && (
@@ -337,9 +343,9 @@ const CarCard = ({
         )}
 
         {!hideButton && (
-          <div className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-normal border transition-colors duration-300 h-10 px-4 py-2 bg-background text-muted-foreground border-border/30 group-hover/card:bg-primary group-hover/card:text-primary-foreground group-hover/card:border-primary" style={{ borderRadius: 'var(--radius-button)' }}>
+          <div className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-normal border transition-colors duration-300 h-10 px-4 py-2 bg-primary text-primary-foreground border-primary lg:bg-background lg:text-muted-foreground lg:border-border/30 group-hover/card:bg-primary group-hover/card:text-primary-foreground group-hover/card:border-primary" style={{ borderRadius: 'var(--radius-button)' }}>
             Bekijk
-            <ArrowRight className="h-4 w-4 group-hover/card:translate-x-1 transition-transform duration-300" />
+            <ArrowRight className="h-4 w-4 lg:group-hover/card:translate-x-1 transition-transform duration-300" />
           </div>
         )}
       </div>

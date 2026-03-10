@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
-import { DEFAULT_FOOTER, DEFAULT_COLORS } from "@/data/contentDefaults";
+import { DEFAULT_FOOTER } from "@/data/contentDefaults";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageSquare, Star, CarFront } from "lucide-react";
 
@@ -36,8 +36,8 @@ function sanitize(s: string): string {
 function buildBrand(colors: any, footer: any) {
   return {
     name: footer?.company_name || DEFAULT_FOOTER.company_name,
-    primary: colors?.primary || DEFAULT_COLORS.primary,
-    background: colors?.background || DEFAULT_COLORS.background,
+    primary: colors?.primary || "#123458",
+    background: colors?.background || "#F1EFEC",
     phone: footer?.phone || DEFAULT_FOOTER.phone,
     address: footer?.address_line1 && footer?.address_line2
       ? `${footer.address_line1}, ${footer.address_line2}`

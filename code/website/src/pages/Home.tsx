@@ -14,6 +14,7 @@ import autoserviceLogo from "@/assets/autoservice-van-der-waals.png";
 import wkLogo from "@/assets/wk-auto-selectie.png";
 import SEO, { buildAutoDealerSchema, buildFAQSchema } from "@/components/SEO";
 import { BUSINESS } from "@/config/business";
+import { optimizedImageUrl } from "@/utils/imageUrl";
 
 function buildTimelineData(cards: TimelineCard[]) {
   return cards.map((card) => ({
@@ -118,11 +119,11 @@ export default function TimelinePage() {
         )}
         <picture>
           {hero?.image_url_mobile && (
-            <source media="(max-width: 767px)" srcSet={hero.image_url_mobile} />
+            <source media="(max-width: 767px)" srcSet={optimizedImageUrl(hero.image_url_mobile, 828)} />
           )}
           <img
-            src={hero?.image_url || heroImage}
-            alt="Auto Service van der Waals"
+            src={hero?.image_url ? optimizedImageUrl(hero.image_url, 1920) : heroImage}
+            alt="Auto Service van der Waals & WK Auto Selectie"
             width={1920}
             height={1080}
             className="hero-cover-image w-full h-full object-cover"

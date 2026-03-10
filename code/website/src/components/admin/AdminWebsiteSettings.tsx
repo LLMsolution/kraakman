@@ -16,7 +16,7 @@ import {
   type FooterSettings,
 } from "@/services/siteSettingsService";
 import { DEFAULT_FOOTER } from "@/data/contentDefaults";
-import { imageService } from "@/services/imageService";
+import { imageService, resizeImage } from "@/services/imageService";
 import { applyColors } from "@/hooks/useSiteSettings";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -152,10 +152,11 @@ const AdminWebsiteSettings = () => {
   };
 
   const uploadHeroImageFile = async (file: File, prefix: string): Promise<string | null> => {
-    const fileName = `site/${prefix}-${crypto.randomUUID()}.${file.name.split(".").pop()}`;
+    const resized = await resizeImage(file);
+    const fileName = `site/${prefix}-${crypto.randomUUID()}.${resized.name.split(".").pop()}`;
     const { error: uploadError } = await (await import("@/integrations/supabase/client")).supabase.storage
       .from("car-images")
-      .upload(fileName, file, { cacheControl: "3600" });
+      .upload(fileName, resized, { cacheControl: "3600" });
 
     if (uploadError) {
       toast({ title: "Fout", description: `Kon ${prefix} afbeelding niet uploaden.`, variant: "destructive" });
@@ -454,8 +455,8 @@ const AdminWebsiteSettings = () => {
               {heroImagePreview && (
                 <div className="mt-4">
                   <Label className="text-sm font-semibold mb-2 block">Positie aanpassen (Desktop)</Label>
-                  <p className="text-xs text-muted-foreground mb-2">Verschuif de afbeelding omhoog of omlaag</p>
-                  <div className="mb-2 border border-border overflow-hidden" style={{ height: "140px" }}>
+                  <p className="text-xs text-muted-foreground mb-2">Zo ziet de hero er uit op de website (70vh)</p>
+                  <div className="mb-2 border border-border overflow-hidden" style={{ aspectRatio: "16/7" }}>
                     <img
                       src={heroImagePreview}
                       alt="Positie preview"
@@ -515,8 +516,8 @@ const AdminWebsiteSettings = () => {
               {heroMobileImagePreview && (
                 <div className="mt-4">
                   <Label className="text-sm font-semibold mb-2 block">Positie aanpassen (Mobiel)</Label>
-                  <p className="text-xs text-muted-foreground mb-2">Verschuif de mobiele afbeelding omhoog of omlaag</p>
-                  <div className="mb-2 border border-border overflow-hidden" style={{ height: "200px", maxWidth: "160px" }}>
+                  <p className="text-xs text-muted-foreground mb-2">Zo ziet de hero er uit op telefoon (70vh)</p>
+                  <div className="mb-2 border border-border overflow-hidden" style={{ aspectRatio: "9/14", maxWidth: "180px" }}>
                     <img
                       src={heroMobileImagePreview}
                       alt="Positie preview mobiel"

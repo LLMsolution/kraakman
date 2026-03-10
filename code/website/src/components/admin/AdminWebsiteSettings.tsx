@@ -264,7 +264,7 @@ const AdminWebsiteSettings = () => {
         {sections.map((section) => (
           <Button
             key={section.key}
-            variant={activeSection === section.key ? "secondary" : "ghost"}
+            variant={activeSection === section.key ? "secondary" : "default"}
             size="sm"
             onClick={() => setActiveSection(section.key)}
             className=""

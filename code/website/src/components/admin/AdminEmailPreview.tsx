@@ -252,7 +252,7 @@ const AdminEmailPreview = () => {
         {EMAIL_TYPES.map(({ id, label, icon: Icon }) => (
           <Button
             key={id}
-            variant={activeType === id ? "secondary" : "ghost"}
+            variant={activeType === id ? "secondary" : "default"}
             size="sm"
             onClick={() => setActiveType(id)}
             className=""

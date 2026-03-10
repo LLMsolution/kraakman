@@ -116,6 +116,24 @@ const CarDetail = () => {
     };
   }, [lightboxOpen, car?.car_images]);
 
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    const fieldName = id.replace('proefrit-', '');
+
+    setFormData(prev => ({
+      ...prev,
+      [fieldName]: value
+    }));
+
+    // Clear error for this field when user starts typing
+    setFormErrors(prev => {
+      if (prev[fieldName]) {
+        return { ...prev, [fieldName]: '' };
+      }
+      return prev;
+    });
+  }, []);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-background">
@@ -186,24 +204,6 @@ const CarDetail = () => {
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
-
-  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    const fieldName = id.replace('proefrit-', '');
-
-    setFormData(prev => ({
-      ...prev,
-      [fieldName]: value
-    }));
-
-    // Clear error for this field when user starts typing
-    setFormErrors(prev => {
-      if (prev[fieldName]) {
-        return { ...prev, [fieldName]: '' };
-      }
-      return prev;
-    });
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -327,7 +327,7 @@ const CarCard = ({
         )}
 
         {!hideButton && (
-          <div className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-normal border transition-colors duration-300 h-10 px-4 py-2 bg-primary text-primary-foreground border-primary lg:bg-background lg:text-muted-foreground lg:border-border/30 group-hover/card:bg-primary group-hover/card:text-primary-foreground group-hover/card:border-primary" style={{ borderRadius: 'var(--radius-button)' }}>
+          <div className="w-full inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium border transition-colors duration-300 h-14 min-h-[56px] px-4 py-4 leading-6 bg-primary text-primary-foreground border-primary lg:bg-background lg:text-foreground lg:border-border lg:hover:bg-primary lg:hover:text-primary-foreground lg:hover:border-primary group-hover/card:bg-primary group-hover/card:text-primary-foreground group-hover/card:border-primary" style={{ borderRadius: 'var(--radius-button)' }}>
             Bekijk
             <ArrowRight className="h-4 w-4 lg:group-hover/card:translate-x-1 transition-transform duration-300" />
           </div>

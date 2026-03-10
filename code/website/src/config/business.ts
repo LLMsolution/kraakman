@@ -5,7 +5,7 @@ export const BUSINESS = {
   SITE_URL: "https://autoservicevanderwaals.nl",
   GOOGLE_PLACE_ID: "ChIJeT_9aSNMz0cR6jgTtpMDCqI",
   GOOGLE_REVIEW_URL: "https://g.page/r/Ceo4E7aTAwqiEBM/review",
-  NAME: "Auto Service van der Waals",
+  NAME: "Auto Service van der Waals & WK Auto Selectie",
   EMAIL: "info@autoservicevanderwaals.nl",
   PHONE: "06-26 344 965",
   PHONE_HREF: "tel:0626344965",

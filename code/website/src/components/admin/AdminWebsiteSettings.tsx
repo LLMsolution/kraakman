@@ -267,7 +267,7 @@ const AdminWebsiteSettings = () => {
             variant={activeSection === section.key ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveSection(section.key)}
-            className="!h-auto !min-h-0 !py-2 !px-3 !text-xs sm:!text-sm sm:!py-2.5 sm:!px-4"
+            className=""
           >
             {section.label}
           </Button>

@@ -255,7 +255,7 @@ const AdminEmailPreview = () => {
             variant={activeType === id ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveType(id)}
-            className="!h-auto !min-h-0 !py-2 !px-3 !text-xs sm:!text-sm sm:!py-2.5 sm:!px-4"
+            className=""
           >
             <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" />
             {label}

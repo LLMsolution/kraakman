@@ -2,7 +2,7 @@ import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 
 const CANONICAL_URL = "https://autoservicevanderwaals.nl";
-const BUSINESS_NAME = "Auto Service van der Waals";
+const BUSINESS_NAME = "Auto Service van der Waals & WK Auto Selectie";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 function getSiteUrl(req: VercelRequest): string {

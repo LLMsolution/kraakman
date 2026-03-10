@@ -1,19 +1,23 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 
-const SITE_URL = "https://autoservicevanderwaals.nl";
+const CANONICAL_URL = "https://autoservicevanderwaals.nl";
 const BUSINESS_NAME = "Auto Service van der Waals";
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+function getSiteUrl(req: VercelRequest): string {
+  const host = req.headers["x-forwarded-host"] || req.headers.host || "";
+  const proto = req.headers["x-forwarded-proto"] || "https";
+  return host ? `${proto}://${host}` : CANONICAL_URL;
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
   const { id } = req.query;
-  if (!id || typeof id !== "string") {
-    return res.redirect(302, SITE_URL);
-  }
+  const siteUrl = getSiteUrl(req);
 
-  if (!UUID_RE.test(id)) {
-    return res.redirect(302, SITE_URL);
+  if (!id || typeof id !== "string" || !UUID_RE.test(id)) {
+    return res.redirect(302, siteUrl);
   }
 
   const supabaseUrl = process.env.VITE_SUPABASE_URL;
@@ -21,7 +25,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (!supabaseUrl || !supabaseKey) {
     console.error('OG handler: Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY environment variables');
-    return res.redirect(302, `${SITE_URL}/auto/${id}`);
+    return res.redirect(302, `${siteUrl}/auto/${id}`);
   }
 
   const supabase = createClient(supabaseUrl, supabaseKey);
@@ -32,20 +36,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     .eq("id", id)
     .single();
 
-  if (error) {
+  if (error || !car) {
     console.error('Supabase query error in OG handler:', error);
-    return res.redirect(302, `${SITE_URL}/auto/${id}`);
-  }
-
-  if (!car) {
-    return res.redirect(302, `${SITE_URL}/auto/${id}`);
+    return res.redirect(302, `${siteUrl}/auto/${id}`);
   }
 
   const images = (car.car_images || []).sort(
     (a: { display_order: number }, b: { display_order: number }) =>
       (a.display_order || 0) - (b.display_order || 0)
   );
-  const mainImage = images[0]?.url || `${SITE_URL}/og-image.jpg`;
+  const mainImage = images[0]?.url || `${siteUrl}/og-image.jpg`;
   const carTitle = `${car.bouwjaar} ${car.merk} ${car.model}${car.type ? ` ${car.type}` : ""}`;
   const price = car.prijs
     ? `€${car.prijs.toLocaleString("nl-NL")}`
@@ -57,7 +57,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     ? (car.omschrijving.length > 155 ? car.omschrijving.substring(0, 155).replace(/\s+\S*$/, "...") : car.omschrijving)
     : `${carTitle} te koop bij ${BUSINESS_NAME}. ${[price, km].filter(Boolean).join(" · ")}`;
   const fullTitle = `${carTitle} kopen | ${BUSINESS_NAME}`;
-  const pageUrl = `${SITE_URL}/auto/${id}`;
+  const pageUrl = `${siteUrl}/auto/${id}`;
 
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
@@ -89,12 +89,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     "itemListElement": [
-      { "@type": "ListItem", "position": 1, "name": "Home", "item": SITE_URL },
-      { "@type": "ListItem", "position": 2, "name": car.status === "aanbod" ? "Aanbod" : "Verkocht", "item": `${SITE_URL}/${car.status === "aanbod" ? "aanbod" : "verkocht"}` },
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": siteUrl },
+      { "@type": "ListItem", "position": 2, "name": car.status === "aanbod" ? "Aanbod" : "Verkocht", "item": `${siteUrl}/${car.status === "aanbod" ? "aanbod" : "verkocht"}` },
       { "@type": "ListItem", "position": 3, "name": carTitle, "item": pageUrl },
     ],
   });
 
+  // No meta-refresh redirect — this page is only served to social media crawlers.
+  // Human visitors access /auto/:id directly via the SPA.
   const html = `<!DOCTYPE html>
 <html lang="nl">
 <head>
@@ -122,11 +124,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   <script type="application/ld+json">${cleanJsonLd.replace(/<\//g, '<\\/')}</script>
   <script type="application/ld+json">${breadcrumbLd.replace(/<\//g, '<\\/')}</script>
-
-  <meta http-equiv="refresh" content="0;url=${pageUrl}" />
 </head>
 <body>
-  <p>Doorsturen naar <a href="${pageUrl}">${escapeHtml(carTitle)}</a>...</p>
+  <p><a href="${pageUrl}">${escapeHtml(carTitle)}</a></p>
 </body>
 </html>`;
 

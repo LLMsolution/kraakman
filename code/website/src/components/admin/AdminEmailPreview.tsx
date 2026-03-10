@@ -189,12 +189,12 @@ interface FieldConfig {
 
 const FIELDS: Record<string, FieldConfig[]> = {
   "contact-confirm": [
-    { key: "contact_confirm_greeting", label: "Begroeting", type: "input", help: "Gebruik {naam} voor de klantnaam" },
+    { key: "contact_confirm_greeting", label: "Begroeting", type: "textarea", help: "Gebruik {naam} voor de klantnaam" },
     { key: "contact_confirm_body", label: "Bericht tekst", type: "textarea" },
-    { key: "contact_confirm_urgent", label: "Dringende vraag tekst", type: "input", help: "Gebruik {telefoon} voor het telefoonnummer" },
+    { key: "contact_confirm_urgent", label: "Dringende vraag tekst", type: "textarea", help: "Gebruik {telefoon} voor het telefoonnummer" },
   ],
   "testdrive-confirm": [
-    { key: "testdrive_confirm_greeting", label: "Begroeting", type: "input", help: "Gebruik {naam} voor de klantnaam" },
+    { key: "testdrive_confirm_greeting", label: "Begroeting", type: "textarea", help: "Gebruik {naam} voor de klantnaam" },
     { key: "testdrive_confirm_body", label: "Bericht tekst", type: "textarea" },
   ],
 };

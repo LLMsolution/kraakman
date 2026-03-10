@@ -1,10 +1,22 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+const ALLOWED_ORIGINS = [
+  "https://wkautoselectie.nl",
+  "https://www.wkautoselectie.nl",
+  "https://autoservicevanderwaals.nl",
+  "https://www.autoservicevanderwaals.nl",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
 
 const sanitize = (s: string): string =>
   s.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]!));
@@ -56,7 +68,7 @@ async function getBrand() {
         contact_confirm_urgent: tpl.contact_confirm_urgent || "Heeft u een dringende vraag? Bel ons gerust op {telefoon}.",
       },
     };
-  } catch (_) { /* fallback to defaults */ }
+  } catch (e) { console.error('getBrand() failed:', e); }
   return {
     ...BRAND_DEFAULTS,
     phone: "06-26 344 965",
@@ -73,19 +85,29 @@ async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = Deno.env.get('CLOUDFLARE_TURNSTILE_SECRET_KEY');
   if (!secret) return true;
 
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
-  });
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
+    });
 
-  const data = await response.json();
-  return data.success === true;
+    if (!response.ok) {
+      console.error(`Turnstile API returned status ${response.status}`);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (e) {
+    console.error('Turnstile verification request failed:', e);
+    return false;
+  }
 }
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders });
+    return new Response('ok', { headers: getCorsHeaders(req) });
   }
 
   try {
@@ -98,7 +120,7 @@ serve(async (req) => {
       if (!valid) {
         return new Response(
           JSON.stringify({ error: 'Beveiligingscontrole mislukt. Probeer het opnieuw.' }),
-          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { status: 403, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
         );
       }
     } else {
@@ -106,7 +128,7 @@ serve(async (req) => {
       if (secret) {
         return new Response(
           JSON.stringify({ error: 'Beveiligingstoken ontbreekt.' }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          { status: 400, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
         );
       }
     }
@@ -137,7 +159,7 @@ serve(async (req) => {
     if (errors.length > 0) {
       return new Response(
         JSON.stringify({ error: errors.join(" ") }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 400, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
       );
     }
 
@@ -145,7 +167,7 @@ serve(async (req) => {
     if (!resendApiKey) {
       return new Response(
         JSON.stringify({ error: 'Email service niet beschikbaar' }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
       );
     }
 
@@ -244,19 +266,21 @@ serve(async (req) => {
       }),
     });
 
+    let warning: string | undefined;
     if (!confirmationResponse.ok) {
       console.error('Confirmation email error:', await confirmationResponse.text());
+      warning = 'Bevestigingsmail kon niet worden verzonden';
     }
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Bericht succesvol verzonden' }),
-      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ success: true, message: 'Bericht succesvol verzonden', ...(warning && { warning }) }),
+      { headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error in send-contact:', error);
     return new Response(
       JSON.stringify({ error: error instanceof Error ? error.message : 'Er ging iets mis' }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      { status: 500, headers: { ...getCorsHeaders(req), 'Content-Type': 'application/json' } }
     );
   }
 });

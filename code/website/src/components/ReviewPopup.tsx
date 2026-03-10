@@ -3,6 +3,7 @@ import { Star, X, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui";
 import { BUSINESS } from "@/config/business";
+import Turnstile from "@/components/Turnstile";
 
 interface ReviewPopupProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ const ReviewPopup = ({ isOpen, onClose }: ReviewPopupProps) => {
   const [review, setReview] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   // Reset state when popup closes
   useEffect(() => {
@@ -24,6 +27,8 @@ const ReviewPopup = ({ isOpen, onClose }: ReviewPopupProps) => {
       setReview("");
       setSubmitted(false);
       setLoading(false);
+      setTurnstileToken(null);
+      setErrorMessage(null);
     }
   }, [isOpen]);
 
@@ -50,6 +55,7 @@ const ReviewPopup = ({ isOpen, onClose }: ReviewPopupProps) => {
     }
 
     setLoading(true);
+    setErrorMessage(null);
 
     // If 5 stars, open Google review
     if (rating === 5) {
@@ -70,6 +76,7 @@ const ReviewPopup = ({ isOpen, onClose }: ReviewPopupProps) => {
             rating,
             feedback: review,
             timestamp: new Date().toISOString(),
+            turnstileToken,
           },
         });
 
@@ -86,6 +93,8 @@ const ReviewPopup = ({ isOpen, onClose }: ReviewPopupProps) => {
       } catch (err) {
         console.error('Error sending feedback:', err);
         setLoading(false);
+        setTurnstileToken(null);
+        setErrorMessage('Er is een fout opgetreden. Probeer het opnieuw.');
       }
     }
   };
@@ -206,10 +215,17 @@ const ReviewPopup = ({ isOpen, onClose }: ReviewPopupProps) => {
                       }}
                     />
                   </div>
+                  {errorMessage && (
+                    <p className="text-destructive text-sm text-center mb-4">{errorMessage}</p>
+                  )}
+                  <Turnstile
+                    onVerify={setTurnstileToken}
+                    onExpire={() => setTurnstileToken(null)}
+                  />
                   <div className="flex justify-center">
                     <Button
                       type="submit"
-                      disabled={loading}
+                      disabled={loading || !turnstileToken}
                       className="w-full"
                     >
                       {loading ? "Verzenden..." : "Verstuur review"}

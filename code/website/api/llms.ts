@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 
-const SITE_URL = "https://autoservicevanderwaals.nl";
+const SITE_URL = "https://wkautoselectie.nl";
 const BUSINESS_NAME = "Auto Service van der Waals";
 
 export default async function handler(_req: VercelRequest, res: VercelResponse) {
@@ -102,7 +102,7 @@ ${verkochtCars.length > 0 ? verkochtCars.map((car) => {
 
 - Adres: Zuid Zijperweg 66, 1766 HD Wieringerwaard
 - Telefoon: 06-26 344 965
-- E-mail: info@autoservicevanderwaals.nl
+- E-mail: info@wkautoselectie.nl
 - Openingstijden: Maandag t/m vrijdag 08:00-17:00 (op afspraak)
 `;
 

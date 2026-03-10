@@ -99,7 +99,7 @@ export const DEFAULT_LPG_FEATURES: LpgFeatures = {
 };
 
 export const DEFAULT_FOOTER: FooterSettings = {
-  email: "info@autoservicevanderwaals.nl",
+  email: "info@wkautoselectie.nl",
   phone: "06-26 344 965",
   phone_name: "",
   phone2: "",

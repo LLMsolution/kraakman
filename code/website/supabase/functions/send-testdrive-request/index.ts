@@ -1,10 +1,22 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const ALLOWED_ORIGINS = [
+  "https://wkautoselectie.nl",
+  "https://www.wkautoselectie.nl",
+  "https://autoservicevanderwaals.nl",
+  "https://www.autoservicevanderwaals.nl",
+];
+
+function getCorsHeaders(req: Request) {
+  const origin = req.headers.get("origin") || "";
+  const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowedOrigin,
+    "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+    "Vary": "Origin",
+  };
+}
 
 const sanitize = (s: string): string =>
   s.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]!));
@@ -19,7 +31,7 @@ const BRAND_DEFAULTS = {
   background: "#F1EFEC",
   from: "Auto Service van der Waals <noreply@wkautoselectie.nl>",
   to: "info@wkautoselectie.nl",
-  siteUrl: "https://autoservicevanderwaals.nl",
+  siteUrl: "https://wkautoselectie.nl",
 };
 
 async function getBrand() {
@@ -55,7 +67,7 @@ async function getBrand() {
         testdrive_confirm_body: tpl.testdrive_confirm_body || "We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.",
       },
     };
-  } catch (_) { /* fallback to defaults */ }
+  } catch (e) { console.error('getBrand() failed:', e); }
   return {
     ...BRAND_DEFAULTS,
     phone: "06-26 344 965",
@@ -71,14 +83,24 @@ async function verifyTurnstile(token: string): Promise<boolean> {
   const secret = Deno.env.get('CLOUDFLARE_TURNSTILE_SECRET_KEY');
   if (!secret) return true;
 
-  const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
-  });
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: `secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(token)}`,
+    });
 
-  const data = await response.json();
-  return data.success === true;
+    if (!response.ok) {
+      console.error(`Turnstile API returned status ${response.status}`);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.success === true;
+  } catch (e) {
+    console.error('Turnstile verification request failed:', e);
+    return false;
+  }
 }
 
 interface TestDriveRequest {
@@ -96,7 +118,7 @@ interface TestDriveRequest {
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: getCorsHeaders(req) });
   }
 
   try {
@@ -109,7 +131,7 @@ serve(async (req) => {
       if (!valid) {
         return new Response(
           JSON.stringify({ error: "Beveiligingscontrole mislukt. Probeer het opnieuw." }),
-          { status: 403, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          { status: 403, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
         );
       }
     } else {
@@ -117,7 +139,7 @@ serve(async (req) => {
       if (secret) {
         return new Response(
           JSON.stringify({ error: "Beveiligingstoken ontbreekt." }),
-          { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+          { status: 400, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
         );
       }
     }
@@ -150,7 +172,7 @@ serve(async (req) => {
     if (errors.length > 0) {
       return new Response(
         JSON.stringify({ error: errors.join(" ") }),
-        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 400, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
       );
     }
 
@@ -158,7 +180,7 @@ serve(async (req) => {
     if (!resendApiKey) {
       return new Response(
         JSON.stringify({ error: 'Email service niet beschikbaar' }),
-        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+        { status: 500, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
       );
     }
 
@@ -171,9 +193,10 @@ serve(async (req) => {
     const carPriceFormatted = carPrice ? `€${carPrice.toLocaleString('nl-NL')}` : '';
     const carUrl = carId ? `${BRAND.siteUrl}/auto/${carId}` : '';
 
-    const carImageBlock = carImage ? `
+    const safeCarImage = carImage && carImage.startsWith('https://') ? carImage : '';
+    const carImageBlock = safeCarImage ? `
       <div style="border-radius: 6px; overflow: hidden; margin-bottom: 24px;">
-        <img src="${sanitize(carImage)}" alt="${carTitle}" style="width: 100%; height: auto; display: block; max-height: 300px; object-fit: cover;" />
+        <img src="${sanitize(safeCarImage)}" alt="${carTitle}" style="width: 100%; height: auto; display: block; max-height: 300px; object-fit: cover;" />
       </div>
     ` : '';
 
@@ -275,19 +298,21 @@ serve(async (req) => {
       }),
     });
 
+    let warning: string | undefined;
     if (!confirmationEmailResponse.ok) {
       console.error('Confirmation email error:', await confirmationEmailResponse.text());
+      warning = 'Bevestigingsmail kon niet worden verzonden';
     }
 
     return new Response(
-      JSON.stringify({ success: true, message: 'Proefrit aanvraag verzonden' }),
-      { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      JSON.stringify({ success: true, message: 'Proefrit aanvraag verzonden', ...(warning && { warning }) }),
+      { status: 200, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
     );
   } catch (error: any) {
     console.error("Error in send-testdrive-request:", error);
     return new Response(
       JSON.stringify({ error: error.message || 'Er ging iets mis' }),
-      { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      { status: 500, headers: { "Content-Type": "application/json", ...getCorsHeaders(req) } }
     );
   }
 });

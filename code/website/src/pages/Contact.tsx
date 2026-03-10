@@ -36,7 +36,7 @@ const Contact = () => {
         hasMessage: formData.bericht.length > 0
       });
 
-      const { error } = await supabase.functions.invoke("send-contact", {
+      const { data, error } = await supabase.functions.invoke("send-contact", {
         body: {
           naam: formData.naam,
           email: formData.email,
@@ -53,7 +53,9 @@ const Contact = () => {
 
       toast({
         title: "Bericht verzonden!",
-        description: "We nemen zo spoedig mogelijk contact met u op."
+        description: data?.warning
+          ? "We hebben uw bericht ontvangen, maar de bevestigingsmail kon niet worden verzonden."
+          : "We nemen zo spoedig mogelijk contact met u op."
       });
       setFormData({ naam: "", email: "", bericht: "" });
       setTurnstileToken(null);
@@ -242,7 +244,7 @@ const Contact = () => {
               />
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                <Button type="submit" variant="secondary" className="w-full" disabled={loading}>
+                <Button type="submit" variant="secondary" className="w-full" disabled={loading || (!!import.meta.env.VITE_TURNSTILE_SITE_KEY && !turnstileToken)}>
                   {loading ? "Verzenden..." : "Verstuur bericht"}
                 </Button>
               </div>

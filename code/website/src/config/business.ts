@@ -2,11 +2,11 @@
 // Centralized configuration for business identity and external service IDs
 
 export const BUSINESS = {
-  SITE_URL: "https://autoservicevanderwaals.nl",
+  SITE_URL: "https://wkautoselectie.nl",
   GOOGLE_PLACE_ID: "ChIJeT_9aSNMz0cR6jgTtpMDCqI",
   GOOGLE_REVIEW_URL: "https://g.page/r/Ceo4E7aTAwqiEBM/review",
   NAME: "Auto Service van der Waals & WK Auto Selectie",
-  EMAIL: "info@autoservicevanderwaals.nl",
+  EMAIL: "info@wkautoselectie.nl",
   PHONE: "06-26 344 965",
   PHONE_HREF: "tel:0626344965",
   WHATSAPP_NUMBER: "31646075907",

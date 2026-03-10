@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
 import { createClient } from "@supabase/supabase-js";
 
-const SITE_URL = "https://autoservicevanderwaals.nl";
+const SITE_URL = "https://wkautoselectie.nl";
 
 const STATIC_PAGES = [
   { path: "/", changefreq: "weekly", priority: "1.0" },

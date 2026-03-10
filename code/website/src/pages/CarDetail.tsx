@@ -16,6 +16,7 @@ import { useSiteSettings } from "@/hooks/useSiteSettings";
 import { galleryUrl, thumbnailUrl, lightboxUrl } from "@/utils/imageUrl";
 import type { CarImage } from "@/types";
 import SEO, { buildCarSchema, buildBreadcrumbSchema } from "@/components/SEO";
+import Turnstile from "@/components/Turnstile";
 
 // Standardized input styling
 const inputClass = "h-12 border border-secondary bg-background focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-secondary hover:border-secondary transition-none leading-6 px-4 py-3";
@@ -76,6 +77,7 @@ const CarDetail = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -218,7 +220,7 @@ const CarDetail = () => {
 
     try {
       // Call the Supabase Edge Function for test drive requests
-      const { error: submitError } = await supabase.functions.invoke('send-testdrive-request', {
+      const { data, error: submitError } = await supabase.functions.invoke('send-testdrive-request', {
         body: {
           name: formData.naam,
           email: formData.email,
@@ -229,6 +231,7 @@ const CarDetail = () => {
           carPrice: car.prijs,
           carImage: car.car_images?.[0]?.url || null,
           carId: car.id,
+          turnstileToken,
         }
       });
 
@@ -237,7 +240,12 @@ const CarDetail = () => {
       }
 
       setSubmitStatus('success');
-      setSubmitMessage('Uw proefrit aanvraag is succesvol verzonden! We nemen zo snel mogelijk contact met u op.');
+      setSubmitMessage(
+        data?.warning
+          ? 'Uw proefrit aanvraag is verzonden, maar de bevestigingsmail kon niet worden verzonden. We nemen zo snel mogelijk contact met u op.'
+          : 'Uw proefrit aanvraag is succesvol verzonden! We nemen zo snel mogelijk contact met u op.'
+      );
+      setTurnstileToken(null);
 
       // Reset form
       setFormData({ naam: '', telefoon: '', email: '' });
@@ -1226,11 +1234,16 @@ const CarDetail = () => {
                   </div>
                 )}
 
+                <Turnstile
+                  onVerify={setTurnstileToken}
+                  onExpire={() => setTurnstileToken(null)}
+                />
+
                 {/* Submit Button - Exact same styling as Google button */}
                 <Button
                   type="submit"
                   className="w-full font-semibold transition-all duration-200"
-                  disabled={isSubmitting}
+                  disabled={isSubmitting || (!!import.meta.env.VITE_TURNSTILE_SITE_KEY && !turnstileToken)}
                   style={{
                     opacity: isSubmitting ? 0.7 : 1,
                     cursor: isSubmitting ? 'not-allowed' : 'pointer'

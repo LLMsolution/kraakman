@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { Link, useParams } from "react-router-dom";
 import Navigation from "@/components/Navigation";
 import Footer from "@/components/Footer";
@@ -40,18 +40,25 @@ const CarDetail = () => {
   const [breakpoint, setBreakpoint] = useState<'sm' | 'md' | 'lg'>('lg');
   const [hoveredTab, setHoveredTab] = useState<string | null>(null);
 
-  // Detect current breakpoint for responsive "Zie meer" logic
+  // Detect current breakpoint for responsive "Zie meer" logic (debounced)
   useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
     const updateBreakpoint = () => {
-      const width = window.innerWidth;
-      if (width < 768) setBreakpoint('sm');  // 1 kolom
-      else if (width < 1024) setBreakpoint('md');  // 2 kolommen
-      else setBreakpoint('lg');  // 3 kolommen
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        const width = window.innerWidth;
+        if (width < 768) setBreakpoint('sm');
+        else if (width < 1024) setBreakpoint('md');
+        else setBreakpoint('lg');
+      }, 150);
     };
 
     updateBreakpoint();
     window.addEventListener('resize', updateBreakpoint);
-    return () => window.removeEventListener('resize', updateBreakpoint);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener('resize', updateBreakpoint);
+    };
   }, []);
 
   // Reset showAllOptions when tab changes
@@ -180,7 +187,7 @@ const CarDetail = () => {
     return Object.keys(errors).length === 0;
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     const fieldName = id.replace('proefrit-', '');
 
@@ -190,13 +197,13 @@ const CarDetail = () => {
     }));
 
     // Clear error for this field when user starts typing
-    if (formErrors[fieldName]) {
-      setFormErrors(prev => ({
-        ...prev,
-        [fieldName]: ''
-      }));
-    }
-  };
+    setFormErrors(prev => {
+      if (prev[fieldName]) {
+        return { ...prev, [fieldName]: '' };
+      }
+      return prev;
+    });
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

@@ -48,71 +48,59 @@ const CarCard = ({
   const touchStartX = useRef<number | null>(null);
   const isTouching = useRef(false);
   const containerRef = useRef<HTMLDivElement>(null);
+  const displayImagesLenRef = useRef(displayImages.length);
+  displayImagesLenRef.current = displayImages.length;
 
-  const handlePrevImage = (e: React.MouseEvent) => {
+  const handlePrevImage = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (hasImages) {
-      setCurrentImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
-    }
-  };
+    setCurrentImageIndex((prev) => (prev === 0 ? displayImagesLenRef.current - 1 : prev - 1));
+  }, []);
 
-  const handleNextImage = (e: React.MouseEvent) => {
+  const handleNextImage = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    if (hasImages) {
-      setCurrentImageIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
-    }
-  };
-
-  // Touch event handlers for swipe functionality
-  const handleTouchStart = useCallback((e: TouchEvent) => {
-    const touch = e.touches[0];
-    touchStartX.current = touch.clientX;
-    isTouching.current = true;
+    setCurrentImageIndex((prev) => (prev === displayImagesLenRef.current - 1 ? 0 : prev + 1));
   }, []);
 
-  const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (!touchStartX.current || !isTouching.current) return;
-    const touch = e.touches[0];
-    const diff = touch.clientX - touchStartX.current;
-    const imageContainer = containerRef.current;
-
-    if (!imageContainer) return;
-
-    const containerWidth = imageContainer.offsetWidth;
-    const swipeThreshold = containerWidth * 0.2; // 20% of container width
-
-    if (Math.abs(diff) > swipeThreshold) {
-      if (diff > 0) {
-        setCurrentImageIndex((prev) => (prev === 0 ? displayImages.length - 1 : prev - 1));
-      } else {
-        setCurrentImageIndex((prev) => (prev === displayImages.length - 1 ? 0 : prev + 1));
-      }
-      touchStartX.current = touch.clientX;
-    }
-  }, [car_images?.length]);
-
-  const handleTouchEnd = useCallback(() => {
-    isTouching.current = false;
-    touchStartX.current = null;
-  }, []);
-
-  // Add touch event listeners
+  // Touch swipe via single stable effect (no re-attachment on image count change)
   useEffect(() => {
     const imageContainer = containerRef.current;
     if (!imageContainer) return;
 
-    imageContainer.addEventListener('touchstart', handleTouchStart, { passive: true });
-    imageContainer.addEventListener('touchmove', handleTouchMove, { passive: true });
-    imageContainer.addEventListener('touchend', handleTouchEnd);
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX;
+      isTouching.current = true;
+    };
+
+    const onTouchMove = (e: TouchEvent) => {
+      if (!touchStartX.current || !isTouching.current) return;
+      const diff = e.touches[0].clientX - touchStartX.current;
+      const containerWidth = imageContainer.offsetWidth;
+      if (Math.abs(diff) > containerWidth * 0.2) {
+        setCurrentImageIndex((prev) => {
+          const len = displayImagesLenRef.current;
+          return diff > 0 ? (prev === 0 ? len - 1 : prev - 1) : (prev === len - 1 ? 0 : prev + 1);
+        });
+        touchStartX.current = e.touches[0].clientX;
+      }
+    };
+
+    const onTouchEnd = () => {
+      isTouching.current = false;
+      touchStartX.current = null;
+    };
+
+    imageContainer.addEventListener('touchstart', onTouchStart, { passive: true });
+    imageContainer.addEventListener('touchmove', onTouchMove, { passive: true });
+    imageContainer.addEventListener('touchend', onTouchEnd);
 
     return () => {
-      imageContainer.removeEventListener('touchstart', handleTouchStart);
-      imageContainer.removeEventListener('touchmove', handleTouchMove);
-      imageContainer.removeEventListener('touchend', handleTouchEnd);
+      imageContainer.removeEventListener('touchstart', onTouchStart);
+      imageContainer.removeEventListener('touchmove', onTouchMove);
+      imageContainer.removeEventListener('touchend', onTouchEnd);
     };
-  }, [car_images?.length, handleTouchStart, handleTouchMove, handleTouchEnd]);
+  }, []);
 
   const saveScrollAndNavigate = () => {
     sessionStorage.setItem(`scrollY_${window.location.pathname}`, String(window.scrollY));

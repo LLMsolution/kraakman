@@ -241,21 +241,17 @@ const AdminWebsiteSettings = () => {
   return (
     <div className="space-y-6">
       {/* Section Tabs */}
-      <div className="flex gap-2 border-b border-border pb-2">
+      <div className="flex gap-1.5 sm:gap-2 flex-wrap pb-2">
         {sections.map((section) => (
-          <button
+          <Button
             key={section.key}
+            variant={activeSection === section.key ? "secondary" : "default"}
+            size="sm"
             onClick={() => setActiveSection(section.key)}
-            className="px-4 py-2 text-sm font-medium transition-colors"
-            style={{
-              backgroundColor: activeSection === section.key ? "var(--color-primary)" : "transparent",
-              color: activeSection === section.key ? "var(--color-background)" : "var(--color-secondary)",
-              border: "1px solid",
-              borderColor: activeSection === section.key ? "var(--color-primary)" : "var(--color-secondary)",
-            }}
+            className="sm:!h-10 sm:!px-4"
           >
             {section.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -805,7 +801,7 @@ const AdminWebsiteSettings = () => {
           <div className="border-t border-border pt-6">
             <h3 className="text-lg font-semibold mb-2">WhatsApp Knop</h3>
             <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-              Deze instellingen bepalen de groene WhatsApp-knop die bezoekers zien op elke autopagina. Bezoekers kunnen hiermee direct een WhatsApp-bericht sturen.
+              Deze instellingen bepalen de WhatsApp-knop op de contactpagina en onderaan elke autopagina ("Stel eenvoudig een vraag"). Bezoekers kunnen hiermee direct een WhatsApp-bericht sturen.
             </p>
             <div className="space-y-4">
               <div>

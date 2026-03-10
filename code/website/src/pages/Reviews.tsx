@@ -84,15 +84,15 @@ const Reviews = () => {
                 <Star key={i} className="w-6 h-6 sm:w-8 sm:h-8 fill-current" />
               ))}
             </div>
-            {!loading && reviewsData?.rating && (
-              <span className="text-2xl sm:text-3xl font-bold">{reviewsData.rating.toFixed(1)}</span>
-            )}
+            <span className="text-2xl sm:text-3xl font-bold" style={{ minWidth: '2.5ch' }}>
+              {!loading && reviewsData?.rating ? reviewsData.rating.toFixed(1) : '\u00A0'}
+            </span>
           </div>
-          {!loading && reviewsData?.totalReviews && (
-            <p className="text-lg opacity-80">
-              Gebaseerd op {reviewsData.totalReviews} Google beoordelingen
-            </p>
-          )}
+          <p className="text-lg opacity-80" style={{ minHeight: '1.75rem' }}>
+            {!loading && reviewsData?.totalReviews
+              ? `Gebaseerd op ${reviewsData.totalReviews} Google beoordelingen`
+              : '\u00A0'}
+          </p>
         </div>
       </section>
 

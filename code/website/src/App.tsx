@@ -39,7 +39,7 @@ const AppContent = () => {
   return (
     <BrowserRouter>
       <ErrorBoundary>
-        <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Laden...</div>}>
+        <Suspense fallback={<div className="min-h-screen" style={{ backgroundColor: 'var(--color-background)' }} />}>
           <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/aanbod" element={<Aanbod />} />

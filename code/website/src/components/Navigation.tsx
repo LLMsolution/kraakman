@@ -117,74 +117,21 @@ const Navigation = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border mt-4">
-            <div className="flex flex-col space-y-4">
-              <Link
-                to="/"
-                className={cn(
-                  "text-sm font-medium py-2",
-                  isActive("/") ? "text-foreground" : "text-muted-foreground"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link
-                to="/aanbod"
-                className={cn(
-                  "text-sm font-medium py-2",
-                  isActive("/aanbod") ? "text-foreground" : "text-muted-foreground"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Aanbod
-              </Link>
-              <Link
-                to="/verkocht"
-                className={cn(
-                  "text-sm font-medium py-2",
-                  isActive("/verkocht") ? "text-foreground" : "text-muted-foreground"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Verkocht
-              </Link>
-              <Link
-                to="/lpg"
-                className={cn(
-                  "text-sm font-medium py-2",
-                  isActive("/lpg") ? "text-foreground" : "text-muted-foreground"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                LPG
-              </Link>
-              <Link
-                to="/reviews"
-                className={cn(
-                  "text-sm font-medium py-2",
-                  isActive("/reviews") ? "text-foreground" : "text-muted-foreground"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Reviews
-              </Link>
-              <Link
-                to="/contact"
-                className={cn(
-                  "text-sm font-medium py-2",
-                  isActive("/contact") ? "text-foreground" : "text-muted-foreground"
-                )}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Menu - absolute overlay to prevent CLS */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden absolute left-0 right-0 top-full z-50 bg-background border-b border-border shadow-lg">
+          <div className="flex flex-col space-y-4 px-4 py-4">
+            <Link to="/" className={cn("text-sm font-medium py-2", isActive("/") ? "text-foreground" : "text-muted-foreground")} onClick={() => setIsMobileMenuOpen(false)}>Home</Link>
+            <Link to="/aanbod" className={cn("text-sm font-medium py-2", isActive("/aanbod") ? "text-foreground" : "text-muted-foreground")} onClick={() => setIsMobileMenuOpen(false)}>Aanbod</Link>
+            <Link to="/verkocht" className={cn("text-sm font-medium py-2", isActive("/verkocht") ? "text-foreground" : "text-muted-foreground")} onClick={() => setIsMobileMenuOpen(false)}>Verkocht</Link>
+            <Link to="/lpg" className={cn("text-sm font-medium py-2", isActive("/lpg") ? "text-foreground" : "text-muted-foreground")} onClick={() => setIsMobileMenuOpen(false)}>LPG</Link>
+            <Link to="/reviews" className={cn("text-sm font-medium py-2", isActive("/reviews") ? "text-foreground" : "text-muted-foreground")} onClick={() => setIsMobileMenuOpen(false)}>Reviews</Link>
+            <Link to="/contact" className={cn("text-sm font-medium py-2", isActive("/contact") ? "text-foreground" : "text-muted-foreground")} onClick={() => setIsMobileMenuOpen(false)}>Contact</Link>
+          </div>
+        </div>
+      )}
     </nav>
   );
 };

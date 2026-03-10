@@ -1,40 +1,14 @@
 import { Star, ExternalLink } from "lucide-react";
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { useCachedReviews } from "@/hooks/useCachedReviews";
 
 const InfiniteReviewCarousel = () => {
   const { reviewsData } = useCachedReviews();
   const scrollRef = useRef<HTMLDivElement>(null);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const [carouselHeight, setCarouselHeight] = useState(0);
 
   // Create an array with multiple copies for seamless infinite scroll
   const allReviews = reviewsData?.reviews || [];
   const duplicatedReviews = allReviews.length > 0 ? [...allReviews, ...allReviews] : [];
-
-  // Update carousel height dynamically
-  useEffect(() => {
-    if (carouselRef.current && duplicatedReviews.length > 0) {
-      const updateHeight = () => {
-        const firstCard = carouselRef.current?.querySelector('[data-review-card]');
-        if (firstCard) {
-          const rect = firstCard.getBoundingClientRect();
-          setCarouselHeight(rect.height);
-        }
-      };
-
-      updateHeight();
-
-      // Update on resize
-      const resizeObserver = new ResizeObserver(updateHeight);
-      const firstCard = carouselRef.current?.querySelector('[data-review-card]');
-      if (firstCard) {
-        resizeObserver.observe(firstCard);
-      }
-
-      return () => resizeObserver.disconnect();
-    }
-  }, [duplicatedReviews]);
 
   // Auto-scroll effect with proper cleanup
   useEffect(() => {
@@ -79,11 +53,9 @@ const InfiniteReviewCarousel = () => {
 
   return (
     <div
-      ref={carouselRef}
       className="w-full relative overflow-hidden"
       style={{
-        paddingTop: '0', /* No top padding - section handles it */
-        paddingBottom: '32px' /* 32px bottom - space to CTA container */
+        paddingBottom: '32px'
       }}
     >
 

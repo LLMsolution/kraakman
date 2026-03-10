@@ -265,12 +265,12 @@ const Contact = () => {
               </p>
             </div>
 
-            <div className="flex-1 border border-border bg-background overflow-hidden">
+            <div className="flex-1 border border-border bg-background overflow-hidden" style={{ minHeight: '400px' }}>
               <iframe
                 src={`https://maps.google.com/maps?q=${encodeURIComponent((footerSettings?.address_line1 || BUSINESS.ADDRESS_STREET) + ' ' + (footerSettings?.address_line2 || BUSINESS.ADDRESS_POSTAL + ' ' + BUSINESS.ADDRESS_CITY))}&z=15&output=embed`}
                 width="100%"
                 height="100%"
-                style={{ border: 0 }}
+                style={{ border: 0, minHeight: '400px' }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"

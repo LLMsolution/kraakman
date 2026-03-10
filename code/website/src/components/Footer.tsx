@@ -82,9 +82,13 @@ const Footer = () => {
           {/* Google Reviews */}
           <div>
             <h4 className="font-semibold mb-4">Google Reviews</h4>
-            <div className="flex flex-col items-center md:items-start">
+            <div className="flex flex-col items-center md:items-start" style={{ minHeight: '88px' }}>
               {loading ? (
-                <div className="text-sm text-muted-foreground">Laden...</div>
+                <div className="flex items-center gap-1 mb-2">
+                  {Array.from({ length: 5 }, (_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current opacity-30" style={{ color: 'var(--color-star-filled)' }} />
+                  ))}
+                </div>
               ) : reviewsData?.reviews && reviewsData.reviews.length > 0 ? (
                 <>
                   <div className="flex items-center gap-1 mb-2">
@@ -144,8 +148,8 @@ const Footer = () => {
 
         {/* Logo's - gecentreerd, naast elkaar */}
         <div className="flex items-center justify-center gap-8 py-6 border-t border-border/50">
-          <img src={autoserviceLogo} alt="Autoservice van der Waals" className="h-10 w-auto" style={{ filter: 'invert(1) hue-rotate(180deg)' }} />
-          <img src={wkLogo} alt="WK Auto Selectie" className="h-10 w-auto" style={{ filter: 'invert(1) hue-rotate(180deg)' }} />
+          <img src={autoserviceLogo} alt="Autoservice van der Waals" width={120} height={40} className="h-10 w-auto" style={{ filter: 'invert(1) hue-rotate(180deg)' }} />
+          <img src={wkLogo} alt="WK Auto Selectie" width={120} height={40} className="h-10 w-auto" style={{ filter: 'invert(1) hue-rotate(180deg)' }} />
         </div>
 
         <div className="text-center pt-4 border-t border-border/50">

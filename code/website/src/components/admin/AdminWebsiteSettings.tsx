@@ -25,7 +25,7 @@ const AdminLpgEditor = lazy(() => import("./AdminLpgEditor"));
 
 const inputClass = "kraakman-input";
 
-type ActiveSection = "kleuren" | "homepage" | "paginas" | "lpg" | "footer";
+type ActiveSection = "kleuren" | "homepage" | "paginas" | "lpg" | "contact" | "footer";
 
 const DEFAULT_COLORS: SiteColors = {
   primary: "#123458",
@@ -235,6 +235,7 @@ const AdminWebsiteSettings = () => {
     { key: "homepage", label: "Homepage" },
     { key: "paginas", label: "Pagina Headers" },
     { key: "lpg", label: "LPG Content" },
+    { key: "contact", label: "Contact" },
     { key: "footer", label: "Footer" },
   ];
 
@@ -678,6 +679,58 @@ const AdminWebsiteSettings = () => {
         </Suspense>
       )}
 
+      {/* Contact Section */}
+      {activeSection === "contact" && (
+        <div className="space-y-6">
+          <div>
+            <h3 className="text-lg font-semibold mb-2">WhatsApp Knop</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+              Deze instellingen bepalen de WhatsApp-knop op de contactpagina en onderaan elke autopagina ("Stel eenvoudig een vraag"). Bezoekers kunnen hiermee direct een WhatsApp-bericht sturen.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">WhatsApp nummer</Label>
+                <p className="text-xs text-muted-foreground mb-1">Internationaal formaat zonder + (bijv. 31612345678)</p>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.whatsapp_number}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_number: e.target.value })}
+                  placeholder="31646075907"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Knoptekst</Label>
+                <p className="text-xs text-muted-foreground mb-1">De tekst die op de WhatsApp-knop staat</p>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.whatsapp_button_text}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_button_text: e.target.value })}
+                  placeholder="Direct chatten met Kees"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Standaard bericht</Label>
+                <p className="text-xs text-muted-foreground mb-1">Dit bericht staat alvast ingevuld als iemand op de knop klikt</p>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.whatsapp_default_message}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_default_message: e.target.value })}
+                  placeholder="Hi Kees, ik heb een vraag:"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Button variant="secondary" onClick={handleSaveFooter} disabled={saving}>
+            {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
+            Contact opslaan
+          </Button>
+        </div>
+      )}
+
       {/* Footer Section */}
       {activeSection === "footer" && (
         <div className="space-y-6">
@@ -792,48 +845,6 @@ const AdminWebsiteSettings = () => {
                   value={footerSettings.opening_note}
                   onChange={(e) => setFooterSettings({ ...footerSettings, opening_note: e.target.value })}
                   placeholder="Op afspraak"
-                  style={{ lineHeight: "24px" }}
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="border-t border-border pt-6">
-            <h3 className="text-lg font-semibold mb-2">WhatsApp Knop</h3>
-            <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-              Deze instellingen bepalen de WhatsApp-knop op de contactpagina en onderaan elke autopagina ("Stel eenvoudig een vraag"). Bezoekers kunnen hiermee direct een WhatsApp-bericht sturen.
-            </p>
-            <div className="space-y-4">
-              <div>
-                <Label className="text-sm font-semibold mb-2 block">WhatsApp nummer</Label>
-                <p className="text-xs text-muted-foreground mb-1">Internationaal formaat zonder + (bijv. 31612345678)</p>
-                <Input
-                  className={inputClass}
-                  value={footerSettings.whatsapp_number}
-                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_number: e.target.value })}
-                  placeholder="31646075907"
-                  style={{ lineHeight: "24px" }}
-                />
-              </div>
-              <div>
-                <Label className="text-sm font-semibold mb-2 block">Knoptekst</Label>
-                <p className="text-xs text-muted-foreground mb-1">De tekst die op de WhatsApp-knop staat</p>
-                <Input
-                  className={inputClass}
-                  value={footerSettings.whatsapp_button_text}
-                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_button_text: e.target.value })}
-                  placeholder="Direct chatten met Kees"
-                  style={{ lineHeight: "24px" }}
-                />
-              </div>
-              <div>
-                <Label className="text-sm font-semibold mb-2 block">Standaard bericht</Label>
-                <p className="text-xs text-muted-foreground mb-1">Dit bericht staat alvast ingevuld als iemand op de knop klikt</p>
-                <Input
-                  className={inputClass}
-                  value={footerSettings.whatsapp_default_message}
-                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_default_message: e.target.value })}
-                  placeholder="Hi Kees, ik heb een vraag:"
                   style={{ lineHeight: "24px" }}
                 />
               </div>

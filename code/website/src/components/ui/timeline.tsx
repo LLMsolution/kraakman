@@ -54,7 +54,7 @@ export const Timeline = ({ data, sectionTitle, sectionSubtitle, logos }: { data:
             {logos && logos.length > 0 && (
               <div className="flex items-center gap-6 mt-6">
                 {logos.map((logo, i) => (
-                  <img key={i} src={logo.src} alt={logo.alt} className="h-10 md:h-14 w-auto" style={{ filter: 'invert(1) hue-rotate(180deg)' }} />
+                  <img key={i} src={logo.src} alt={logo.alt} width={120} height={56} className="h-10 md:h-14 w-auto" style={{ filter: 'invert(1) hue-rotate(180deg)' }} />
                 ))}
               </div>
             )}
@@ -63,6 +63,8 @@ export const Timeline = ({ data, sectionTitle, sectionSubtitle, logos }: { data:
             <img
               src="/two-men-image.jpg"
               alt="Kees Kraakman en Stefan van der Waals"
+              width={800}
+              height={533}
               className="w-full h-auto rounded-lg shadow-lg object-cover"
               style={{ maxHeight: '400px', objectPosition: 'center' }}
             />

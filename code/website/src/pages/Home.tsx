@@ -126,6 +126,7 @@ export default function TimelinePage() {
             alt="Auto Service van der Waals & WK Auto Selectie"
             width={1920}
             height={1080}
+            sizes="100vw"
             className="hero-cover-image w-full h-full object-cover"
             style={{ objectPosition: `center ${hero?.image_position ?? 50}%` }}
             fetchPriority="high"
@@ -173,26 +174,21 @@ export default function TimelinePage() {
                 </svg>
               </div>
 
-              {/* Rating Display */}
-              <div className="flex items-center justify-center gap-2 mb-4">
-                {!loading && reviewsData?.rating ? (
-                  <>
-                    <div className="flex gap-1">
-                      {renderStars(reviewsData.rating)}
-                    </div>
-                    <span className="text-3xl font-bold ml-2" style={{ color: 'var(--color-text-primary)' }}>
-                      {reviewsData.rating.toFixed(1)}
-                    </span>
-                  </>
-                ) : (
-                  <div className="flex gap-1" style={{ height: '32px' }}>
-                    {Array.from({ length: 5 }, (_, i) => (
-                      <svg key={i} className="w-6 h-6" viewBox="0 0 24 24" fill="var(--color-star-empty)" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
-                      </svg>
-                    ))}
-                  </div>
-                )}
+              {/* Rating Display — fixed height to prevent CLS */}
+              <div className="flex items-center justify-center gap-2 mb-4" style={{ minHeight: '36px' }}>
+                <div className="flex gap-1">
+                  {!loading && reviewsData?.rating
+                    ? renderStars(reviewsData.rating)
+                    : Array.from({ length: 5 }, (_, i) => (
+                        <svg key={i} className="w-6 h-6" viewBox="0 0 24 24" fill="var(--color-star-empty)" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      ))
+                  }
+                </div>
+                <span className="text-3xl font-bold ml-2" style={{ color: 'var(--color-text-primary)', minWidth: '3ch' }}>
+                  {!loading && reviewsData?.rating ? reviewsData.rating.toFixed(1) : '\u00A0'}
+                </span>
               </div>
 
               {/* Trust Message */}

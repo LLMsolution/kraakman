@@ -465,7 +465,11 @@ const CarDetail = () => {
                       <img
                         src={galleryUrl(image.url)}
                         alt={`${car.merk} ${car.model} - foto ${index + 1}`}
+                        width={1200}
+                        height={900}
+                        sizes="(max-width: 767px) 100vw, (max-width: 1023px) 66vw, 50vw"
                         loading={index === 0 ? "eager" : "lazy"}
+                        fetchPriority={index === 0 ? "high" : undefined}
                         decoding="async"
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />

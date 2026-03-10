@@ -129,6 +129,9 @@ const CarCard = ({
                     key={idx}
                     src={thumbnailUrl(image.url)}
                     alt={`${merk} ${model}`}
+                    width={600}
+                    height={450}
+                    sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
                     loading={idx === 0 ? "eager" : "lazy"}
                     decoding="async"
                     className={`absolute w-full h-full object-cover transition-transform duration-500 ease-in-out ${

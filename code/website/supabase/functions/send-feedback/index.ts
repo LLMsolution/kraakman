@@ -15,8 +15,8 @@ const BRAND_DEFAULTS = {
   name: "Auto Service van der Waals",
   primary: "#123458",
   background: "#F1EFEC",
-  from: "Auto Service van der Waals <noreply@autoservicevanderwaals.nl>",
-  to: "info@autoservicevanderwaals.nl",
+  from: "Auto Service van der Waals <noreply@wkautoselectie.nl>",
+  to: "info@wkautoselectie.nl",
 };
 
 async function getBrand() {

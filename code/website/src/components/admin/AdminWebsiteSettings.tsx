@@ -449,6 +449,34 @@ const AdminWebsiteSettings = () => {
                 onChange={handleHeroImageSelect}
                 className="hidden"
               />
+
+              {/* Desktop image position control */}
+              {heroImagePreview && (
+                <div className="mt-4">
+                  <Label className="text-sm font-semibold mb-2 block">Positie aanpassen (Desktop)</Label>
+                  <p className="text-xs text-muted-foreground mb-2">Verschuif de afbeelding omhoog of omlaag</p>
+                  <div className="mb-2 border border-border overflow-hidden" style={{ height: "140px" }}>
+                    <img
+                      src={heroImagePreview}
+                      alt="Positie preview"
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: `center ${hero.image_position ?? 50}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Boven</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={hero.image_position ?? 50}
+                      onChange={(e) => setHero({ ...hero, image_position: Number(e.target.value) })}
+                      className="w-full accent-primary"
+                    />
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Onder</span>
+                  </div>
+                </div>
+              )}
             </div>
             <div>
               <Label className="text-sm font-semibold mb-2 block">Hero Afbeelding (Mobiel)</Label>
@@ -482,6 +510,34 @@ const AdminWebsiteSettings = () => {
                 onChange={handleHeroMobileImageSelect}
                 className="hidden"
               />
+
+              {/* Mobile image position control */}
+              {heroMobileImagePreview && (
+                <div className="mt-4">
+                  <Label className="text-sm font-semibold mb-2 block">Positie aanpassen (Mobiel)</Label>
+                  <p className="text-xs text-muted-foreground mb-2">Verschuif de mobiele afbeelding omhoog of omlaag</p>
+                  <div className="mb-2 border border-border overflow-hidden" style={{ height: "200px", maxWidth: "160px" }}>
+                    <img
+                      src={heroMobileImagePreview}
+                      alt="Positie preview mobiel"
+                      className="w-full h-full object-cover"
+                      style={{ objectPosition: `center ${hero.image_position_mobile ?? 50}%` }}
+                    />
+                  </div>
+                  <div className="flex items-center gap-3" style={{ maxWidth: "280px" }}>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Boven</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      value={hero.image_position_mobile ?? 50}
+                      onChange={(e) => setHero({ ...hero, image_position_mobile: Number(e.target.value) })}
+                      className="w-full accent-primary"
+                    />
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">Onder</span>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

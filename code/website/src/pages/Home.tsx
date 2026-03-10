@@ -113,6 +113,9 @@ export default function TimelinePage() {
 
       {/* Hero Section */}
       <section className="relative h-[70vh] overflow-hidden">
+        {hero?.image_url_mobile && hero?.image_position_mobile != null && (
+          <style>{`@media (max-width: 767px) { .hero-cover-image { object-position: center ${hero.image_position_mobile}% !important; } }`}</style>
+        )}
         <picture>
           {hero?.image_url_mobile && (
             <source media="(max-width: 767px)" srcSet={hero.image_url_mobile} />
@@ -122,7 +125,8 @@ export default function TimelinePage() {
             alt="Auto Service van der Waals"
             width={1920}
             height={1080}
-            className="w-full h-full object-cover"
+            className="hero-cover-image w-full h-full object-cover"
+            style={{ objectPosition: `center ${hero?.image_position ?? 50}%` }}
             fetchPriority="high"
           />
         </picture>

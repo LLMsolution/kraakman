@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { siteSettingsService, SiteColors, type HeroSettings, type PageHeaders, type ReviewsSection, type HomepageTimeline, type LpgFeatures, type FooterSettings } from "@/services/siteSettingsService";
+import { siteSettingsService, SiteColors, type HeroSettings, type PageHeaders, type ReviewsSection, type HomepageTimeline, type LpgFeatures, type FooterSettings, type EmailTemplateSettings } from "@/services/siteSettingsService";
 import { useEffect } from "react";
 
 // Apply colors to CSS custom properties on document root
@@ -90,6 +90,7 @@ export function useSiteSettings() {
     homepageTimeline: settings?.homepage_timeline as HomepageTimeline | undefined,
     lpgFeatures: settings?.lpg_features as LpgFeatures | undefined,
     footerSettings: settings?.footer as FooterSettings | undefined,
+    emailTemplates: settings?.email_templates as EmailTemplateSettings | undefined,
     isLoading,
     error,
   };

@@ -31,13 +31,15 @@ async function getBrand() {
     const { data } = await supabase
       .from('site_settings')
       .select('key, value')
-      .in('key', ['colors', 'footer']);
+      .in('key', ['colors', 'footer', 'email_templates']);
 
     const settings: Record<string, any> = {};
     for (const row of data || []) settings[row.key] = row.value;
 
     const colors = settings.colors || {};
     const footer = settings.footer || {};
+
+    const tpl = settings.email_templates || {};
 
     return {
       ...BRAND_DEFAULTS,
@@ -48,9 +50,23 @@ async function getBrand() {
       address: footer.address_line1 && footer.address_line2
         ? `${footer.address_line1}, ${footer.address_line2}`
         : "Zuid Zijperweg 66, 1766 HD Wieringerwaard",
+      tpl: {
+        contact_confirm_greeting: tpl.contact_confirm_greeting || "Bedankt voor uw bericht, {naam}!",
+        contact_confirm_body: tpl.contact_confirm_body || "We hebben uw bericht in goede orde ontvangen. We streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.",
+        contact_confirm_urgent: tpl.contact_confirm_urgent || "Heeft u een dringende vraag? Bel ons gerust op {telefoon}.",
+      },
     };
   } catch (_) { /* fallback to defaults */ }
-  return { ...BRAND_DEFAULTS, phone: "06-26 344 965", address: "Zuid Zijperweg 66, 1766 HD Wieringerwaard" };
+  return {
+    ...BRAND_DEFAULTS,
+    phone: "06-26 344 965",
+    address: "Zuid Zijperweg 66, 1766 HD Wieringerwaard",
+    tpl: {
+      contact_confirm_greeting: "Bedankt voor uw bericht, {naam}!",
+      contact_confirm_body: "We hebben uw bericht in goede orde ontvangen. We streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.",
+      contact_confirm_urgent: "Heeft u een dringende vraag? Bel ons gerust op {telefoon}.",
+    },
+  };
 }
 
 async function verifyTurnstile(token: string): Promise<boolean> {
@@ -201,16 +217,16 @@ serve(async (req) => {
                 <h2 style="color: white; margin: 0; font-size: 20px;">${BRAND.name}</h2>
               </div>
               <div style="padding: 32px;">
-                <h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">Bedankt voor uw bericht, ${safeName}!</h3>
+                <h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">${BRAND.tpl.contact_confirm_greeting.replace(/\{naam\}/g, safeName)}</h3>
                 <p style="color: #555; line-height: 1.6; margin: 0 0 16px 0;">
-                  We hebben uw bericht in goede orde ontvangen. We streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.
+                  ${BRAND.tpl.contact_confirm_body}
                 </p>
                 <div style="background-color: ${BRAND.background}; padding: 20px; border-radius: 6px; margin-bottom: 24px;">
                   <h3 style="color: ${BRAND.primary}; margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px;">Uw bericht</h3>
                   <p style="margin: 0; line-height: 1.6; color: #333; white-space: pre-wrap; font-style: italic;">${safeMessage}</p>
                 </div>
                 <p style="color: #555; line-height: 1.6; margin: 0 0 24px 0;">
-                  Heeft u een dringende vraag? Bel ons gerust op <strong>${BRAND.phone}</strong>.
+                  ${BRAND.tpl.contact_confirm_urgent.replace(/\{telefoon\}/g, `<strong>${BRAND.phone}</strong>`)}
                 </p>
                 <div style="border-top: 1px solid #eee; padding-top: 20px;">
                   <p style="color: #555; margin: 0; line-height: 1.6;">
@@ -223,7 +239,7 @@ serve(async (req) => {
             </div>
           </div>
         `,
-        text: `Bedankt voor uw bericht, ${safeName}!\n\nWe hebben uw bericht ontvangen en streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.\n\nUw bericht:\n${safeMessage}\n\nHeeft u een dringende vraag? Bel ons op ${BRAND.phone}.\n\nMet vriendelijke groet,\n${BRAND.name}\n${BRAND.address}`,
+        text: `${BRAND.tpl.contact_confirm_greeting.replace(/\{naam\}/g, safeName)}\n\n${BRAND.tpl.contact_confirm_body}\n\nUw bericht:\n${safeMessage}\n\n${BRAND.tpl.contact_confirm_urgent.replace(/\{telefoon\}/g, BRAND.phone)}\n\nMet vriendelijke groet,\n${BRAND.name}\n${BRAND.address}`,
       }),
     });
 

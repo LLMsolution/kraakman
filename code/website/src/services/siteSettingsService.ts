@@ -81,12 +81,20 @@ export interface FooterSettings {
   whatsapp_default_message: string;
 }
 
+export interface EmailTemplateSettings {
+  contact_confirm_greeting: string;
+  contact_confirm_body: string;
+  contact_confirm_urgent: string;
+  testdrive_confirm_greeting: string;
+  testdrive_confirm_body: string;
+}
+
 /** Convert a display phone number like "06-26 344 965" to "tel:0626344965" */
 export function phoneToHref(phone: string): string {
   return `tel:${phone.replace(/[\s\-()]/g, '')}`;
 }
 
-export type SettingsKey = 'colors' | 'hero' | 'page_headers' | 'reviews_section' | 'homepage_timeline' | 'lpg_features' | 'footer';
+export type SettingsKey = 'colors' | 'hero' | 'page_headers' | 'reviews_section' | 'homepage_timeline' | 'lpg_features' | 'footer' | 'email_templates';
 
 // site_settings table is not in auto-generated types yet.
 // Using a typed helper to minimize `as any` surface area.

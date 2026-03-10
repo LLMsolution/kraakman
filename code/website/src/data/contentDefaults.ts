@@ -1,4 +1,4 @@
-import type { HomepageTimeline, LpgFeatures, FooterSettings } from "@/services/siteSettingsService";
+import type { HomepageTimeline, LpgFeatures, FooterSettings, EmailTemplateSettings } from "@/services/siteSettingsService";
 
 export const DEFAULT_HOMEPAGE_TIMELINE: HomepageTimeline = {
   section_subtitle: "Ons verhaal, passie en expertise in de automotive branche.",
@@ -113,4 +113,12 @@ export const DEFAULT_FOOTER: FooterSettings = {
   whatsapp_number: "31626344965",
   whatsapp_button_text: "Direct chatten met Kees",
   whatsapp_default_message: "Hi Kees, ik heb een vraag:",
+};
+
+export const DEFAULT_EMAIL_TEMPLATES: EmailTemplateSettings = {
+  contact_confirm_greeting: "Bedankt voor uw bericht, {naam}!",
+  contact_confirm_body: "We hebben uw bericht in goede orde ontvangen. We streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.",
+  contact_confirm_urgent: "Heeft u een dringende vraag? Bel ons gerust op {telefoon}.",
+  testdrive_confirm_greeting: "Bedankt voor uw aanvraag, {naam}!",
+  testdrive_confirm_body: "We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.",
 };

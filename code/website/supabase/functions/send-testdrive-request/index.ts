@@ -31,13 +31,15 @@ async function getBrand() {
     const { data } = await supabase
       .from('site_settings')
       .select('key, value')
-      .in('key', ['colors', 'footer']);
+      .in('key', ['colors', 'footer', 'email_templates']);
 
     const settings: Record<string, any> = {};
     for (const row of data || []) settings[row.key] = row.value;
 
     const colors = settings.colors || {};
     const footer = settings.footer || {};
+
+    const tpl = settings.email_templates || {};
 
     return {
       ...BRAND_DEFAULTS,
@@ -48,9 +50,21 @@ async function getBrand() {
       address: footer.address_line1 && footer.address_line2
         ? `${footer.address_line1}, ${footer.address_line2}`
         : "Zuid Zijperweg 66, 1766 HD Wieringerwaard",
+      tpl: {
+        testdrive_confirm_greeting: tpl.testdrive_confirm_greeting || "Bedankt voor uw aanvraag, {naam}!",
+        testdrive_confirm_body: tpl.testdrive_confirm_body || "We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.",
+      },
     };
   } catch (_) { /* fallback to defaults */ }
-  return { ...BRAND_DEFAULTS, phone: "06-26 344 965", address: "Zuid Zijperweg 66, 1766 HD Wieringerwaard" };
+  return {
+    ...BRAND_DEFAULTS,
+    phone: "06-26 344 965",
+    address: "Zuid Zijperweg 66, 1766 HD Wieringerwaard",
+    tpl: {
+      testdrive_confirm_greeting: "Bedankt voor uw aanvraag, {naam}!",
+      testdrive_confirm_body: "We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.",
+    },
+  };
 }
 
 async function verifyTurnstile(token: string): Promise<boolean> {
@@ -239,9 +253,9 @@ serve(async (req) => {
                 <h2 style="color: white; margin: 0; font-size: 20px;">${BRAND.name}</h2>
               </div>
               <div style="padding: 32px;">
-                <h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">Bedankt voor uw aanvraag, ${safeName}!</h3>
+                <h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">${BRAND.tpl.testdrive_confirm_greeting.replace(/\{naam\}/g, safeName)}</h3>
                 <p style="color: #555; line-height: 1.6; margin: 0 0 24px 0;">
-                  We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.
+                  ${BRAND.tpl.testdrive_confirm_body}
                 </p>
                 ${carImageBlock}
                 ${carDetailsBlock}
@@ -256,7 +270,7 @@ serve(async (req) => {
             </div>
           </div>
         `,
-        text: `Bedankt voor uw aanvraag, ${safeName}!\n\nWe hebben uw proefrit aanvraag voor de ${carTitle} ontvangen.\nWe nemen zo snel mogelijk contact met u op.\n\nMet vriendelijke groet,\n${BRAND.name}\n${BRAND.address}`,
+        text: `${BRAND.tpl.testdrive_confirm_greeting.replace(/\{naam\}/g, safeName)}\n\n${BRAND.tpl.testdrive_confirm_body}\n\nAuto: ${carTitle}\n\nMet vriendelijke groet,\n${BRAND.name}\n${BRAND.address}`,
       }),
     });
 

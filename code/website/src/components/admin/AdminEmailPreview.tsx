@@ -1,15 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useSiteSettings } from "@/hooks/useSiteSettings";
-import { DEFAULT_FOOTER } from "@/data/contentDefaults";
+import { DEFAULT_FOOTER, DEFAULT_EMAIL_TEMPLATES } from "@/data/contentDefaults";
+import { siteSettingsService, type EmailTemplateSettings } from "@/services/siteSettingsService";
 import { Button } from "@/components/ui/button";
-import { Mail, MessageSquare, Star, CarFront } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Mail, MessageSquare, Star, CarFront, Save, RotateCcw } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 type EmailType = "contact" | "contact-confirm" | "feedback" | "testdrive" | "testdrive-confirm";
 
 const EMAIL_TYPES: { id: EmailType; label: string; icon: typeof Mail; description: string }[] = [
   { id: "contact", label: "Contact (intern)", icon: Mail, description: "Email naar het bedrijf bij nieuw contactbericht" },
   { id: "contact-confirm", label: "Contact (klant)", icon: MessageSquare, description: "Bevestigingsmail naar de klant" },
-  { id: "feedback", label: "Feedback", icon: Star, description: "Email naar het bedrijf bij nieuwe feedback" },
+  { id: "feedback", label: "Feedback (intern)", icon: Star, description: "Email naar het bedrijf bij nieuwe feedback — geen mail naar klant" },
   { id: "testdrive", label: "Proefrit (intern)", icon: CarFront, description: "Email naar het bedrijf bij proefrit aanvraag" },
   { id: "testdrive-confirm", label: "Proefrit (klant)", icon: CarFront, description: "Bevestigingsmail naar de klant" },
 ];
@@ -33,7 +39,24 @@ function sanitize(s: string): string {
   return s.replace(/[<>&"']/g, (c) => ({ "<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;", "'": "&#x27;" }[c]!));
 }
 
-function buildBrand(colors: any, footer: any) {
+function replacePlaceholders(text: string, brand: Brand): string {
+  return text
+    .replace(/\{naam\}/g, sanitize(MOCK.name))
+    .replace(/\{telefoon\}/g, brand.phone)
+    .replace(/\{bedrijfsnaam\}/g, brand.name)
+    .replace(/\{adres\}/g, brand.address)
+    .replace(/\{auto\}/g, `${MOCK.carYear} ${MOCK.carBrand} ${MOCK.carModel}`);
+}
+
+interface Brand {
+  name: string;
+  primary: string;
+  background: string;
+  phone: string;
+  address: string;
+}
+
+function buildBrand(colors: any, footer: any): Brand {
   return {
     name: footer?.company_name || DEFAULT_FOOTER.company_name,
     primary: colors?.primary || "#123458",
@@ -45,7 +68,7 @@ function buildBrand(colors: any, footer: any) {
   };
 }
 
-function generateEmailHtml(type: EmailType, brand: ReturnType<typeof buildBrand>): string {
+function generateEmailHtml(type: EmailType, brand: Brand, tpl: EmailTemplateSettings): string {
   const wrapper = (header: string, content: string, footerText: string) => `
     <!DOCTYPE html><html><head><meta charset="utf-8"></head><body style="margin:0;padding:0;background:#f5f5f5;">
     <div style="font-family: Inter, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: ${brand.background}; padding: 32px;">
@@ -75,6 +98,14 @@ function generateEmailHtml(type: EmailType, brand: ReturnType<typeof buildBrand>
   const carTitle = `${MOCK.carYear} ${MOCK.carBrand} ${MOCK.carModel}`;
   const carPrice = `\u20AC${MOCK.carPrice.toLocaleString("nl-NL")}`;
 
+  const closing = `<div style="border-top: 1px solid #eee; padding-top: 20px;">
+    <p style="color: #555; margin: 0; line-height: 1.6;">
+      Met vriendelijke groet,<br>
+      <strong>${brand.name}</strong><br>
+      <span style="font-size: 14px; color: #999;">${brand.address}</span>
+    </p>
+  </div>`;
+
   switch (type) {
     case "contact":
       return wrapper("Nieuw Contactbericht",
@@ -88,21 +119,14 @@ function generateEmailHtml(type: EmailType, brand: ReturnType<typeof buildBrand>
 
     case "contact-confirm":
       return wrapper(brand.name,
-        `<h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">Bedankt voor uw bericht, ${safeName}!</h3>
+        `<h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">${replacePlaceholders(tpl.contact_confirm_greeting, brand)}</h3>
         <p style="color: #555; line-height: 1.6; margin: 0 0 16px 0;">
-          We hebben uw bericht in goede orde ontvangen. We streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.
+          ${replacePlaceholders(tpl.contact_confirm_body, brand)}
         </p>` +
         sectionBox("Uw bericht", `<p style="margin: 0; line-height: 1.6; color: #333; white-space: pre-wrap; font-style: italic;">${safeMessage}</p>`) +
         `<p style="color: #555; line-height: 1.6; margin: 0 0 24px 0;">
-          Heeft u een dringende vraag? Bel ons gerust op <strong>${brand.phone}</strong>.
-        </p>
-        <div style="border-top: 1px solid #eee; padding-top: 20px;">
-          <p style="color: #555; margin: 0; line-height: 1.6;">
-            Met vriendelijke groet,<br>
-            <strong>${brand.name}</strong><br>
-            <span style="font-size: 14px; color: #999;">${brand.address}</span>
-          </p>
-        </div>`,
+          ${replacePlaceholders(tpl.contact_confirm_urgent, brand)}
+        </p>` + closing,
         `Verzonden via het contactformulier op de website &middot; ${MOCK.timestamp}`
       );
 
@@ -138,9 +162,9 @@ function generateEmailHtml(type: EmailType, brand: ReturnType<typeof buildBrand>
 
     case "testdrive-confirm":
       return wrapper(brand.name,
-        `<h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">Bedankt voor uw aanvraag, ${safeName}!</h3>
+        `<h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">${replacePlaceholders(tpl.testdrive_confirm_greeting, brand)}</h3>
         <p style="color: #555; line-height: 1.6; margin: 0 0 24px 0;">
-          We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.
+          ${replacePlaceholders(tpl.testdrive_confirm_body, brand)}
         </p>
         <div style="border-radius: 6px; overflow: hidden; margin-bottom: 24px;">
           <img src="${MOCK.carImage}" alt="${carTitle}" style="width: 100%; height: auto; display: block; max-height: 300px; object-fit: cover;" />
@@ -148,34 +172,79 @@ function generateEmailHtml(type: EmailType, brand: ReturnType<typeof buildBrand>
         sectionBox("Auto", `
           <p style="margin: 0 0 4px 0; font-size: 18px; font-weight: 600; color: #333;">${carTitle}</p>
           <p style="margin: 0; font-size: 16px; color: ${brand.primary}; font-weight: 600;">${carPrice}</p>
-        `) +
-        `<div style="border-top: 1px solid #eee; padding-top: 20px;">
-          <p style="color: #555; margin: 0; line-height: 1.6;">
-            Met vriendelijke groet,<br>
-            <strong>${brand.name}</strong><br>
-            <span style="font-size: 14px; color: #999;">${brand.address}</span>
-          </p>
-        </div>`,
+        `) + closing,
         `Verzonden via het proefrit formulier &middot; ${MOCK.timestamp}`
       );
   }
 }
 
+const EDITABLE_TYPES: EmailType[] = ["contact-confirm", "testdrive-confirm"];
+
+interface FieldConfig {
+  key: keyof EmailTemplateSettings;
+  label: string;
+  type: "input" | "textarea";
+  help?: string;
+}
+
+const FIELDS: Record<string, FieldConfig[]> = {
+  "contact-confirm": [
+    { key: "contact_confirm_greeting", label: "Begroeting", type: "input", help: "Gebruik {naam} voor de klantnaam" },
+    { key: "contact_confirm_body", label: "Bericht tekst", type: "textarea" },
+    { key: "contact_confirm_urgent", label: "Dringende vraag tekst", type: "input", help: "Gebruik {telefoon} voor het telefoonnummer" },
+  ],
+  "testdrive-confirm": [
+    { key: "testdrive_confirm_greeting", label: "Begroeting", type: "input", help: "Gebruik {naam} voor de klantnaam" },
+    { key: "testdrive_confirm_body", label: "Bericht tekst", type: "textarea" },
+  ],
+};
+
 const AdminEmailPreview = () => {
   const [activeType, setActiveType] = useState<EmailType>("contact");
-  const { colors, footerSettings } = useSiteSettings();
+  const { colors, footerSettings, emailTemplates } = useSiteSettings();
+  const [templates, setTemplates] = useState<EmailTemplateSettings>(DEFAULT_EMAIL_TEMPLATES);
+  const [saving, setSaving] = useState(false);
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (emailTemplates) {
+      setTemplates({ ...DEFAULT_EMAIL_TEMPLATES, ...emailTemplates });
+    }
+  }, [emailTemplates]);
 
   const brand = buildBrand(colors, footerSettings);
-  const html = generateEmailHtml(activeType, brand);
+  const html = generateEmailHtml(activeType, brand, templates);
+  const isEditable = EDITABLE_TYPES.includes(activeType);
+
+  const handleFieldChange = useCallback((key: keyof EmailTemplateSettings, value: string) => {
+    setTemplates(prev => ({ ...prev, [key]: value }));
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const { error } = await siteSettingsService.update("email_templates", templates);
+    setSaving(false);
+    if (error) {
+      toast({ title: "Fout", description: "Kon email teksten niet opslaan.", variant: "destructive" });
+    } else {
+      queryClient.invalidateQueries({ queryKey: ["site-settings"] });
+      toast({ title: "Opgeslagen", description: "Email teksten bijgewerkt." });
+    }
+  };
+
+  const handleReset = () => {
+    setTemplates(DEFAULT_EMAIL_TEMPLATES);
+  };
 
   return (
     <div>
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-2" style={{ color: "var(--color-text-primary)" }}>
-          Email Preview
+          Email Preview & Teksten
         </h2>
         <p className="text-sm" style={{ color: "var(--color-text-secondary)" }}>
-          Bekijk hoe de emails eruitzien met je huidige thema-instellingen. Dit zijn voorbeelden met testdata — er wordt niets verstuurd.
+          Bekijk en bewerk de email teksten. De preview toont testdata — er wordt niets verstuurd.
         </p>
       </div>
 
@@ -183,7 +252,7 @@ const AdminEmailPreview = () => {
         {EMAIL_TYPES.map(({ id, label, icon: Icon }) => (
           <Button
             key={id}
-            variant={activeType === id ? "secondary" : "outline"}
+            variant={activeType === id ? "secondary" : "default"}
             size="sm"
             onClick={() => setActiveType(id)}
           >
@@ -193,17 +262,61 @@ const AdminEmailPreview = () => {
         ))}
       </div>
 
-      <p className="text-xs mb-3" style={{ color: "var(--color-text-secondary)" }}>
+      <p className="text-xs mb-4" style={{ color: "var(--color-text-secondary)" }}>
         {EMAIL_TYPES.find((t) => t.id === activeType)?.description}
       </p>
 
-      <div className="border rounded-lg overflow-hidden" style={{ borderColor: "var(--color-border-primary)" }}>
-        <iframe
-          srcDoc={html}
-          title="Email preview"
-          className="w-full border-0"
-          style={{ height: "700px", background: "#f5f5f5" }}
-        />
+      <div className={`grid gap-6 ${isEditable ? "lg:grid-cols-2" : ""}`}>
+        {isEditable && (
+          <div className="space-y-4">
+            <h3 className="font-medium text-sm" style={{ color: "var(--color-text-primary)" }}>
+              Teksten aanpassen
+            </h3>
+            {FIELDS[activeType]?.map(({ key, label, type, help }) => (
+              <div key={key} className="space-y-1.5">
+                <Label htmlFor={key} className="text-sm">{label}</Label>
+                {type === "input" ? (
+                  <Input
+                    id={key}
+                    value={templates[key]}
+                    onChange={(e) => handleFieldChange(key, e.target.value)}
+                  />
+                ) : (
+                  <Textarea
+                    id={key}
+                    value={templates[key]}
+                    onChange={(e) => handleFieldChange(key, e.target.value)}
+                    rows={3}
+                  />
+                )}
+                {help && (
+                  <p className="text-xs" style={{ color: "var(--color-text-secondary)" }}>{help}</p>
+                )}
+              </div>
+            ))}
+            <div className="flex gap-2 pt-2">
+              <Button onClick={handleSave} disabled={saving} size="sm">
+                <Save className="w-4 h-4 mr-1.5" />
+                {saving ? "Opslaan..." : "Opslaan"}
+              </Button>
+              <Button variant="default" onClick={handleReset} size="sm">
+                <RotateCcw className="w-4 h-4 mr-1.5" />
+                Standaard teksten
+              </Button>
+            </div>
+          </div>
+        )}
+
+        <div>
+          <div className="border rounded-lg overflow-hidden" style={{ borderColor: "var(--color-border-primary)" }}>
+            <iframe
+              srcDoc={html}
+              title="Email preview"
+              className="w-full border-0"
+              style={{ height: "700px", background: "#f5f5f5" }}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

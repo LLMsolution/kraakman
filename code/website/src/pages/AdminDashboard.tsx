@@ -275,45 +275,53 @@ const AdminDashboard = () => {
       <SEO title="Admin Dashboard" description="" path="/admin/dashboard" noindex />
       <Navigation />
       <div style={{ borderBottom: '1px solid var(--color-border-primary)' }}>
-        <div className="container-wide flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 px-4 py-8 sm:py-16" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
-          <h1 className="text-xl sm:text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Admin Dashboard</h1>
-          <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+        <div className="container-wide flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 px-4 py-4 sm:py-8">
+          <div className="flex items-center justify-between w-full sm:w-auto">
+            <h1 className="text-lg sm:text-2xl font-bold" style={{ color: 'var(--color-text-primary)' }}>Admin Dashboard</h1>
+            <Button variant="default" size="sm" onClick={handleLogout} className="sm:hidden">
+              <LogOut className="w-4 h-4" />
+            </Button>
+          </div>
+          <div className="flex gap-1.5 sm:gap-2 w-full sm:w-auto">
             <Button
               variant={activeTab === "autos" ? "secondary" : "default"}
-              size="lg"
+              size="sm"
               onClick={() => setActiveTab("autos")}
-              className="flex-1 sm:flex-none"
+              className="flex-1 sm:flex-none sm:!h-10 sm:!px-4"
             >
-              <CarIcon className="w-4 h-4 mr-2" />
-              Auto's beheren
+              <CarIcon className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Auto's beheren</span>
+              <span className="sm:hidden text-xs">Auto's</span>
             </Button>
             <Button
               variant={activeTab === "website" ? "secondary" : "default"}
-              size="lg"
+              size="sm"
               onClick={() => setActiveTab("website")}
-              className="flex-1 sm:flex-none"
+              className="flex-1 sm:flex-none sm:!h-10 sm:!px-4"
             >
-              <Settings className="w-4 h-4 mr-2" />
-              Website beheren
+              <Settings className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Website beheren</span>
+              <span className="sm:hidden text-xs">Website</span>
             </Button>
             <Button
               variant={activeTab === "emails" ? "secondary" : "default"}
-              size="lg"
+              size="sm"
               onClick={() => setActiveTab("emails")}
-              className="flex-1 sm:flex-none"
+              className="flex-1 sm:flex-none sm:!h-10 sm:!px-4"
             >
-              <Mail className="w-4 h-4 mr-2" />
-              Email preview
+              <Mail className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Email preview</span>
+              <span className="sm:hidden text-xs">Emails</span>
             </Button>
-            <Button variant="default" size="lg" onClick={handleLogout} className="flex-1 sm:flex-none">
-              <LogOut className="w-4 h-4 mr-2" />
-              Uitloggen
+            <Button variant="default" size="sm" onClick={handleLogout} className="hidden sm:flex sm:!h-10 sm:!px-4">
+              <LogOut className="w-4 h-4 sm:mr-1.5" />
+              <span className="hidden sm:inline">Uitloggen</span>
             </Button>
           </div>
         </div>
       </div>
 
-      <div className="container-wide px-4 py-8 sm:py-16" style={{ paddingTop: '32px', paddingBottom: '32px' }}>
+      <div className="container-wide px-4 py-4 sm:py-8">
         {activeTab === "autos" && (
           <>
             {cars.length > 0 && (

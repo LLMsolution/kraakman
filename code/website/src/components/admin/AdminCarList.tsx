@@ -180,46 +180,40 @@ const AdminCarList = ({
           </div>
         </div>
 
-        {/* Mobile View - Card Layout */}
-        <div className="md:hidden space-y-3">
+        {/* Mobile View - Compact Card Layout */}
+        <div className="md:hidden space-y-2">
           {filteredCars.map((car) => (
             <div
               key={car.id}
-              className="border rounded-lg p-4 space-y-3"
+              className="border rounded-lg p-3"
               style={{
                 backgroundColor: 'var(--color-bg-card)',
                 borderColor: 'var(--color-border-primary)'
               }}
             >
-              {/* Header with Title and Status */}
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <h3 className="font-semibold text-lg" style={{ color: 'var(--color-text-primary)' }}>
-                    {car.merk} {car.model}
-                  </h3>
-                  <p className="text-sm opacity-75" style={{ color: 'var(--color-text-secondary)' }}>
-                    {car.bouwjaar}
-                  </p>
+              <div className="flex items-center justify-between gap-2 mb-2">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <h3 className="font-semibold text-sm truncate" style={{ color: 'var(--color-text-primary)' }}>
+                      {car.merk} {car.model}
+                    </h3>
+                    <span
+                      className="px-1.5 py-0.5 text-[10px] rounded shrink-0"
+                      style={{
+                        backgroundColor: car.status === "aanbod" ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
+                        color: car.status === "aanbod" ? 'var(--color-background)' : 'var(--color-text-primary)'
+                      }}
+                    >
+                      {car.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
+                    <span>{car.bouwjaar}</span>
+                    <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>&#8364; {car.prijs.toLocaleString()}</span>
+                  </div>
                 </div>
-                <span
-                  className="px-2 py-1 text-xs rounded"
-                  style={{
-                    backgroundColor: car.status === "aanbod" ? 'var(--color-primary)' : 'var(--color-bg-secondary)',
-                    color: car.status === "aanbod" ? 'var(--color-background)' : 'var(--color-text-primary)',
-                    whiteSpace: 'nowrap'
-                  }}
-                >
-                  {car.status}
-                </span>
               </div>
-
-              {/* Price */}
-              <div className="text-xl font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                &#8364; {car.prijs.toLocaleString()}
-              </div>
-
-              {/* Action Buttons */}
-              <div className="flex gap-2 pt-2">
+              <div className="flex gap-1.5">
                 <Button
                   variant="secondary"
                   size="sm"
@@ -227,26 +221,26 @@ const AdminCarList = ({
                     setPhotoCarId(car.id);
                     setIsPhotoDialogOpen(true);
                   }}
-                  className="flex-1"
+                  className="flex-1 !h-8 !text-xs"
                 >
-                  <Image className="w-4 h-4 mr-1" />
+                  <Image className="w-3.5 h-3.5 mr-1" />
                   Foto's
                 </Button>
                 <Button
                   size="sm"
                   onClick={() => onEdit(car)}
-                  className="flex-1"
+                  className="flex-1 !h-8 !text-xs"
                 >
-                  <Pencil className="w-4 h-4 mr-1" />
+                  <Pencil className="w-3.5 h-3.5 mr-1" />
                   Bewerken
                 </Button>
                 <Button
                   variant="default"
                   size="sm"
                   onClick={() => onDelete(car)}
-                  className="hover:bg-red-600 hover:text-white hover:border-red-600"
+                  className="hover:bg-red-600 hover:text-white hover:border-red-600 !h-8"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="h-3.5 w-3.5" />
                 </Button>
               </div>
             </div>
@@ -256,7 +250,7 @@ const AdminCarList = ({
 
       {/* Photo Manager Dialog */}
       <Dialog open={isPhotoDialogOpen} onOpenChange={setIsPhotoDialogOpen}>
-        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" style={{ width: '90vw', maxWidth: '1800px' }} hideCloseButton={true}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto" style={{ width: '95vw', maxWidth: '1800px' }} hideCloseButton={true}>
           <button
             onClick={() => setIsPhotoDialogOpen(false)}
             className="absolute top-4 right-4 z-50 flex items-center justify-center transition-all duration-200"

@@ -248,15 +248,16 @@ const AdminEmailPreview = () => {
         </p>
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-6">
+      <div className="flex flex-wrap gap-1.5 sm:gap-2 mb-4 sm:mb-6">
         {EMAIL_TYPES.map(({ id, label, icon: Icon }) => (
           <Button
             key={id}
             variant={activeType === id ? "secondary" : "default"}
             size="sm"
             onClick={() => setActiveType(id)}
+            className="!text-xs sm:!text-sm"
           >
-            <Icon className="w-4 h-4 mr-1.5" />
+            <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" />
             {label}
           </Button>
         ))}
@@ -313,7 +314,7 @@ const AdminEmailPreview = () => {
               srcDoc={html}
               title="Email preview"
               className="w-full border-0"
-              style={{ height: "700px", background: "#f5f5f5" }}
+              style={{ height: "min(700px, 60vh)", background: "#f5f5f5" }}
             />
           </div>
         </div>

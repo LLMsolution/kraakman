@@ -9,7 +9,7 @@ export const BUSINESS = {
   EMAIL: "info@autoservicevanderwaals.nl",
   PHONE: "06-26 344 965",
   PHONE_HREF: "tel:0626344965",
-  WHATSAPP_NUMBER: "31626344965",
+  WHATSAPP_NUMBER: "31646075907",
   ADDRESS_STREET: "Zuid Zijperweg 66",
   ADDRESS_CITY: "Wieringerwaard",
   ADDRESS_POSTAL: "1766 HD",

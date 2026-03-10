@@ -79,6 +79,10 @@ export interface FooterSettings {
   whatsapp_number: string;
   whatsapp_button_text: string;
   whatsapp_default_message: string;
+  contact_form_title: string;
+  contact_form_subtitle: string;
+  contact_map_title: string;
+  contact_map_subtitle: string;
 }
 
 export interface EmailTemplateSettings {

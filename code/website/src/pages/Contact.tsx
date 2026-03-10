@@ -172,10 +172,10 @@ const Contact = () => {
           <div className="lg:w-1/2">
             <div className="mb-12">
               <h2 className="text-3xl font-bold mb-4">
-                Stuur ons een bericht
+                {footerSettings?.contact_form_title || "Stuur ons een bericht"}
               </h2>
               <p className="text-lg text-muted-foreground">
-                Vul het formulier in en we nemen zo spoedig mogelijk contact met u op.
+                {footerSettings?.contact_form_subtitle || "Vul het formulier in en we nemen zo spoedig mogelijk contact met u op."}
               </p>
             </div>
 
@@ -258,10 +258,10 @@ const Contact = () => {
           <div className="lg:w-1/2 flex flex-col">
             <div className="mb-8">
               <h2 className="text-3xl font-bold mb-4">
-                Locatie
+                {footerSettings?.contact_map_title || "Locatie"}
               </h2>
               <p className="text-muted-foreground text-lg">
-                Wij zijn gevestigd in Wieringerwaard, makkelijk bereikbaar vanuit de regio.
+                {footerSettings?.contact_map_subtitle || "Wij zijn gevestigd in Wieringerwaard, makkelijk bereikbaar vanuit de regio."}
               </p>
             </div>
 

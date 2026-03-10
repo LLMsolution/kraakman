@@ -113,6 +113,10 @@ export const DEFAULT_FOOTER: FooterSettings = {
   whatsapp_number: "31626344965",
   whatsapp_button_text: "Direct chatten met Kees",
   whatsapp_default_message: "Hi Kees, ik heb een vraag:",
+  contact_form_title: "Stuur ons een bericht",
+  contact_form_subtitle: "Vul het formulier in en we nemen zo spoedig mogelijk contact met u op.",
+  contact_map_title: "Locatie",
+  contact_map_subtitle: "Wij zijn gevestigd in Wieringerwaard, makkelijk bereikbaar vanuit de regio.",
 };
 
 export const DEFAULT_EMAIL_TEMPLATES: EmailTemplateSettings = {

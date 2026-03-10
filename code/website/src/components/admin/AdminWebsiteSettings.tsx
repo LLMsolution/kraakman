@@ -565,32 +565,6 @@ const AdminWebsiteSettings = () => {
             </div>
           </div>
 
-          {/* Contact Header */}
-          <div className="border-t border-border pt-6">
-            <h3 className="text-lg font-semibold mb-4">Contact Pagina</h3>
-            <div className="space-y-4">
-              <div>
-                <Label className="text-sm font-semibold mb-2 block">Titel</Label>
-                <Input
-                  className={inputClass}
-                  value={pageHeaders.contact_title}
-                  onChange={(e) => setPageHeaders({ ...pageHeaders, contact_title: e.target.value })}
-                  placeholder="Neem contact op"
-                  style={{ lineHeight: "24px" }}
-                />
-              </div>
-              <div>
-                <Label className="text-sm font-semibold mb-2 block">Subtekst</Label>
-                <Textarea
-                  className="kraakman-textarea"
-                  value={pageHeaders.contact_subtitle}
-                  onChange={(e) => setPageHeaders({ ...pageHeaders, contact_subtitle: e.target.value })}
-                  rows={2}
-                />
-              </div>
-            </div>
-          </div>
-
           {/* Reviews Header */}
           <div className="border-t border-border pt-6">
             <h3 className="text-lg font-semibold mb-4">Reviews Pagina</h3>
@@ -682,10 +656,101 @@ const AdminWebsiteSettings = () => {
       {/* Contact Section */}
       {activeSection === "contact" && (
         <div className="space-y-6">
+          {/* Page Header */}
           <div>
+            <h3 className="text-lg font-semibold mb-2">Pagina Header</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+              De titel en subtekst bovenaan de contactpagina.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Titel</Label>
+                <Input
+                  className={inputClass}
+                  value={pageHeaders.contact_title}
+                  onChange={(e) => setPageHeaders({ ...pageHeaders, contact_title: e.target.value })}
+                  placeholder="Neem contact op"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Subtekst</Label>
+                <Textarea
+                  className="kraakman-textarea"
+                  value={pageHeaders.contact_subtitle}
+                  onChange={(e) => setPageHeaders({ ...pageHeaders, contact_subtitle: e.target.value })}
+                  placeholder="Heeft u vragen over ons aanbod, onderhoud of LPG installaties?"
+                  rows={2}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Form Section */}
+          <div className="border-t border-border pt-6">
+            <h3 className="text-lg font-semibold mb-2">Contactformulier</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+              De tekst boven het contactformulier.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Titel</Label>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.contact_form_title}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, contact_form_title: e.target.value })}
+                  placeholder="Stuur ons een bericht"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Subtekst</Label>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.contact_form_subtitle}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, contact_form_subtitle: e.target.value })}
+                  placeholder="Vul het formulier in en we nemen zo spoedig mogelijk contact met u op."
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Map Section */}
+          <div className="border-t border-border pt-6">
+            <h3 className="text-lg font-semibold mb-2">Kaart</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+              De tekst naast de Google Maps kaart.
+            </p>
+            <div className="space-y-4">
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Titel</Label>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.contact_map_title}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, contact_map_title: e.target.value })}
+                  placeholder="Locatie"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Subtekst</Label>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.contact_map_subtitle}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, contact_map_subtitle: e.target.value })}
+                  placeholder="Wij zijn gevestigd in Wieringerwaard, makkelijk bereikbaar vanuit de regio."
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* WhatsApp */}
+          <div className="border-t border-border pt-6">
             <h3 className="text-lg font-semibold mb-2">WhatsApp Knop</h3>
             <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
-              Deze instellingen bepalen de WhatsApp-knop op de contactpagina en onderaan elke autopagina ("Stel eenvoudig een vraag"). Bezoekers kunnen hiermee direct een WhatsApp-bericht sturen.
+              De WhatsApp-knop op de contactpagina en onderaan elke autopagina ("Stel eenvoudig een vraag").
             </p>
             <div className="space-y-4">
               <div>
@@ -724,7 +789,20 @@ const AdminWebsiteSettings = () => {
             </div>
           </div>
 
-          <Button variant="secondary" onClick={handleSaveFooter} disabled={saving}>
+          <Button variant="secondary" onClick={async () => {
+            setSaving(true);
+            const [footerResult, headersResult] = await Promise.all([
+              siteSettingsService.update("footer", footerSettings),
+              siteSettingsService.update("page_headers", pageHeaders),
+            ]);
+            if (footerResult.error || headersResult.error) {
+              toast({ title: "Fout", description: "Kon contact instellingen niet opslaan.", variant: "destructive" });
+            } else {
+              queryClient.invalidateQueries({ queryKey: ["site-settings"] });
+              toast({ title: "Opgeslagen", description: "Contact instellingen bijgewerkt." });
+            }
+            setSaving(false);
+          }} disabled={saving}>
             {saving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
             Contact opslaan
           </Button>

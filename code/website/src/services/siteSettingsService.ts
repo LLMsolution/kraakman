@@ -11,6 +11,7 @@ export interface HeroSettings {
   title: string;
   subtitle: string;
   image_url: string;
+  image_url_mobile: string;
   cta_title: string;
   cta_subtitle: string;
   wie_zijn_wij_title: string;

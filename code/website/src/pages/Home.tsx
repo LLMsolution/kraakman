@@ -113,15 +113,20 @@ export default function TimelinePage() {
 
       {/* Hero Section */}
       <section className="relative h-[70vh] overflow-hidden">
-        <img
-          src={hero?.image_url || heroImage}
-          alt="Auto Service van der Waals"
-          className="w-full h-full object-cover"
-          fetchPriority="high"
-        />
+        <picture>
+          {hero?.image_url_mobile && (
+            <source media="(max-width: 767px)" srcSet={hero.image_url_mobile} />
+          )}
+          <img
+            src={hero?.image_url || heroImage}
+            alt="Auto Service van der Waals"
+            className="w-full h-full object-cover"
+            fetchPriority="high"
+          />
+        </picture>
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="text-center text-white px-4 py-16 md:px-8 md:py-12 lg:px-16 lg:py-16">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+            <h1 className="text-3xl md:text-5xl lg:text-7xl font-bold mb-6">
               {hero?.title || "Auto Service van der Waals"}
             </h1>
             <p className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto">

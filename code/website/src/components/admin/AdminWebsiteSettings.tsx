@@ -50,6 +50,7 @@ const AdminWebsiteSettings = () => {
     title: "",
     subtitle: "",
     image_url: "",
+    image_url_mobile: "",
     cta_title: "",
     cta_subtitle: "",
     wie_zijn_wij_title: "",
@@ -84,6 +85,8 @@ const AdminWebsiteSettings = () => {
 
   const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
   const [heroImagePreview, setHeroImagePreview] = useState<string>("");
+  const [heroMobileImageFile, setHeroMobileImageFile] = useState<File | null>(null);
+  const [heroMobileImagePreview, setHeroMobileImagePreview] = useState<string>("");
   const [uploadingImage, setUploadingImage] = useState(false);
 
   useEffect(() => {
@@ -103,6 +106,7 @@ const AdminWebsiteSettings = () => {
       if (data.hero) {
         setHero(data.hero);
         if (data.hero.image_url) setHeroImagePreview(data.hero.image_url);
+        if (data.hero.image_url_mobile) setHeroMobileImagePreview(data.hero.image_url_mobile);
       }
       if (data.page_headers) setPageHeaders(data.page_headers);
       if (data.reviews_section) setReviewsSection(data.reviews_section);
@@ -140,19 +144,21 @@ const AdminWebsiteSettings = () => {
     setHeroImagePreview(URL.createObjectURL(file));
   };
 
-  const uploadHeroImage = async (): Promise<string | null> => {
-    if (!heroImageFile) return hero.image_url || null;
+  const handleHeroMobileImageSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setHeroMobileImageFile(file);
+    setHeroMobileImagePreview(URL.createObjectURL(file));
+  };
 
-    setUploadingImage(true);
-    const fileName = `site/hero-${crypto.randomUUID()}.${heroImageFile.name.split(".").pop()}`;
-
+  const uploadHeroImageFile = async (file: File, prefix: string): Promise<string | null> => {
+    const fileName = `site/${prefix}-${crypto.randomUUID()}.${file.name.split(".").pop()}`;
     const { error: uploadError } = await (await import("@/integrations/supabase/client")).supabase.storage
       .from("car-images")
-      .upload(fileName, heroImageFile, { cacheControl: "3600" });
+      .upload(fileName, file, { cacheControl: "3600" });
 
     if (uploadError) {
-      toast({ title: "Fout", description: "Kon hero afbeelding niet uploaden.", variant: "destructive" });
-      setUploadingImage(false);
+      toast({ title: "Fout", description: `Kon ${prefix} afbeelding niet uploaden.`, variant: "destructive" });
       return null;
     }
 
@@ -160,8 +166,15 @@ const AdminWebsiteSettings = () => {
       .from("car-images")
       .getPublicUrl(fileName);
 
-    setUploadingImage(false);
     return publicUrl;
+  };
+
+  const uploadHeroImages = async (): Promise<{ desktop: string | null; mobile: string | null }> => {
+    setUploadingImage(true);
+    const desktop = heroImageFile ? await uploadHeroImageFile(heroImageFile, "hero") : (hero.image_url || null);
+    const mobile = heroMobileImageFile ? await uploadHeroImageFile(heroMobileImageFile, "hero-mobile") : (hero.image_url_mobile || null);
+    setUploadingImage(false);
+    return { desktop, mobile };
   };
 
   const handleSaveColors = async () => {
@@ -179,8 +192,12 @@ const AdminWebsiteSettings = () => {
 
   const handleSaveHero = async () => {
     setSaving(true);
-    const imageUrl = await uploadHeroImage();
-    const updatedHero = { ...hero, image_url: imageUrl || hero.image_url };
+    const { desktop, mobile } = await uploadHeroImages();
+    const updatedHero = {
+      ...hero,
+      image_url: desktop || hero.image_url,
+      image_url_mobile: mobile || hero.image_url_mobile,
+    };
 
     const { error } = await siteSettingsService.update("hero", updatedHero);
     if (error) {
@@ -188,6 +205,7 @@ const AdminWebsiteSettings = () => {
     } else {
       setHero(updatedHero);
       setHeroImageFile(null);
+      setHeroMobileImageFile(null);
       queryClient.invalidateQueries({ queryKey: ["site-settings"] });
       toast({ title: "Opgeslagen", description: "Homepage instellingen bijgewerkt." });
     }
@@ -398,22 +416,24 @@ const AdminWebsiteSettings = () => {
             />
           </div>
 
-          <div>
-            <Label className="text-sm font-semibold mb-2 block">Hero Afbeelding</Label>
-            <div className="mb-3 border border-border overflow-hidden" style={{ maxHeight: "200px" }}>
-              {heroImagePreview ? (
-                <img
-                  src={heroImagePreview}
-                  alt="Hero preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
-                  Geen afbeelding ingesteld
-                </div>
-              )}
-            </div>
-            <div className="flex gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <Label className="text-sm font-semibold mb-2 block">Hero Afbeelding (Desktop)</Label>
+              <p className="text-xs text-muted-foreground mb-2">Liggend formaat, wordt getoond op desktop en tablet</p>
+              <div className="mb-3 border border-border overflow-hidden">
+                {heroImagePreview ? (
+                  <img
+                    src={heroImagePreview}
+                    alt="Hero preview desktop"
+                    className="w-full object-contain"
+                    style={{ maxHeight: "300px" }}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
+                    Geen afbeelding ingesteld
+                  </div>
+                )}
+              </div>
               <Button
                 variant="default"
                 onClick={() => document.getElementById("hero-image-upload")?.click()}
@@ -427,6 +447,39 @@ const AdminWebsiteSettings = () => {
                 type="file"
                 accept="image/*"
                 onChange={handleHeroImageSelect}
+                className="hidden"
+              />
+            </div>
+            <div>
+              <Label className="text-sm font-semibold mb-2 block">Hero Afbeelding (Mobiel)</Label>
+              <p className="text-xs text-muted-foreground mb-2">Staand formaat, wordt getoond op telefoons. Laat leeg om de desktop afbeelding te gebruiken.</p>
+              <div className="mb-3 border border-border overflow-hidden">
+                {heroMobileImagePreview ? (
+                  <img
+                    src={heroMobileImagePreview}
+                    alt="Hero preview mobiel"
+                    className="w-full object-contain"
+                    style={{ maxHeight: "300px" }}
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-32 text-muted-foreground text-sm">
+                    Geen mobiele afbeelding (desktop wordt gebruikt)
+                  </div>
+                )}
+              </div>
+              <Button
+                variant="default"
+                onClick={() => document.getElementById("hero-mobile-image-upload")?.click()}
+                disabled={uploadingImage}
+              >
+                <Upload className="w-4 h-4 mr-2" />
+                {heroMobileImagePreview ? "Andere afbeelding" : "Afbeelding kiezen"}
+              </Button>
+              <input
+                id="hero-mobile-image-upload"
+                type="file"
+                accept="image/*"
+                onChange={handleHeroMobileImageSelect}
                 className="hidden"
               />
             </div>

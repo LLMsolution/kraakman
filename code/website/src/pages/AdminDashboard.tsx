@@ -12,12 +12,13 @@ import { Car } from "@/types";
 import { carService } from "@/services/carService";
 import { imageService } from "@/services/imageService";
 import { logger } from "@/utils/logger";
-import { LogOut, Car as CarIcon, Settings, Loader2 } from "lucide-react";
+import { LogOut, Car as CarIcon, Settings, Mail, Loader2 } from "lucide-react";
 import SEO from "@/components/SEO";
 
 const AdminWebsiteSettings = lazy(() => import("@/components/admin/AdminWebsiteSettings"));
+const AdminEmailPreview = lazy(() => import("@/components/admin/AdminEmailPreview"));
 
-type AdminTab = "autos" | "website";
+type AdminTab = "autos" | "website" | "emails";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -295,6 +296,15 @@ const AdminDashboard = () => {
               <Settings className="w-4 h-4 mr-2" />
               Website beheren
             </Button>
+            <Button
+              variant={activeTab === "emails" ? "secondary" : "default"}
+              size="lg"
+              onClick={() => setActiveTab("emails")}
+              className="flex-1 sm:flex-none"
+            >
+              <Mail className="w-4 h-4 mr-2" />
+              Email preview
+            </Button>
             <Button variant="default" size="lg" onClick={handleLogout} className="flex-1 sm:flex-none">
               <LogOut className="w-4 h-4 mr-2" />
               Uitloggen
@@ -362,6 +372,12 @@ const AdminDashboard = () => {
         {activeTab === "website" && (
           <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
             <AdminWebsiteSettings />
+          </Suspense>
+        )}
+
+        {activeTab === "emails" && (
+          <Suspense fallback={<div className="flex justify-center py-12"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+            <AdminEmailPreview />
           </Suspense>
         )}
       </div>

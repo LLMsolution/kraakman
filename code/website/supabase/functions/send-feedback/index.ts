@@ -27,17 +27,21 @@ async function getBrand() {
     );
     const { data } = await supabase
       .from('site_settings')
-      .select('value')
-      .eq('key', 'colors')
-      .single();
+      .select('key, value')
+      .in('key', ['colors', 'footer']);
 
-    if (data?.value) {
-      return {
-        ...BRAND_DEFAULTS,
-        primary: data.value.primary || BRAND_DEFAULTS.primary,
-        background: data.value.background || BRAND_DEFAULTS.background,
-      };
-    }
+    const settings: Record<string, any> = {};
+    for (const row of data || []) settings[row.key] = row.value;
+
+    const colors = settings.colors || {};
+    const footer = settings.footer || {};
+
+    return {
+      ...BRAND_DEFAULTS,
+      name: footer.company_name || BRAND_DEFAULTS.name,
+      primary: colors.primary || BRAND_DEFAULTS.primary,
+      background: colors.background || BRAND_DEFAULTS.background,
+    };
   } catch (_) { /* fallback to defaults */ }
   return BRAND_DEFAULTS;
 }

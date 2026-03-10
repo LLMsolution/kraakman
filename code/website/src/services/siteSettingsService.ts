@@ -76,6 +76,9 @@ export interface FooterSettings {
   opening_hours: string;
   opening_note: string;
   company_name: string;
+  whatsapp_number: string;
+  whatsapp_button_text: string;
+  whatsapp_default_message: string;
 }
 
 /** Convert a display phone number like "06-26 344 965" to "tel:0626344965" */

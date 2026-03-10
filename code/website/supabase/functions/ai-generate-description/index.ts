@@ -27,7 +27,7 @@ Uitgerust met onder andere:
 • Cruise control
 • BLIS dodehoekbewaking
 
-De XC60 staat bekend als één van de veiligste SUV's in zijn klasse, met uitgebreide airbags en stabiliteitscontrole. Met 123.000 km op de teller is hij goed ingereden. Het is een bouwjaar 2010, dus houd rekening met wat leeftijdsgerelateerde slijtage, maar Volvo's uit deze periode staan bekend om hun lange levensduur. Een degelijke gezinsauto met veel ruimte en goede veiligheidsuitrusting.`;
+De XC60 staat bekend als één van de veiligste SUV's in zijn klasse, met uitgebreide airbags en stabiliteitscontrole. Volvo's uit deze periode staan bekend om hun lange levensduur. Een degelijke gezinsauto met veel ruimte en goede veiligheidsuitrusting.`;
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -77,7 +77,7 @@ serve(async (req) => {
 
     const carSummary = parts.join("\n");
 
-    const prompt = `Je schrijft autohandelaar-omschrijvingen in het Nederlands voor een autobedrijf. De toon is nuchter, eerlijk en concreet — geen superlatieven of marketingtaal. Beschrijf wat de auto praktisch biedt, noem sterke punten maar ook eerlijke kanttekeningen waar relevant (leeftijd, kilometerstand, bekende aandachtspunten).
+    const prompt = `Je schrijft autohandelaar-omschrijvingen in het Nederlands voor een autobedrijf. De toon is nuchter, professioneel en positief — geen superlatieven of marketingtaal, maar ook geen negatieve opmerkingen of waarschuwingen. Je schrijft als een verkoper die de auto aan wil prijzen, niet als een keurmeester.
 
 ${FEW_SHOT_EXAMPLE}
 
@@ -95,7 +95,7 @@ Regels:
 - Je krijgt alle beschikbare informatie mee: basis gegevens, technische specificaties, opties/extra's, kleur, prijs, kilometerstand, etc. Gebruik deze gegevens slim — verwerk ze alleen als ze de omschrijving waardevoller maken voor de lezer. Voorbeelden: noem de acceleratie als die sportief is ("in 4.5 seconden van 0 naar 100"), noem de kleur als het de auto typeert ("het witte exterieur geeft de auto een strakke uitstraling"), noem de prijs-kwaliteitverhouding als die opvalt. Niet elk gegeven hoeft benoemd te worden
 - Beschrijf het praktische gebruik (voor wie is deze auto geschikt?)
 - Maak een opsomming met bullet points (•) van de belangrijkste opties
-- Sluit af met een eerlijke beoordeling, inclusief eventuele aandachtspunten
+- Sluit positief af — NOOIT negatieve opmerkingen, waarschuwingen, aandachtspunten of adviezen om de auto te controleren. De auto's zijn al door ons gecontroleerd en goedgekeurd
 - Eindig ALTIJD met een korte call-to-action: "Heeft u vragen of wilt u meer weten? Neem gerust contact met ons op via de contactpagina of direct via de WhatsApp-button. U kunt hieronder ook direct een proefrit inplannen."
 - Gebruik "u" als aanspreking, niet "je"
 - Geen superlatieven zoals "prachtig", "schitterend", "fantastisch"

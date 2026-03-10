@@ -30,19 +30,27 @@ async function getBrand() {
     );
     const { data } = await supabase
       .from('site_settings')
-      .select('value')
-      .eq('key', 'colors')
-      .single();
+      .select('key, value')
+      .in('key', ['colors', 'footer']);
 
-    if (data?.value) {
-      return {
-        ...BRAND_DEFAULTS,
-        primary: data.value.primary || BRAND_DEFAULTS.primary,
-        background: data.value.background || BRAND_DEFAULTS.background,
-      };
-    }
+    const settings: Record<string, any> = {};
+    for (const row of data || []) settings[row.key] = row.value;
+
+    const colors = settings.colors || {};
+    const footer = settings.footer || {};
+
+    return {
+      ...BRAND_DEFAULTS,
+      name: footer.company_name || BRAND_DEFAULTS.name,
+      primary: colors.primary || BRAND_DEFAULTS.primary,
+      background: colors.background || BRAND_DEFAULTS.background,
+      phone: footer.phone || "06-26 344 965",
+      address: footer.address_line1 && footer.address_line2
+        ? `${footer.address_line1}, ${footer.address_line2}`
+        : "Zuid Zijperweg 66, 1766 HD Wieringerwaard",
+    };
   } catch (_) { /* fallback to defaults */ }
-  return BRAND_DEFAULTS;
+  return { ...BRAND_DEFAULTS, phone: "06-26 344 965", address: "Zuid Zijperweg 66, 1766 HD Wieringerwaard" };
 }
 
 async function verifyTurnstile(token: string): Promise<boolean> {
@@ -231,9 +239,9 @@ serve(async (req) => {
                 <h2 style="color: white; margin: 0; font-size: 20px;">${BRAND.name}</h2>
               </div>
               <div style="padding: 32px;">
-                <h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">Bedankt voor je aanvraag, ${safeName}!</h3>
+                <h3 style="color: #333; margin: 0 0 16px 0; font-size: 18px;">Bedankt voor uw aanvraag, ${safeName}!</h3>
                 <p style="color: #555; line-height: 1.6; margin: 0 0 24px 0;">
-                  We hebben je proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met je op om een afspraak in te plannen.
+                  We hebben uw proefrit aanvraag ontvangen. We nemen zo snel mogelijk contact met u op om een afspraak in te plannen.
                 </p>
                 ${carImageBlock}
                 ${carDetailsBlock}
@@ -241,14 +249,14 @@ serve(async (req) => {
                   <p style="color: #555; margin: 0; line-height: 1.6;">
                     Met vriendelijke groet,<br>
                     <strong>${BRAND.name}</strong><br>
-                    <span style="font-size: 14px; color: #999;">Zuid Zijperweg 66, 1766 HD Wieringerwaard</span>
+                    <span style="font-size: 14px; color: #999;">${BRAND.address}</span>
                   </p>
                 </div>
               </div>
             </div>
           </div>
         `,
-        text: `Bedankt voor je aanvraag, ${safeName}!\n\nWe hebben je proefrit aanvraag voor de ${carTitle} ontvangen.\nWe nemen zo snel mogelijk contact met je op.\n\nMet vriendelijke groet,\n${BRAND.name}`,
+        text: `Bedankt voor uw aanvraag, ${safeName}!\n\nWe hebben uw proefrit aanvraag voor de ${carTitle} ontvangen.\nWe nemen zo snel mogelijk contact met u op.\n\nMet vriendelijke groet,\n${BRAND.name}\n${BRAND.address}`,
       }),
     });
 

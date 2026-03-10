@@ -12,6 +12,7 @@ import { useCarDetail } from "@/hooks/useCarDetail";
 import { supabase } from "@/integrations/supabase/client";
 import { logger } from "@/utils/logger";
 import { BUSINESS } from "@/config/business";
+import { useSiteSettings } from "@/hooks/useSiteSettings";
 import type { CarImage } from "@/types";
 import SEO, { buildCarSchema, buildBreadcrumbSchema } from "@/components/SEO";
 
@@ -21,6 +22,7 @@ const inputClass = "h-12 border border-secondary bg-background focus:outline-non
 const CarDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { car, similarCars: hookSimilarCars, loading, error } = useCarDetail();
+  const { footerSettings } = useSiteSettings();
   const similarCars = (hookSimilarCars || []).slice(0, 3);
 
   // Scroll to top when navigating to a different car (e.g. via similar cars)
@@ -351,7 +353,7 @@ const CarDetail = () => {
                     if (navigator.share) {
                       navigator.share({
                         title: carTitle,
-                        text: `Bekijk deze ${carTitle} bij Auto Service van der Waals! €${car.prijs?.toLocaleString("nl-NL")}`,
+                        text: `Bekijk deze ${carTitle} bij ${footerSettings?.company_name || BUSINESS.NAME}! €${car.prijs?.toLocaleString("nl-NL")}`,
                         url: window.location.href,
                       }).catch(() => {});
                     } else {
@@ -371,7 +373,7 @@ const CarDetail = () => {
                       <button
                         className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-md hover:bg-muted transition-colors text-left"
                         onClick={() => {
-                          const text = `Bekijk deze ${carTitle} bij Auto Service van der Waals! €${car.prijs?.toLocaleString("nl-NL")}\n${window.location.href}`;
+                          const text = `Bekijk deze ${carTitle} bij ${footerSettings?.company_name || BUSINESS.NAME}! €${car.prijs?.toLocaleString("nl-NL")}\n${window.location.href}`;
                           window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
                           setShowShareMenu(false);
                         }}
@@ -385,7 +387,7 @@ const CarDetail = () => {
                         className="w-full flex items-center gap-3 px-3 py-2.5 text-sm rounded-md hover:bg-muted transition-colors text-left"
                         onClick={() => {
                           const subject = encodeURIComponent(carTitle);
-                          const body = encodeURIComponent(`Bekijk deze ${carTitle} bij Auto Service van der Waals!\n\n€${car.prijs?.toLocaleString("nl-NL")}\n\n${window.location.href}`);
+                          const body = encodeURIComponent(`Bekijk deze ${carTitle} bij ${footerSettings?.company_name || BUSINESS.NAME}!\n\n€${car.prijs?.toLocaleString("nl-NL")}\n\n${window.location.href}`);
                           window.open(`mailto:?subject=${subject}&body=${body}`);
                           setShowShareMenu(false);
                         }}
@@ -527,7 +529,7 @@ const CarDetail = () => {
             {/* WhatsApp CTA */}
             <div className="mb-8">
               <a
-                href={`https://wa.me/${BUSINESS.WHATSAPP_NUMBER}?text=${encodeURIComponent(`Hi Kees, ik heb wat vragen over de ${car.merk} ${car.model}:`)}`}
+                href={`https://wa.me/${footerSettings?.whatsapp_number || BUSINESS.WHATSAPP_NUMBER}?text=${encodeURIComponent(`${footerSettings?.whatsapp_default_message || 'Hi Kees, ik heb wat vragen over'} de ${car.merk} ${car.model}:`)}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3"

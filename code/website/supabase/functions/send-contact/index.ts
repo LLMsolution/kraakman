@@ -30,19 +30,27 @@ async function getBrand() {
     );
     const { data } = await supabase
       .from('site_settings')
-      .select('value')
-      .eq('key', 'colors')
-      .single();
+      .select('key, value')
+      .in('key', ['colors', 'footer']);
 
-    if (data?.value) {
-      return {
-        ...BRAND_DEFAULTS,
-        primary: data.value.primary || BRAND_DEFAULTS.primary,
-        background: data.value.background || BRAND_DEFAULTS.background,
-      };
-    }
+    const settings: Record<string, any> = {};
+    for (const row of data || []) settings[row.key] = row.value;
+
+    const colors = settings.colors || {};
+    const footer = settings.footer || {};
+
+    return {
+      ...BRAND_DEFAULTS,
+      name: footer.company_name || BRAND_DEFAULTS.name,
+      primary: colors.primary || BRAND_DEFAULTS.primary,
+      background: colors.background || BRAND_DEFAULTS.background,
+      phone: footer.phone || "06-26 344 965",
+      address: footer.address_line1 && footer.address_line2
+        ? `${footer.address_line1}, ${footer.address_line2}`
+        : "Zuid Zijperweg 66, 1766 HD Wieringerwaard",
+    };
   } catch (_) { /* fallback to defaults */ }
-  return BRAND_DEFAULTS;
+  return { ...BRAND_DEFAULTS, phone: "06-26 344 965", address: "Zuid Zijperweg 66, 1766 HD Wieringerwaard" };
 }
 
 async function verifyTurnstile(token: string): Promise<boolean> {
@@ -202,20 +210,20 @@ serve(async (req) => {
                   <p style="margin: 0; line-height: 1.6; color: #333; white-space: pre-wrap; font-style: italic;">${safeMessage}</p>
                 </div>
                 <p style="color: #555; line-height: 1.6; margin: 0 0 24px 0;">
-                  Heeft u een dringende vraag? Bel ons gerust op <strong>06-26 344 965</strong>.
+                  Heeft u een dringende vraag? Bel ons gerust op <strong>${BRAND.phone}</strong>.
                 </p>
                 <div style="border-top: 1px solid #eee; padding-top: 20px;">
                   <p style="color: #555; margin: 0; line-height: 1.6;">
                     Met vriendelijke groet,<br>
                     <strong>${BRAND.name}</strong><br>
-                    <span style="font-size: 14px; color: #999;">Zuid Zijperweg 66, 1766 HD Wieringerwaard</span>
+                    <span style="font-size: 14px; color: #999;">${BRAND.address}</span>
                   </p>
                 </div>
               </div>
             </div>
           </div>
         `,
-        text: `Bedankt voor uw bericht, ${safeName}!\n\nWe hebben uw bericht ontvangen en streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.\n\nUw bericht:\n${safeMessage}\n\nHeeft u een dringende vraag? Bel ons op 06-26 344 965.\n\nMet vriendelijke groet,\n${BRAND.name}\nZuid Zijperweg 66, 1766 HD Wieringerwaard`,
+        text: `Bedankt voor uw bericht, ${safeName}!\n\nWe hebben uw bericht ontvangen en streven ernaar om zo snel mogelijk te reageren, meestal binnen 1 werkdag.\n\nUw bericht:\n${safeMessage}\n\nHeeft u een dringende vraag? Bel ons op ${BRAND.phone}.\n\nMet vriendelijke groet,\n${BRAND.name}\n${BRAND.address}`,
       }),
     });
 

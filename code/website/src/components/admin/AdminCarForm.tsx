@@ -207,10 +207,17 @@ const AdminCarForm = ({
   };
 
   const handleAiGenerateDescription = async () => {
-    if (!formData.merk && !formData.model) {
+    const missing: string[] = [];
+    if (!formData.merk) missing.push("merk");
+    if (!formData.model) missing.push("model");
+    if (!formData.bouwjaar) missing.push("bouwjaar");
+    if (!formData.prijs) missing.push("prijs");
+    if (!formData.kilometerstand) missing.push("kilometerstand");
+    if (!formData.kleur) missing.push("kleur");
+    if (missing.length > 0) {
       toast({
         title: "Gegevens nodig",
-        description: "Vul minimaal merk en model in.",
+        description: `Vul eerst in: ${missing.join(", ")}.`,
         variant: "destructive",
       });
       return;

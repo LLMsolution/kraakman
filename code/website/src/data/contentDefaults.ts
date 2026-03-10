@@ -110,4 +110,7 @@ export const DEFAULT_FOOTER: FooterSettings = {
   opening_hours: "08:00 - 17:00 uur",
   opening_note: "Op afspraak",
   company_name: "Auto Service van der Waals",
+  whatsapp_number: "31626344965",
+  whatsapp_button_text: "Direct chatten met Kees",
+  whatsapp_default_message: "Hi Kees, ik heb een vraag:",
 };

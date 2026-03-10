@@ -148,7 +148,7 @@ const Contact = () => {
             </a>
 
             <a
-              href={`https://wa.me/${BUSINESS.WHATSAPP_NUMBER}?text=${encodeURIComponent('Hi Kees, ik heb een vraag:')}`}
+              href={`https://wa.me/${footerSettings?.whatsapp_number || BUSINESS.WHATSAPP_NUMBER}?text=${encodeURIComponent(footerSettings?.whatsapp_default_message || 'Hi Kees, ik heb een vraag:')}`}
               target="_blank"
               rel="noopener noreferrer"
               className="block bg-background border border-border p-8 cursor-pointer"
@@ -158,7 +158,7 @@ const Contact = () => {
               </svg>
               <h3 className="font-bold text-lg mb-3">WhatsApp</h3>
               <p className="text-muted-foreground">
-                Direct chatten met Kees
+                {footerSettings?.whatsapp_button_text || "Direct chatten met Kees"}
               </p>
             </a>
           </div>

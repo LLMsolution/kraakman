@@ -803,21 +803,25 @@ const AdminWebsiteSettings = () => {
           </div>
 
           <div className="border-t border-border pt-6">
-            <h3 className="text-lg font-semibold mb-4">WhatsApp</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <h3 className="text-lg font-semibold mb-2">WhatsApp Knop</h3>
+            <p className="text-sm mb-4" style={{ color: 'var(--color-text-secondary)' }}>
+              Deze instellingen bepalen de groene WhatsApp-knop die bezoekers zien op elke autopagina. Bezoekers kunnen hiermee direct een WhatsApp-bericht sturen.
+            </p>
+            <div className="space-y-4">
               <div>
                 <Label className="text-sm font-semibold mb-2 block">WhatsApp nummer</Label>
-                <p className="text-xs text-muted-foreground mb-1">Landcode zonder + (bijv. 31612345678)</p>
+                <p className="text-xs text-muted-foreground mb-1">Internationaal formaat zonder + (bijv. 31612345678)</p>
                 <Input
                   className={inputClass}
                   value={footerSettings.whatsapp_number}
                   onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_number: e.target.value })}
-                  placeholder="31626344965"
+                  placeholder="31646075907"
                   style={{ lineHeight: "24px" }}
                 />
               </div>
               <div>
-                <Label className="text-sm font-semibold mb-2 block">Button tekst</Label>
+                <Label className="text-sm font-semibold mb-2 block">Knoptekst</Label>
+                <p className="text-xs text-muted-foreground mb-1">De tekst die op de WhatsApp-knop staat</p>
                 <Input
                   className={inputClass}
                   value={footerSettings.whatsapp_button_text}
@@ -826,17 +830,17 @@ const AdminWebsiteSettings = () => {
                   style={{ lineHeight: "24px" }}
                 />
               </div>
-            </div>
-            <div className="mt-4">
-              <Label className="text-sm font-semibold mb-2 block">Standaard bericht</Label>
-              <p className="text-xs text-muted-foreground mb-1">Dit bericht staat alvast klaar als iemand op de WhatsApp button klikt</p>
-              <Input
-                className={inputClass}
-                value={footerSettings.whatsapp_default_message}
-                onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_default_message: e.target.value })}
-                placeholder="Hi Kees, ik heb een vraag:"
-                style={{ lineHeight: "24px" }}
-              />
+              <div>
+                <Label className="text-sm font-semibold mb-2 block">Standaard bericht</Label>
+                <p className="text-xs text-muted-foreground mb-1">Dit bericht staat alvast ingevuld als iemand op de knop klikt</p>
+                <Input
+                  className={inputClass}
+                  value={footerSettings.whatsapp_default_message}
+                  onChange={(e) => setFooterSettings({ ...footerSettings, whatsapp_default_message: e.target.value })}
+                  placeholder="Hi Kees, ik heb een vraag:"
+                  style={{ lineHeight: "24px" }}
+                />
+              </div>
             </div>
           </div>
 

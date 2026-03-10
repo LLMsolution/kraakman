@@ -69,7 +69,9 @@ export class CarService {
         }
       }
 
-      const { data, error } = await query.order('created_at', { ascending: false });
+      const { data, error } = await query
+        .order('status', { ascending: true })
+        .order('created_at', { ascending: false });
 
       if (error) {
         logger.apiError('GET', '/cars', error, { filters });

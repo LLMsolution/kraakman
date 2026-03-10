@@ -24,14 +24,14 @@ const MOCK = {
   name: "Jan de Vries",
   email: "jan@voorbeeld.nl",
   phone: "06-12345678",
-  message: "Goedendag,\n\nIk ben geïnteresseerd in de Volkswagen Golf die op uw website staat. Kunt u mij meer informatie geven over de staat van de auto en of een proefrit mogelijk is?\n\nMet vriendelijke groet,\nJan de Vries",
+  message: "Goedendag,\n\nIk ben geïnteresseerd in de BMW 330e Plug-in Hybride die op uw website staat. Kunt u mij meer informatie geven over de staat van de auto en of een proefrit mogelijk is?\n\nMet vriendelijke groet,\nJan de Vries",
   rating: 4,
   feedback: "Goede service gehad! De auto was precies zoals beschreven en de afhandeling ging snel en professioneel. Enige minpuntje was de wachttijd bij het ophalen.",
-  carBrand: "Volkswagen",
-  carModel: "Golf 1.4 TSI Comfortline",
-  carYear: 2021,
-  carPrice: 24950,
-  carImage: "https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=600&h=300&fit=crop",
+  carBrand: "BMW",
+  carModel: "330e Plug-in Hybride",
+  carYear: 2024,
+  carPrice: 42950,
+  carImage: "https://asqamsbnrjldkxievcmj.supabase.co/storage/v1/object/public/car-images/746f6d6f-c164-4cea-88a6-062138d562dd/1_IMG-20251005-WA0002-scaled.jpg",
   timestamp: new Date().toLocaleString("nl-NL", { timeZone: "Europe/Amsterdam" }),
 };
 
@@ -252,10 +252,10 @@ const AdminEmailPreview = () => {
         {EMAIL_TYPES.map(({ id, label, icon: Icon }) => (
           <Button
             key={id}
-            variant={activeType === id ? "secondary" : "default"}
+            variant={activeType === id ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveType(id)}
-            className="!text-xs sm:!text-sm"
+            className="!h-auto !min-h-0 !py-2 !px-3 !text-xs sm:!text-sm sm:!py-2.5 sm:!px-4"
           >
             <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-1.5" />
             {label}

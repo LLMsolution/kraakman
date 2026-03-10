@@ -264,10 +264,10 @@ const AdminWebsiteSettings = () => {
         {sections.map((section) => (
           <Button
             key={section.key}
-            variant={activeSection === section.key ? "secondary" : "default"}
+            variant={activeSection === section.key ? "secondary" : "ghost"}
             size="sm"
             onClick={() => setActiveSection(section.key)}
-            className="sm:!h-10 sm:!px-4"
+            className="!h-auto !min-h-0 !py-2 !px-3 !text-xs sm:!text-sm sm:!py-2.5 sm:!px-4"
           >
             {section.label}
           </Button>

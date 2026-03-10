@@ -252,14 +252,12 @@ const CarCard = ({
         {status === 'verkocht' ? (
           <>
             <div className="text-center mb-4">
-              <h3 className="text-xl font-semibold mb-1">
+              <h3 className="text-xl font-semibold line-clamp-2 min-h-[3.5rem]">
                 {merk} {model}
               </h3>
-              {voertuig_type && (
-                <p className="text-sm text-muted-foreground">
-                  {voertuig_type}
-                </p>
-              )}
+              <p className="text-sm text-muted-foreground min-h-[1.25rem]">
+                {voertuig_type || '\u00A0'}
+              </p>
             </div>
 
             <div className="hidden sm:flex items-center justify-between text-xs text-muted-foreground/70">
@@ -290,18 +288,16 @@ const CarCard = ({
           <>
             <div className="mb-4">
               <div className="flex items-start justify-between gap-3">
-                <h3 className="text-xl font-semibold mb-1 min-w-0">
+                <h3 className="text-xl font-semibold line-clamp-2 min-h-[3.5rem] min-w-0">
                   {merk} {model}
                 </h3>
                 <p className="text-lg font-medium text-muted-foreground whitespace-nowrap shrink-0">
                   € {prijs.toLocaleString('nl-NL')}
                 </p>
               </div>
-              {voertuig_type && (
-                <p className="text-sm text-muted-foreground">
-                  {voertuig_type}
-                </p>
-              )}
+              <p className="text-sm text-muted-foreground min-h-[1.25rem]">
+                {voertuig_type || '\u00A0'}
+              </p>
             </div>
 
             <div className="hidden sm:flex items-center justify-between text-xs text-muted-foreground/70 mb-4">
